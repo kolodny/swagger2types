@@ -1,0 +1,34 @@
+<%
+const { apiConfig, utils, routes, config } = it;
+
+const isGrpc = apiConfig.baseUrl.includes('/grpc')
+const processRoute = (route) => {
+  const { path, method, payload, query, pathParams, headers, parameters } = route.request;
+
+  const requestLines = [`method?: '${method.toUpperCase()}'`, `path?: '${path}'`];
+
+  const paramsByName = utils._.keyBy(route.request.parameters, 'name');
+  const typedPath = path.replace(/{([^}]*)}/g, (_, name) => `{${paramsByName[name].type}}`);
+  if (typedPath !== path) requestLines.push(`typedPath?: \`${typedPath}\``);
+
+  if (pathParams) requestLines.push(`params: ${pathParams.type}`);
+  if (headers) requestLines.push(`headers: ${headers.type}`);
+  if (query) requestLines.push(`query: ${query.type}`);
+  if (payload) requestLines.push(`body: ${payload.type}`);
+
+  const key = `${method.toUpperCase()} ${path}`;
+
+  const responseType = isGrpc ? route.response.errorType : route.response.type
+
+  return `['${key}']: {Request: { ${requestLines.join(', ')} }, Response: ${responseType}};`;
+}
+
+const allRoutes = [...routes.outOfModule, ...(routes.combined).flatMap(item => item.routes)].filter(Boolean);
+
+%>
+
+export type Routes = {
+  <% for (const route of allRoutes) { %>
+    <%~ processRoute(route) %>
+  <% } %>
+}
