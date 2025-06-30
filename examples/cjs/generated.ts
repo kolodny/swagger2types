@@ -98077,4 +98077,4 @@ type Routes = {
   ["GET /zen"]: { Request: { method?: "GET"; path?: "/zen" }; Response: WebhookConfigUrl };
 };
 
-export { Routes };
+export type { Routes };

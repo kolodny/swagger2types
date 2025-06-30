@@ -134,32 +134,12 @@ Each route's request type includes relevant properties:
 
 All generated types are pure TypeScript interfaces and type aliases. They provide compile-time safety without adding any JavaScript code to your bundle.
 
-## Project Structure
-
-```
-swagger2types/
-├── src/
-│   ├── index.ts          # Main generation logic
-│   ├── cli.ts            # Command-line interface
-│   ├── dirname.ts        # Directory resolution (CJS)
-│   └── dirname-esm.ts    # Directory resolution (ESM)
-├── template/
-│   └── extra.ejs         # EJS template for route generation
-├── used/                 # Example usage
-│   ├── cjs/              # CommonJS example with generated.ts
-│   └── esm/              # ES Module example with generated.ts
-└── dist/                 # Built output (created during build)
-    ├── cjs/              # CommonJS build
-    └── esm/              # ES Module build
-```
-
 ## How It Works
 
 1. **Spec Processing**: Accepts a Swagger/OpenAPI specification object with proper TypeScript typing
 2. **Code Generation**: Uses `swagger-typescript-api` with a custom EJS template to generate TypeScript types
 3. **Route Mapping**: Creates a structured `Routes` type that maps each endpoint to its request/response types
 4. **Type Extraction**: Removes export statements and re-exports only the `Routes` type
-5. **Comment Handling**: For specs with comment-like patterns (like GitHub's API), preprocessing is handled in usage examples
 
 ## Development
 
@@ -191,15 +171,95 @@ The `used/` directory contains working examples:
 Both examples:
 
 1. Fetch the GitHub API specification from their public endpoint
-2. Clean the spec by removing comment-like patterns (`/* */`) that can break JSON parsing
-3. Generate comprehensive TypeScript route definitions
-4. Demonstrate usage with type-safe request/response handling
+2. Generate comprehensive TypeScript route definitions
+3. Demonstrate usage with type-safe request/response types
 
 The generated `Routes` type includes over 1,000 GitHub API endpoints with full type safety for parameters, request bodies, and response types.
 
+## Type Safe API Requests
+
+You can use some TypeScript Magic to create type-safe API requests. Here's an example of how to use the generated types to make a fully typed request from the generated `Routes` type:
+
+```typescript
+const requestParts = <Route extends keyof Routes>(
+  route: Route,
+  request: Omit<Routes[Route]['Request'], 'path' | 'typedPath' | 'method'>
+) => {
+  type Request = Required<Routes[Route]['Request']>;
+  type Value<T extends string> = Request[T & keyof Request];
+  type Params = Record<string, string>;
+
+  const get = <K extends string>(k: K) => {
+    const typedRequest = request as never as Record<K, Value<K>>;
+    return k in typedRequest ? typedRequest[k] : undefined;
+  };
+  const formatPathTemplate = (template: string, params: Params) => {
+    return template.replace(/\$\{([^}]*)}/g, (_, m) => params[m]);
+  };
+
+  const base = 'https://api.github.com';
+  const [method, template] = route.split(' ') as [Value<'method'>, string];
+  const params = get('params');
+  const formatted = formatPathTemplate(template, params ?? {});
+  const query = get('query');
+  const url = new URL(`.${formatted}`, base);
+  Object.entries(query ?? {}).map(([k, v]) => url.searchParams.set(k, `${v}`));
+  const body = get('body');
+  const headers = get('headers');
+
+  const ResponseType = undefined as Routes[Route]['Response'];
+
+  return { url: `${url}`, params, method, body, headers, query, ResponseType };
+};
+const makeRequest = async <Route extends keyof Routes>(
+  ...[route, request]: Parameters<typeof requestParts<Route>>
+) => {
+  const parts = requestParts(route, request);
+
+  const init: RequestInit = {
+    method: parts.method,
+    headers: {},
+  };
+
+  if (parts.headers) {
+    init.headers = {
+      ...(parts.body ? { 'Content-Type': 'application/json' } : {}),
+      ...parts.headers,
+    };
+  }
+  if (parts.body) init.body = JSON.stringify(parts.body);
+
+  const response = await fetch(parts.url, init);
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  const json = (await response.json()) as Routes[Route]['Response'];
+  return json;
+};
+
+// Everything here is type-safe
+const parts = requestParts(
+  'POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions',
+  {
+    params: { commentId: 123, owner: 'own', repo: 'rep' },
+    body: { content: '+1' },
+  }
+);
+
+// Everything here is type-safe
+const response = await makeRequest(
+  'POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions',
+  {
+    params: { commentId: 123, owner: 'own', repo: 'rep' },
+    body: { content: '+1' },
+  }
+);
+response.user.email; // Fully typed!
+```
+
 ## License
 
-ISC
+MIT
 
 ## Contributing
 

@@ -1,7 +1,6 @@
 <%
 const { apiConfig, utils, routes, config } = it;
 
-const isGrpc = apiConfig.baseUrl.includes('/grpc')
 const processRoute = (route) => {
   const { path, method, payload, query, pathParams, headers, parameters } = route.request;
 
@@ -18,9 +17,7 @@ const processRoute = (route) => {
 
   const key = `${method.toUpperCase()} ${path}`;
 
-  const responseType = isGrpc ? route.response.errorType : route.response.type
-
-  return `['${key}']: {Request: { ${requestLines.join(', ')} }, Response: ${responseType}};`;
+  return `['${key}']: {Request: { ${requestLines.join(', ')} }, Response: ${route.response.type}};`;
 }
 
 const allRoutes = [...routes.outOfModule, ...(routes.combined).flatMap(item => item.routes)].filter(Boolean);
