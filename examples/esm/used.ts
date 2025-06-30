@@ -1,16 +1,11 @@
-import type { Routes } from './generated';
+import { makeRequest } from './typed-request';
 
-type ReactRoute =
-  Routes['POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions'];
-
-const reactRequest: ReactRoute['Request'] = {
-  body: { content: '+1' },
-  params: {
-    discussionNumber: 123,
-    org: 'my-org',
-    teamSlug: 'my-team',
-  },
-};
-
-const reactResponse = {} as ReactRoute['Response'];
-reactResponse.user.email;
+// Everything here is type-safe
+const response = await makeRequest(
+  'POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions',
+  {
+    params: { commentId: 123, owner: 'own', repo: 'rep' },
+    body: { content: '+1' },
+  }
+);
+response.user.email; // Fully typed!
