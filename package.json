@@ -1,6 +1,6 @@
 {
   "name": "swagger2types",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.ts",
@@ -24,6 +24,12 @@
       }
     }
   },
+  "files": [
+    "dist",
+    "template",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "clean": "rm -rf ./dist && rm -rf ./examples/{esm,cjs}/{node_modules,generated.ts}",
     "build": "npm run build:esm && npm run build:cjs",
