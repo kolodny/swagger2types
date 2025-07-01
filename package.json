@@ -1,11 +1,11 @@
 {
   "name": "swagger2types",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",
   "types": "./lib/index.d.ts",
   "bin": {
-    "swagger2types": "lib/cjs/cli.js"
+    "swagger2types": "lib/cli.js"
   },
   "exports": {
     "./package.json": "./package.json",
