@@ -1,40 +1,28 @@
 {
   "name": "swagger2types",
-  "version": "0.0.2",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/cjs/index.d.ts",
+  "version": "0.0.3",
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
   "bin": {
-    "swagger2types": "dist/cjs/cli.js"
+    "swagger2types": "lib/cjs/cli.js"
   },
   "exports": {
     "./package.json": "./package.json",
-    "./*": {
-      "import": "./dist/esm/*.js",
-      "require": "./dist/cjs/*.js"
-    },
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/index.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js"
     }
   },
   "files": [
-    "dist",
+    "lib",
     "template",
     "package.json",
     "README.md"
   ],
   "scripts": {
-    "clean": "rm -rf ./dist && rm -rf ./examples/{esm,cjs}/{node_modules,generated.ts}",
-    "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "tsup",
     "test:esm": "cd examples/esm && npm install && node index.js",
     "test:cjs": "cd examples/cjs && npm install && node index.js",
     "test": "npm run test:esm && npm run test:cjs"
@@ -45,6 +33,7 @@
   "description": "Convert Swagger Spec to Typescript Types",
   "devDependencies": {
     "@types/node": "^24.0.7",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
