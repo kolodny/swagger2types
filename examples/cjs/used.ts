@@ -14,3 +14,8 @@ const reactRequest: ReactRoute['Request'] = {
 
 const reactResponse = {} as ReactRoute['Response'];
 reactResponse.user.email;
+
+// This errors with: This comparison appears to be unintentional because the types '"+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes"' and '""' have no overlap.
+// @ts-expect-error
+console.log(reactResponse.content === '');
+

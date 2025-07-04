@@ -81,31 +81,33 @@ export type Routes = {
 };
 ```
 
-## Example Usage
+## But Why?
 
-Once you've generated your routes, you can use them for type-safe API interactions:
+The goal of this project is to provide the Swagger/OpenAPI spec as a simple TypeScript type that can be used to create type-safe API requests without any runtime overhead. This allows developers to leverage the power of the TypeScript type system while working with APIs defined by Swagger/OpenAPI specifications.
 
-```typescript
-import type { Routes } from './generated/my-api.ts';
+Most other libraries generate the client as well but that adds unnecessary complexity and choice for example using fetch, axios, or other HTTP clients. How the response is wrapped, how errors are handled, how the request is made, etc. This library focuses solely on generating the type definitions needed to make type-safe API requests. No runtime code is generated, it's up to you to use the generated types to create your own API clients.
 
-// Extract specific route types
-type CreateReactionRoute =
-  Routes['POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions'];
+Another pain point is that other generators make it difficult to get a simple list of methods and paths, the service will have something like `client.getAllUsers()` and `client.getUser(id)` but doesn't expose what endpoint map to which functions. Most users coming from the backend side don't know how this translates and instead would just like to have an API along the lines of `makeRequest('GET /users')` or `makeRequest('POST /users/${userId}/posts', { body: { title: 'Hello' } })`. This library provides a simple way to do that.
 
-// Type-safe request construction
-const request: CreateReactionRoute['Request'] = {
-  body: { content: '+1' },
-  params: {
-    discussionNumber: 123,
-    org: 'my-org',
-    teamSlug: 'my-team',
-  },
-};
+Take a look at the [this utils file](./examples/esm/swagger-utils.ts) which provides some TypeScript magic to convert the generated `Routes` type into a type-safe request `prepare` function (this file does some TypeScript voodoo you don't need to understand but is required for creating type aware clients). Once you have the request parts, it's easy to use any HTTP client to make the request. For example there's a [fetch client examples](./examples//esm/clientTypes/fetch.ts), you can play around with to see how this works.
 
-// Type-safe response handling
-const response = {} as CreateReactionRoute['Response'];
-response.user.email; // Fully typed!
-```
+There are so many various use cases for consuming/wrapping some spec, that could be in a BFF, in an MCP, or just as some api provider in the browser. This library aims to provide a simple, type-safe way to extract the minimal necessary types from a Swagger/OpenAPI for any use case.
+
+## How to use this library
+
+In practice, you would typically:
+
+1. Generate whatever types from your Swagger/OpenAPI spec using the `generate` function or via the cli.
+2. Copy something like [this helper](./examples/esm/swagger-utils.ts) to your project to help you prepare requests. Treat this file as a TypeScript magic black box.
+3. Create a `clients.ts` file that imports the generated types and uses the helper to create type-safe clients for your APIs. You'll essentially be copying [this file](./examples/esm/clientTypes/fetch.ts) and modifying it to suit your needs.
+4. You'll import the `client.ts` file in your application code to use the type-safe API clients.
+
+## How It Works
+
+1. **Spec Processing**: Accepts a Swagger/OpenAPI specification object with proper TypeScript typing
+2. **Code Generation**: Uses `swagger-typescript-api` with a custom EJS template to generate TypeScript types
+3. **Route Mapping**: Creates a structured `Routes` type that maps each endpoint to its request/response types
+4. **Type Extraction**: Removes export statements and re-exports only the `Routes` type
 
 ## Features
 
@@ -134,32 +136,6 @@ Each route's request type includes relevant properties:
 
 All generated types are pure TypeScript interfaces and type aliases. They provide compile-time safety without adding any JavaScript code to your bundle.
 
-## But Why?
-
-The goal of this project is to provide the Swagger/OpenAPI spec as a simple TypeScript type that can be used to create type-safe API requests without any runtime overhead. This allows developers to leverage the power of TypeScript's type system while working with APIs defined by Swagger/OpenAPI specifications.
-
-Most other libraries generate the client as well but that adds unnecessary complexity and choice for example using fetch, axios, or other HTTP clients. How the response is wrapped, how errors are handled, how the request is made, etc. This library focuses solely on generating the type definitions needed to make type-safe API requests. No runtime code is generated, it's up to you to use the generated types to create your own API clients.
-
-Take a look at the [this utils file](./examples/esm/swagger-utils.ts) which provides some TypeScript magic to convert the generated `Routes` type into a type-safe request `prepare` function (this file does some TypeScript voodoo you don't need to understand but is required for creating type aware clients). Once you have the request parts, it's easy to use any HTTP client to make the request. For example there's a [fetch client examples](./examples//esm/clientTypes/fetch.ts), you can play around with to see how this works.
-
-There are so many various use cases for consuming/wrapping some spec, that could be in a BFF, in an MCP, or just as some api provider in the browser. This library aims to provide a simple, type-safe way to extract the minimal necessary types from a Swagger/OpenAPI for any use case.
-
-## How to use this library
-
-In practice, you would typically:
-
-1. Generate whatever types from your Swagger/OpenAPI spec using the `generate` function or via the cli.
-2. Copy something like [this helper](./examples/esm/swagger-utils.ts) to your project to help you prepare requests. Treat this file as a TypeScript magic black box.
-3. Create a `clients.ts` file that imports the generated types and uses the helper to create type-safe clients for your APIs. You'll essentially be copying [this file](./examples/esm/clientTypes/fetch.ts) and modifying it to suit your needs.
-4. You'll import the `client.ts` file in your application code to use the type-safe API clients.
-
-## How It Works
-
-1. **Spec Processing**: Accepts a Swagger/OpenAPI specification object with proper TypeScript typing
-2. **Code Generation**: Uses `swagger-typescript-api` with a custom EJS template to generate TypeScript types
-3. **Route Mapping**: Creates a structured `Routes` type that maps each endpoint to its request/response types
-4. **Type Extraction**: Removes export statements and re-exports only the `Routes` type
-
 ## Development
 
 ```bash
@@ -182,101 +158,41 @@ npm run clean
 
 ## Examples
 
-The `used/` directory contains working examples:
+The `examples/` directory contains working examples:
 
-- **CJS Example** (`used/cjs/`): CommonJS usage with GitHub API, includes `generated.ts` output
-- **ESM Example** (`used/esm/`): ES Module usage with GitHub API, includes `generated.ts` output
+- **ESM Example** [`examples/esm/`](./examples/esm/)): ESM usage with various APIs. [generated fetch client](./examples/esm/clientTypes/fetch.ts) includes some examples of how to use the generated types with fetch.
+- **CJS Example** [`examples/cjs](./examples/cjs/): ES Module usage with GitHub API, includes `generated.ts` output.
 
-Both examples:
+The generated `Routes` type for the Github spec contains over 1,000 API endpoints with full type safety for parameters, request bodies, headers, response types, and more.
 
-1. Fetch the GitHub API specification from their public endpoint
-2. Generate comprehensive TypeScript route definitions
-3. Demonstrate usage with type-safe request/response types
+## Example of Type-Safe API Requests
 
-The generated `Routes` type includes over 1,000 GitHub API endpoints with full type safety for parameters, request bodies, and response types.
-
-## Type Safe API Requests
-
-You can use some TypeScript Magic to create type-safe API requests. Here's an example of how to use the generated types to make a fully typed request from the generated `Routes` type:
+The [fetcher clients](./examples/esm/clientTypes/fetch.ts) allow making type safe API to various APIs like GitHub, Petstore, and Star Wars API. Here's a quick example of how to use the generated types with a fetch client:
 
 ```typescript
-const requestParts = <Route extends keyof Routes>(
-  route: Route,
-  request: Omit<Routes[Route]['Request'], 'path' | 'typedPath' | 'method'>
-) => {
-  type Request = Required<Routes[Route]['Request']>;
-  type Value<T extends string> = Request[T & keyof Request];
-  type Params = Record<string, string>;
-
-  const get = <K extends string>(k: K) => {
-    const typedRequest = request as never as Record<K, Value<K>>;
-    return k in typedRequest ? typedRequest[k] : undefined;
-  };
-  const formatPathTemplate = (template: string, params: Params) => {
-    return template.replace(/\$\{([^}]*)}/g, (_, m) => params[m]);
-  };
-
-  const base = 'https://api.github.com';
-  const [method, template] = route.split(' ') as [Value<'method'>, string];
-  const params = get('params');
-  const formatted = formatPathTemplate(template, params ?? {});
-  const query = get('query');
-  const url = new URL(`.${formatted}`, base);
-  Object.entries(query ?? {}).map(([k, v]) => url.searchParams.set(k, `${v}`));
-  const body = get('body');
-  const headers = get('headers');
-
-  const ResponseType = undefined as Routes[Route]['Response'];
-
-  return { url: `${url}`, params, method, body, headers, query, ResponseType };
-};
-const makeRequest = async <Route extends keyof Routes>(
-  ...[route, request]: Parameters<typeof requestParts<Route>>
-) => {
-  const parts = requestParts(route, request);
-
-  const init: RequestInit = {
-    method: parts.method,
-    headers: {},
-  };
-
-  if (parts.headers) {
-    init.headers = {
-      ...(parts.body ? { 'Content-Type': 'application/json' } : {}),
-      ...parts.headers,
-    };
-  }
-  if (parts.body) init.body = JSON.stringify(parts.body);
-
-  const response = await fetch(parts.url, init);
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
-  }
-  const json = (await response.json()) as Routes[Route]['Response'];
-  return json;
-};
-
-// Everything here is type-safe
-const parts = requestParts(
-  'POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions',
-  {
-    params: { commentId: 123, owner: 'own', repo: 'rep' },
-    body: { content: '+1' },
-  }
+const petstoreFetcher: TypeHelper<Petstore>['Request'] = genericFetcher(
+  'https://petstore.swagger.io/v2/'
+);
+const starWarsFetcher: TypeHelper<StarWars>['Request'] = genericFetcher(
+  'https://swapi.profiq.com'
 );
 
-// Everything here is type-safe
-const response = await makeRequest(
-  'POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions',
-  {
-    params: { commentId: 123, owner: 'own', repo: 'rep' },
-    body: { content: '+1' },
-  }
-);
-response.user.email; // Fully typed!
+petstoreFetcher({
+  route: 'GET /pet/${petId}',
+  request: {
+    params: { petId: 1 },
+  },
+}).then((pet) => console.log({ pet }));
+
+starWarsFetcher({
+  route: 'GET /api/people/${id}',
+  request: {
+    params: { id: 1 },
+  },
+}).then((person) => console.log({ person }));
 ```
 
-[Try out the example in stackblitz](https://stackblitz.com/github/kolodny/swagger2types?file=examples%2Fesm%2FclientTypes%2Ffetch.ts)
+[Play around with this example in stackblitz](https://stackblitz.com/github/kolodny/swagger2types?file=examples%2Fesm%2FclientTypes%2Ffetch.ts)
 
 ## License
 

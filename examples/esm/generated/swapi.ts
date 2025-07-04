@@ -279,7 +279,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api";
-      typedPath: `/api`;
+      typedPath?: `/api`;
       params?: never;
       headers?: never;
       query?: never;
@@ -291,7 +291,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/films";
-      typedPath: `/api/films`;
+      typedPath?: `/api/films`;
       params?: never;
       headers?: never;
       query: {
@@ -323,7 +323,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/films/${id}";
-      typedPath: `/api/films/${number}`;
+      typedPath?: `/api/films/${number}`;
       params: {
         /** Film ID */
         id: number;
@@ -338,7 +338,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/people";
-      typedPath: `/api/people`;
+      typedPath?: `/api/people`;
       params?: never;
       headers?: never;
       query: {
@@ -370,7 +370,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/people/${id}";
-      typedPath: `/api/people/${number}`;
+      typedPath?: `/api/people/${number}`;
       params: {
         /** Person ID */
         id: number;
@@ -385,7 +385,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/planets";
-      typedPath: `/api/planets`;
+      typedPath?: `/api/planets`;
       params?: never;
       headers?: never;
       query: {
@@ -417,7 +417,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/planets/${id}";
-      typedPath: `/api/planets/${number}`;
+      typedPath?: `/api/planets/${number}`;
       params: {
         /** Planet ID */
         id: number;
@@ -432,7 +432,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/species";
-      typedPath: `/api/species`;
+      typedPath?: `/api/species`;
       params?: never;
       headers?: never;
       query: {
@@ -464,7 +464,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/species/${id}";
-      typedPath: `/api/species/${number}`;
+      typedPath?: `/api/species/${number}`;
       params: {
         /** Species ID */
         id: number;
@@ -479,7 +479,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/starships";
-      typedPath: `/api/starships`;
+      typedPath?: `/api/starships`;
       params?: never;
       headers?: never;
       query: {
@@ -511,7 +511,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/starships/${id}";
-      typedPath: `/api/starships/${number}`;
+      typedPath?: `/api/starships/${number}`;
       params: {
         /** Starship ID */
         id: number;
@@ -526,7 +526,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/vehicles";
-      typedPath: `/api/vehicles`;
+      typedPath?: `/api/vehicles`;
       params?: never;
       headers?: never;
       query: {
@@ -558,7 +558,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/api/vehicles/${id}";
-      typedPath: `/api/vehicles/${number}`;
+      typedPath?: `/api/vehicles/${number}`;
       params: {
         /** Vehicle ID */
         id: number;

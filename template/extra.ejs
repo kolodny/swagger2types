@@ -16,7 +16,7 @@ const processRoute = (route) => {
 
   const paramsByName = utils._.keyBy(route.request.parameters, 'name');
   const typedPath = path.replace(/{([^}]*)}/g, (_, name) => `{${paramsByName[name].type}}`);
-  requestLines.push(`typedPath: \`${typedPath}\``);
+  requestLines.push(`typedPath?: \`${typedPath}\``);
 
   add(pathParams, 'params', pathParams?.type);
   add(headers, 'headers', headers?.type);

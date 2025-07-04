@@ -73,7 +73,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/pet/${petId}/uploadImage";
-      typedPath: `/pet/${number}/uploadImage`;
+      typedPath?: `/pet/${number}/uploadImage`;
       params: {
         /**
          * ID of pet to update
@@ -96,7 +96,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/pet";
-      typedPath: `/pet`;
+      typedPath?: `/pet`;
       params?: never;
       headers?: never;
       query?: never;
@@ -108,7 +108,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/pet";
-      typedPath: `/pet`;
+      typedPath?: `/pet`;
       params?: never;
       headers?: never;
       query?: never;
@@ -120,7 +120,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/pet/findByStatus";
-      typedPath: `/pet/findByStatus`;
+      typedPath?: `/pet/findByStatus`;
       params?: never;
       headers?: never;
       query: {
@@ -135,7 +135,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/pet/findByTags";
-      typedPath: `/pet/findByTags`;
+      typedPath?: `/pet/findByTags`;
       params?: never;
       headers?: never;
       query: {
@@ -150,7 +150,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/pet/${petId}";
-      typedPath: `/pet/${number}`;
+      typedPath?: `/pet/${number}`;
       params: {
         /**
          * ID of pet to return
@@ -168,7 +168,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/pet/${petId}";
-      typedPath: `/pet/${number}`;
+      typedPath?: `/pet/${number}`;
       params: {
         /**
          * ID of pet that needs to be updated
@@ -191,7 +191,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/pet/${petId}";
-      typedPath: `/pet/${number}`;
+      typedPath?: `/pet/${number}`;
       params: {
         /**
          * Pet id to delete
@@ -211,7 +211,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/store/inventory";
-      typedPath: `/store/inventory`;
+      typedPath?: `/store/inventory`;
       params?: never;
       headers?: never;
       query?: never;
@@ -223,7 +223,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/store/order";
-      typedPath: `/store/order`;
+      typedPath?: `/store/order`;
       params?: never;
       headers?: never;
       query?: never;
@@ -235,7 +235,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/store/order/${orderId}";
-      typedPath: `/store/order/${number}`;
+      typedPath?: `/store/order/${number}`;
       params: {
         /**
          * ID of pet that needs to be fetched
@@ -255,7 +255,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/store/order/${orderId}";
-      typedPath: `/store/order/${number}`;
+      typedPath?: `/store/order/${number}`;
       params: {
         /**
          * ID of the order that needs to be deleted
@@ -274,7 +274,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/createWithList";
-      typedPath: `/user/createWithList`;
+      typedPath?: `/user/createWithList`;
       params?: never;
       headers?: never;
       query?: never;
@@ -286,7 +286,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/${username}";
-      typedPath: `/user/${string}`;
+      typedPath?: `/user/${string}`;
       params: {
         /** The name that needs to be fetched. Use user1 for testing.  */
         username: string;
@@ -301,7 +301,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/${username}";
-      typedPath: `/user/${string}`;
+      typedPath?: `/user/${string}`;
       params: {
         /** name that need to be updated */
         username: string;
@@ -316,7 +316,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/${username}";
-      typedPath: `/user/${string}`;
+      typedPath?: `/user/${string}`;
       params: {
         /** The name that needs to be deleted */
         username: string;
@@ -331,7 +331,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/login";
-      typedPath: `/user/login`;
+      typedPath?: `/user/login`;
       params?: never;
       headers?: never;
       query: {
@@ -348,7 +348,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/logout";
-      typedPath: `/user/logout`;
+      typedPath?: `/user/logout`;
       params?: never;
       headers?: never;
       query?: never;
@@ -360,7 +360,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/createWithArray";
-      typedPath: `/user/createWithArray`;
+      typedPath?: `/user/createWithArray`;
       params?: never;
       headers?: never;
       query?: never;
@@ -372,7 +372,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user";
-      typedPath: `/user`;
+      typedPath?: `/user`;
       params?: never;
       headers?: never;
       query?: never;
