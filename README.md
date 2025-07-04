@@ -276,7 +276,7 @@ const response = await makeRequest(
 response.user.email; // Fully typed!
 ```
 
-[Try out the example in stackblitz](https://stackblitz.com/github/kolodny/swagger2types?file=examples%2Fesm%2FclientType%2Ffetcher.ts)
+[Try out the example in stackblitz](https://stackblitz.com/github/kolodny/swagger2types?file=examples%2Fesm%2FclientTypes%2Ffetch.ts)
 
 ## License
 
