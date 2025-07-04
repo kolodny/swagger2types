@@ -28,13 +28,13 @@ npm install swagger2types
 
 ```bash
 # From a local file
-swagger2types ./api-spec.json
+swagger2types ./api-spec.json > generated/my-api.ts
 
 # From a URL
-swagger2types https://api.example.com/swagger.json
+swagger2types https://api.example.com/swagger.json > generated/my-api.ts
 
 # From stdin
-cat api-spec.json | swagger2types
+cat api-spec.json | swagger2types > generated/my-api.ts
 ```
 
 ### Programmatic Usage
@@ -50,7 +50,7 @@ const spec = {
 };
 
 const generated = await generate(spec);
-writeFileSync('./generated.ts', generated);
+writeFileSync('./generated/my-api.ts', generated);
 ```
 
 ## Generated Type Structure
@@ -86,7 +86,7 @@ export type Routes = {
 Once you've generated your routes, you can use them for type-safe API interactions:
 
 ```typescript
-import type { Routes } from './generated';
+import type { Routes } from './generated/my-api.ts';
 
 // Extract specific route types
 type CreateReactionRoute =
@@ -133,6 +133,25 @@ Each route's request type includes relevant properties:
 ### Zero Runtime Cost
 
 All generated types are pure TypeScript interfaces and type aliases. They provide compile-time safety without adding any JavaScript code to your bundle.
+
+## But Why?
+
+The goal of this project is to provide the Swagger/OpenAPI spec as a simple TypeScript type that can be used to create type-safe API requests without any runtime overhead. This allows developers to leverage the power of TypeScript's type system while working with APIs defined by Swagger/OpenAPI specifications.
+
+Most other libraries generate the client as well but that adds unnecessary complexity and choice for example using fetch, axios, or other HTTP clients. How the response is wrapped, how errors are handled, how the request is made, etc. This library focuses solely on generating the type definitions needed to make type-safe API requests. No runtime code is generated, it's up to you to use the generated types to create your own API clients.
+
+Take a look at the [this utils file](./examples/esm/swagger-utils.ts) which provides some TypeScript magic to convert the generated `Routes` type into a type-safe request `prepare` function (this file does some TypeScript voodoo you don't need to understand but is required for creating type aware clients). Once you have the request parts, it's easy to use any HTTP client to make the request. For example there's a [fetch client examples](./examples//esm/clientTypes/fetch.ts), you can play around with to see how this works.
+
+There are so many various use cases for consuming/wrapping some spec, that could be in a BFF, in an MCP, or just as some api provider in the browser. This library aims to provide a simple, type-safe way to extract the minimal necessary types from a Swagger/OpenAPI for any use case.
+
+## How to use this library
+
+In practice, you would typically:
+
+1. Generate whatever types from your Swagger/OpenAPI spec using the `generate` function or via the cli.
+2. Copy something like [this helper](./examples/esm/swagger-utils.ts) to your project to help you prepare requests. Treat this file as a TypeScript magic black box.
+3. Create a `clients.ts` file that imports the generated types and uses the helper to create type-safe clients for your APIs. You'll essentially be copying [this file](./examples/esm/clientTypes/fetch.ts) and modifying it to suit your needs.
+4. You'll import the `client.ts` file in your application code to use the type-safe API clients.
 
 ## How It Works
 
@@ -257,7 +276,7 @@ const response = await makeRequest(
 response.user.email; // Fully typed!
 ```
 
-[Try out the example in stackblitz](https://stackblitz.com/github/kolodny/swagger2types?file=examples%2Fesm%2Fused.ts)
+[Try out the example in stackblitz](https://stackblitz.com/github/kolodny/swagger2types?file=examples%2Fesm%2FclientType%2Ffetcher.ts)
 
 ## License
 

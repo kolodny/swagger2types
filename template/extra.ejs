@@ -6,14 +6,22 @@ const processRoute = (route) => {
 
   const requestLines = [`method?: '${method.toUpperCase()}'`, `path?: '${path}'`];
 
+  const add = (enabled, name, type) => {
+    if (enabled) {
+      requestLines.push(`${name}: ${type}`);
+    } else {
+      requestLines.push(`${name}?: never`);
+    }
+  }
+
   const paramsByName = utils._.keyBy(route.request.parameters, 'name');
   const typedPath = path.replace(/{([^}]*)}/g, (_, name) => `{${paramsByName[name].type}}`);
-  if (typedPath !== path) requestLines.push(`typedPath?: \`${typedPath}\``);
+  requestLines.push(`typedPath: \`${typedPath}\``);
 
-  if (pathParams) requestLines.push(`params: ${pathParams.type}`);
-  if (headers) requestLines.push(`headers: ${headers.type}`);
-  if (query) requestLines.push(`query: ${query.type}`);
-  if (payload) requestLines.push(`body: ${payload.type}`);
+  add(pathParams, 'params', pathParams?.type);
+  add(headers, 'headers', headers?.type);
+  add(query, 'query', query?.type);
+  add(payload, 'body', payload?.type);
 
   const key = `${method.toUpperCase()} ${path}`;
 

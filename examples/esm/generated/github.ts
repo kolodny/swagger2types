@@ -941,6 +941,8 @@ interface Installation {
   html_url: string;
   /** @example 1 */
   app_id: number;
+  /** @example "Iv1.ab1112223334445c" */
+  client_id?: string;
   /** The ID of the user or organization this token is being scoped to. */
   target_id: number;
   /** @example "Organization" */
@@ -4873,7 +4875,7 @@ interface SelectedActions {
   /** Whether actions from GitHub Marketplace verified creators are allowed. Set to `true` to allow all actions by GitHub Marketplace verified creators. */
   verified_allowed?: boolean;
   /**
-   * Specifies a list of string-matching patterns to allow specific action(s) and reusable workflow(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa`.
+   * Specifies a list of string-matching patterns to allow specific action(s) and reusable workflow(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`.
    *
    * > [!NOTE]
    * > The `patterns_allowed` setting only applies to public repositories.
@@ -13441,7 +13443,7 @@ interface DeploymentBranchPolicy {
   node_id?: string;
   /**
    * The name pattern that branches or tags must match in order to deploy to the environment.
-   * @example "release"
+   * @example "release/*"
    */
   name?: string;
   /**
@@ -13456,9 +13458,9 @@ interface DeploymentBranchPolicyNamePatternWithType {
   /**
    * The name pattern that branches or tags must match in order to deploy to the environment.
    *
-   * Wildcard characters will not match `/`. For example, to match branches that begin with `release/` and contain an additional single slash, use `release`.
+   * Wildcard characters will not match `/`. For example, to match branches that begin with `release/` and contain an additional single slash, use `release/*​/*`.
    * For more information about pattern matching syntax, see the [Ruby File.fnmatch documentation](https://ruby-doc.org/core-2.5.1/File.html#method-c-fnmatch).
-   * @example "release"
+   * @example "release/*"
    */
   name: string;
   /**
@@ -13473,9 +13475,9 @@ interface DeploymentBranchPolicyNamePattern {
   /**
    * The name pattern that branches must match in order to deploy to the environment.
    *
-   * Wildcard characters will not match `/`. For example, to match branches that begin with `release/` and contain an additional single slash, use `release`.
+   * Wildcard characters will not match `/`. For example, to match branches that begin with `release/` and contain an additional single slash, use `release/*​/*`.
    * For more information about pattern matching syntax, see the [Ruby File.fnmatch documentation](https://ruby-doc.org/core-2.5.1/File.html#method-c-fnmatch).
-   * @example "release"
+   * @example "release/*"
    */
   name: string;
 }
@@ -74367,11 +74369,25 @@ interface WebhookWorkflowRunRequested {
 }
 
 type Routes = {
-  ["GET /"]: { Request: { method?: "GET"; path?: "/" }; Response: Root };
+  ["GET /"]: {
+    Request: {
+      method?: "GET";
+      path?: "/";
+      typedPath: `/`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: Root;
+  };
   ["GET /advisories"]: {
     Request: {
       method?: "GET";
       path?: "/advisories";
+      typedPath: `/advisories`;
+      params?: never;
+      headers?: never;
       query: {
         /** If specified, only advisories with this GHSA (GitHub Security Advisory) identifier will be returned. */
         ghsa_id?: string;
@@ -74451,6 +74467,7 @@ type Routes = {
          */
         sort?: "updated" | "published" | "epss_percentage" | "epss_percentile";
       };
+      body?: never;
     };
     Response: GlobalAdvisory[];
   };
@@ -74458,20 +74475,49 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/advisories/${ghsaId}";
-      typedPath?: `/advisories/${string}`;
+      typedPath: `/advisories/${string}`;
       params: {
         /** The GHSA (GitHub Security Advisory) identifier of the advisory. */
         ghsaId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GlobalAdvisory;
   };
-  ["GET /app"]: { Request: { method?: "GET"; path?: "/app" }; Response: Integration };
-  ["GET /app/hook/config"]: { Request: { method?: "GET"; path?: "/app/hook/config" }; Response: WebhookConfig };
+  ["GET /app"]: {
+    Request: {
+      method?: "GET";
+      path?: "/app";
+      typedPath: `/app`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: Integration;
+  };
+  ["GET /app/hook/config"]: {
+    Request: {
+      method?: "GET";
+      path?: "/app/hook/config";
+      typedPath: `/app/hook/config`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: WebhookConfig;
+  };
   ["PATCH /app/hook/config"]: {
     Request: {
       method?: "PATCH";
       path?: "/app/hook/config";
+      typedPath: `/app/hook/config`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /** The URL to which the payloads will be delivered. */
         url?: WebhookConfigUrl;
@@ -74489,6 +74535,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/app/hook/deliveries";
+      typedPath: `/app/hook/deliveries`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74498,6 +74547,7 @@ type Routes = {
         /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
         cursor?: string;
       };
+      body?: never;
     };
     Response: HookDeliveryItem[];
   };
@@ -74505,10 +74555,13 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/app/hook/deliveries/${deliveryId}";
-      typedPath?: `/app/hook/deliveries/${number}`;
+      typedPath: `/app/hook/deliveries/${number}`;
       params: {
         deliveryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: HookDelivery;
   };
@@ -74516,10 +74569,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/app/hook/deliveries/${deliveryId}/attempts";
-      typedPath?: `/app/hook/deliveries/${number}/attempts`;
+      typedPath: `/app/hook/deliveries/${number}/attempts`;
       params: {
         deliveryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -74527,6 +74583,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/app/installation-requests";
+      typedPath: `/app/installation-requests`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74539,6 +74598,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: IntegrationInstallationRequest[];
   };
@@ -74546,6 +74606,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/app/installations";
+      typedPath: `/app/installations`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74564,6 +74627,7 @@ type Routes = {
         since?: string;
         outdated?: string;
       };
+      body?: never;
     };
     Response: Installation[];
   };
@@ -74571,11 +74635,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/app/installations/${installationId}";
-      typedPath?: `/app/installations/${number}`;
+      typedPath: `/app/installations/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Installation;
   };
@@ -74583,11 +74650,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/app/installations/${installationId}";
-      typedPath?: `/app/installations/${number}`;
+      typedPath: `/app/installations/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -74595,11 +74665,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/app/installations/${installationId}/access_tokens";
-      typedPath?: `/app/installations/${number}/access_tokens`;
+      typedPath: `/app/installations/${number}/access_tokens`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** List of repository names that the token should have access to */
         repositories?: string[];
@@ -74618,11 +74690,14 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/app/installations/${installationId}/suspended";
-      typedPath?: `/app/installations/${number}/suspended`;
+      typedPath: `/app/installations/${number}/suspended`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -74630,11 +74705,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/app/installations/${installationId}/suspended";
-      typedPath?: `/app/installations/${number}/suspended`;
+      typedPath: `/app/installations/${number}/suspended`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -74642,10 +74720,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/app-manifests/${code}/conversions";
-      typedPath?: `/app-manifests/${string}/conversions`;
+      typedPath: `/app-manifests/${string}/conversions`;
       params: {
         code: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Integration & {
       client_id: string;
@@ -74659,11 +74740,13 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/applications/${clientId}/grant";
-      typedPath?: `/applications/${string}/grant`;
+      typedPath: `/applications/${string}/grant`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The OAuth access token used to authenticate to the GitHub API. */
         access_token: string;
@@ -74675,11 +74758,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/applications/${clientId}/token";
-      typedPath?: `/applications/${string}/token`;
+      typedPath: `/applications/${string}/token`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The access_token of the OAuth or GitHub application. */
         access_token: string;
@@ -74691,11 +74776,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/applications/${clientId}/token";
-      typedPath?: `/applications/${string}/token`;
+      typedPath: `/applications/${string}/token`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The access_token of the OAuth or GitHub application. */
         access_token: string;
@@ -74707,11 +74794,13 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/applications/${clientId}/token";
-      typedPath?: `/applications/${string}/token`;
+      typedPath: `/applications/${string}/token`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The OAuth access token used to authenticate to the GitHub API. */
         access_token: string;
@@ -74723,11 +74812,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/applications/${clientId}/token/scoped";
-      typedPath?: `/applications/${string}/token/scoped`;
+      typedPath: `/applications/${string}/token/scoped`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The access token used to authenticate to the GitHub API.
@@ -74761,10 +74852,13 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/apps/${appSlug}";
-      typedPath?: `/apps/${string}`;
+      typedPath: `/apps/${string}`;
       params: {
         appSlug: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Integration;
   };
@@ -74772,11 +74866,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/assignments/${assignmentId}";
-      typedPath?: `/assignments/${number}`;
+      typedPath: `/assignments/${number}`;
       params: {
         /** The unique identifier of the classroom assignment. */
         assignmentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ClassroomAssignment;
   };
@@ -74784,11 +74881,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/assignments/${assignmentId}/accepted_assignments";
-      typedPath?: `/assignments/${number}/accepted_assignments`;
+      typedPath: `/assignments/${number}/accepted_assignments`;
       params: {
         /** The unique identifier of the classroom assignment. */
         assignmentId: number;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74801,6 +74899,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: ClassroomAcceptedAssignment[];
   };
@@ -74808,11 +74907,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/assignments/${assignmentId}/grades";
-      typedPath?: `/assignments/${number}/grades`;
+      typedPath: `/assignments/${number}/grades`;
       params: {
         /** The unique identifier of the classroom assignment. */
         assignmentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ClassroomAssignmentGrade[];
   };
@@ -74820,6 +74922,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/classrooms";
+      typedPath: `/classrooms`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74832,6 +74937,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: SimpleClassroom[];
   };
@@ -74839,11 +74945,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/classrooms/${classroomId}";
-      typedPath?: `/classrooms/${number}`;
+      typedPath: `/classrooms/${number}`;
       params: {
         /** The unique identifier of the classroom. */
         classroomId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Classroom;
   };
@@ -74851,11 +74960,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/classrooms/${classroomId}/assignments";
-      typedPath?: `/classrooms/${number}/assignments`;
+      typedPath: `/classrooms/${number}/assignments`;
       params: {
         /** The unique identifier of the classroom. */
         classroomId: number;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74868,18 +74978,33 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: SimpleClassroomAssignment[];
   };
-  ["GET /codes_of_conduct"]: { Request: { method?: "GET"; path?: "/codes_of_conduct" }; Response: CodeOfConduct[] };
+  ["GET /codes_of_conduct"]: {
+    Request: {
+      method?: "GET";
+      path?: "/codes_of_conduct";
+      typedPath: `/codes_of_conduct`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: CodeOfConduct[];
+  };
   ["GET /codes_of_conduct/${key}"]: {
     Request: {
       method?: "GET";
       path?: "/codes_of_conduct/${key}";
-      typedPath?: `/codes_of_conduct/${string}`;
+      typedPath: `/codes_of_conduct/${string}`;
       params: {
         key: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeOfConduct;
   };
@@ -74887,6 +75012,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/credentials/revoke";
+      typedPath: `/credentials/revoke`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * A list of credentials to be revoked, up to 1000 per request.
@@ -74898,16 +75027,28 @@ type Routes = {
     };
     Response: object;
   };
-  ["GET /emojis"]: { Request: { method?: "GET"; path?: "/emojis" }; Response: Record<string, string> };
+  ["GET /emojis"]: {
+    Request: {
+      method?: "GET";
+      path?: "/emojis";
+      typedPath: `/emojis`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: Record<string, string>;
+  };
   ["GET /enterprises/${enterprise}/code-security/configurations"]: {
     Request: {
       method?: "GET";
       path?: "/enterprises/${enterprise}/code-security/configurations";
-      typedPath?: `/enterprises/${string}/code-security/configurations`;
+      typedPath: `/enterprises/${string}/code-security/configurations`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -74919,6 +75060,7 @@ type Routes = {
         /** A cursor, as given in the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
         after?: string;
       };
+      body?: never;
     };
     Response: CodeSecurityConfiguration[];
   };
@@ -74926,11 +75068,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/enterprises/${enterprise}/code-security/configurations";
-      typedPath?: `/enterprises/${string}/code-security/configurations`;
+      typedPath: `/enterprises/${string}/code-security/configurations`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the code security configuration. Must be unique within the enterprise. */
         name: string;
@@ -75032,11 +75176,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/enterprises/${enterprise}/code-security/configurations/defaults";
-      typedPath?: `/enterprises/${string}/code-security/configurations/defaults`;
+      typedPath: `/enterprises/${string}/code-security/configurations/defaults`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeSecurityDefaultConfigurations;
   };
@@ -75044,13 +75191,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}`;
+      typedPath: `/enterprises/${string}/code-security/configurations/${number}`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeSecurityConfiguration;
   };
@@ -75058,13 +75208,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}`;
+      typedPath: `/enterprises/${string}/code-security/configurations/${number}`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the code security configuration. Must be unique across the enterprise. */
         name?: string;
@@ -75127,13 +75279,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}`;
+      typedPath: `/enterprises/${string}/code-security/configurations/${number}`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -75141,13 +75296,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}/attach";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}/attach`;
+      typedPath: `/enterprises/${string}/code-security/configurations/${number}/attach`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The type of repositories to attach the configuration to. */
         scope: "all" | "all_without_configurations";
@@ -75159,13 +75316,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}/defaults";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}/defaults`;
+      typedPath: `/enterprises/${string}/code-security/configurations/${number}/defaults`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Specify which types of repository this security configuration should be applied to by default. */
         default_for_new_repos?: "all" | "none" | "private_and_internal" | "public";
@@ -75182,13 +75341,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}/repositories";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}/repositories`;
+      typedPath: `/enterprises/${string}/code-security/configurations/${number}/repositories`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75207,6 +75367,7 @@ type Routes = {
          */
         status?: string;
       };
+      body?: never;
     };
     Response: CodeSecurityConfigurationRepositories[];
   };
@@ -75214,11 +75375,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/enterprises/${enterprise}/dependabot/alerts";
-      typedPath?: `/enterprises/${string}/dependabot/alerts`;
+      typedPath: `/enterprises/${string}/dependabot/alerts`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
       };
+      headers?: never;
       query: {
         /**
          * A comma-separated list of states. If specified, only alerts with these states will be returned.
@@ -75296,6 +75458,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: DependabotAlertWithRepository[];
   };
@@ -75303,11 +75466,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/enterprises/${enterprise}/secret-scanning/alerts";
-      typedPath?: `/enterprises/${string}/secret-scanning/alerts`;
+      typedPath: `/enterprises/${string}/secret-scanning/alerts`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
       };
+      headers?: never;
       query: {
         /** Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
         state?: "open" | "resolved";
@@ -75352,6 +75516,7 @@ type Routes = {
          */
         hide_secret?: boolean;
       };
+      body?: never;
     };
     Response: OrganizationSecretScanningAlert[];
   };
@@ -75359,6 +75524,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/events";
+      typedPath: `/events`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75371,14 +75539,29 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
-  ["GET /feeds"]: { Request: { method?: "GET"; path?: "/feeds" }; Response: Feed };
+  ["GET /feeds"]: {
+    Request: {
+      method?: "GET";
+      path?: "/feeds";
+      typedPath: `/feeds`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: Feed;
+  };
   ["GET /gists"]: {
     Request: {
       method?: "GET";
       path?: "/gists";
+      typedPath: `/gists`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -75396,6 +75579,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: BaseGist[];
   };
@@ -75403,6 +75587,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/gists";
+      typedPath: `/gists`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Description of the gist
@@ -75430,6 +75618,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/public";
+      typedPath: `/gists/public`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -75447,6 +75638,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: BaseGist[];
   };
@@ -75454,6 +75646,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/starred";
+      typedPath: `/gists/starred`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -75471,6 +75666,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: BaseGist[];
   };
@@ -75478,11 +75674,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}";
-      typedPath?: `/gists/${string}`;
+      typedPath: `/gists/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GistSimple;
   };
@@ -75490,11 +75689,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/gists/${gistId}";
-      typedPath?: `/gists/${string}`;
+      typedPath: `/gists/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The description of the gist.
@@ -75526,11 +75727,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/gists/${gistId}";
-      typedPath?: `/gists/${string}`;
+      typedPath: `/gists/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -75538,11 +75742,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}/comments";
-      typedPath?: `/gists/${string}/comments`;
+      typedPath: `/gists/${string}/comments`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75555,6 +75760,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: GistComment[];
   };
@@ -75562,11 +75768,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/gists/${gistId}/comments";
-      typedPath?: `/gists/${string}/comments`;
+      typedPath: `/gists/${string}/comments`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The comment text.
@@ -75582,7 +75790,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}/comments/${commentId}";
-      typedPath?: `/gists/${string}/comments/${number}`;
+      typedPath: `/gists/${string}/comments/${number}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75592,6 +75800,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GistComment;
   };
@@ -75599,7 +75810,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/gists/${gistId}/comments/${commentId}";
-      typedPath?: `/gists/${string}/comments/${number}`;
+      typedPath: `/gists/${string}/comments/${number}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75609,6 +75820,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The comment text.
@@ -75624,7 +75837,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/gists/${gistId}/comments/${commentId}";
-      typedPath?: `/gists/${string}/comments/${number}`;
+      typedPath: `/gists/${string}/comments/${number}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75634,6 +75847,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -75641,11 +75857,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}/commits";
-      typedPath?: `/gists/${string}/commits`;
+      typedPath: `/gists/${string}/commits`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75658,6 +75875,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: GistCommit[];
   };
@@ -75665,11 +75883,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}/forks";
-      typedPath?: `/gists/${string}/forks`;
+      typedPath: `/gists/${string}/forks`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75682,6 +75901,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: GistSimple[];
   };
@@ -75689,11 +75909,14 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/gists/${gistId}/forks";
-      typedPath?: `/gists/${string}/forks`;
+      typedPath: `/gists/${string}/forks`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: BaseGist;
   };
@@ -75701,11 +75924,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}/star";
-      typedPath?: `/gists/${string}/star`;
+      typedPath: `/gists/${string}/star`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -75713,11 +75939,14 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/gists/${gistId}/star";
-      typedPath?: `/gists/${string}/star`;
+      typedPath: `/gists/${string}/star`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -75725,11 +75954,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/gists/${gistId}/star";
-      typedPath?: `/gists/${string}/star`;
+      typedPath: `/gists/${string}/star`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -75737,24 +75969,41 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/gists/${gistId}/${sha}";
-      typedPath?: `/gists/${string}/${string}`;
+      typedPath: `/gists/${string}/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
         sha: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GistSimple;
   };
-  ["GET /gitignore/templates"]: { Request: { method?: "GET"; path?: "/gitignore/templates" }; Response: string[] };
+  ["GET /gitignore/templates"]: {
+    Request: {
+      method?: "GET";
+      path?: "/gitignore/templates";
+      typedPath: `/gitignore/templates`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: string[];
+  };
   ["GET /gitignore/templates/${name}"]: {
     Request: {
       method?: "GET";
       path?: "/gitignore/templates/${name}";
-      typedPath?: `/gitignore/templates/${string}`;
+      typedPath: `/gitignore/templates/${string}`;
       params: {
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GitignoreTemplate;
   };
@@ -75762,6 +76011,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/installation/repositories";
+      typedPath: `/installation/repositories`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75774,6 +76026,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -75782,11 +76035,25 @@ type Routes = {
       repository_selection?: string;
     };
   };
-  ["DELETE /installation/token"]: { Request: { method?: "DELETE"; path?: "/installation/token" }; Response: void };
+  ["DELETE /installation/token"]: {
+    Request: {
+      method?: "DELETE";
+      path?: "/installation/token";
+      typedPath: `/installation/token`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: void;
+  };
   ["GET /issues"]: {
     Request: {
       method?: "GET";
       path?: "/issues";
+      typedPath: `/issues`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.
@@ -75830,6 +76097,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Issue[];
   };
@@ -75837,6 +76105,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/licenses";
+      typedPath: `/licenses`;
+      params?: never;
+      headers?: never;
       query: {
         featured?: boolean;
         /**
@@ -75850,6 +76121,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: LicenseSimple[];
   };
@@ -75857,10 +76129,13 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/licenses/${license}";
-      typedPath?: `/licenses/${string}`;
+      typedPath: `/licenses/${string}`;
       params: {
         license: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: License;
   };
@@ -75868,6 +76143,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/markdown";
+      typedPath: `/markdown`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /** The Markdown text to render in HTML. */
         text: string;
@@ -75884,18 +76163,29 @@ type Routes = {
     Response: WebhookConfigUrl;
   };
   ["POST /markdown/raw"]: {
-    Request: { method?: "POST"; path?: "/markdown/raw"; body: WebhookConfigUrl };
+    Request: {
+      method?: "POST";
+      path?: "/markdown/raw";
+      typedPath: `/markdown/raw`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body: WebhookConfigUrl;
+    };
     Response: WebhookConfigUrl;
   };
   ["GET /marketplace_listing/accounts/${accountId}"]: {
     Request: {
       method?: "GET";
       path?: "/marketplace_listing/accounts/${accountId}";
-      typedPath?: `/marketplace_listing/accounts/${number}`;
+      typedPath: `/marketplace_listing/accounts/${number}`;
       params: {
         /** account_id parameter */
         accountId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: MarketplacePurchase;
   };
@@ -75903,6 +76193,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/marketplace_listing/plans";
+      typedPath: `/marketplace_listing/plans`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75915,6 +76208,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MarketplaceListingPlan[];
   };
@@ -75922,11 +76216,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/marketplace_listing/plans/${planId}/accounts";
-      typedPath?: `/marketplace_listing/plans/${number}/accounts`;
+      typedPath: `/marketplace_listing/plans/${number}/accounts`;
       params: {
         /** The unique identifier of the plan. */
         planId: number;
       };
+      headers?: never;
       query: {
         /**
          * The property to sort the results by.
@@ -75946,6 +76241,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MarketplacePurchase[];
   };
@@ -75953,11 +76249,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/marketplace_listing/stubbed/accounts/${accountId}";
-      typedPath?: `/marketplace_listing/stubbed/accounts/${number}`;
+      typedPath: `/marketplace_listing/stubbed/accounts/${number}`;
       params: {
         /** account_id parameter */
         accountId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: MarketplacePurchase;
   };
@@ -75965,6 +76264,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/marketplace_listing/stubbed/plans";
+      typedPath: `/marketplace_listing/stubbed/plans`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -75977,6 +76279,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MarketplaceListingPlan[];
   };
@@ -75984,11 +76287,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/marketplace_listing/stubbed/plans/${planId}/accounts";
-      typedPath?: `/marketplace_listing/stubbed/plans/${number}/accounts`;
+      typedPath: `/marketplace_listing/stubbed/plans/${number}/accounts`;
       params: {
         /** The unique identifier of the plan. */
         planId: number;
       };
+      headers?: never;
       query: {
         /**
          * The property to sort the results by.
@@ -76008,21 +76312,34 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MarketplacePurchase[];
   };
-  ["GET /meta"]: { Request: { method?: "GET"; path?: "/meta" }; Response: ApiOverview };
+  ["GET /meta"]: {
+    Request: {
+      method?: "GET";
+      path?: "/meta";
+      typedPath: `/meta`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ApiOverview;
+  };
   ["GET /networks/${owner}/${repo}/events"]: {
     Request: {
       method?: "GET";
       path?: "/networks/${owner}/${repo}/events";
-      typedPath?: `/networks/${string}/${string}/events`;
+      typedPath: `/networks/${string}/${string}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -76035,6 +76352,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -76042,6 +76360,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/notifications";
+      typedPath: `/notifications`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * If `true`, show notifications marked as read.
@@ -76074,6 +76395,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: Thread[];
   };
@@ -76081,6 +76403,10 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/notifications";
+      typedPath: `/notifications`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Describes the last point that notifications were checked. Anything updated since this time will not be marked as read. If you omit this parameter, all notifications are marked as read. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. Default: The current timestamp.
@@ -76099,11 +76425,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/notifications/threads/${threadId}";
-      typedPath?: `/notifications/threads/${number}`;
+      typedPath: `/notifications/threads/${number}`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Thread;
   };
@@ -76111,11 +76440,14 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/notifications/threads/${threadId}";
-      typedPath?: `/notifications/threads/${number}`;
+      typedPath: `/notifications/threads/${number}`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -76123,11 +76455,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/notifications/threads/${threadId}";
-      typedPath?: `/notifications/threads/${number}`;
+      typedPath: `/notifications/threads/${number}`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -76135,11 +76470,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/notifications/threads/${threadId}/subscription";
-      typedPath?: `/notifications/threads/${number}/subscription`;
+      typedPath: `/notifications/threads/${number}/subscription`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ThreadSubscription;
   };
@@ -76147,11 +76485,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/notifications/threads/${threadId}/subscription";
-      typedPath?: `/notifications/threads/${number}/subscription`;
+      typedPath: `/notifications/threads/${number}/subscription`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Whether to block all notifications from a thread.
@@ -76166,11 +76506,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/notifications/threads/${threadId}/subscription";
-      typedPath?: `/notifications/threads/${number}/subscription`;
+      typedPath: `/notifications/threads/${number}/subscription`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -76178,10 +76521,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/octocat";
+      typedPath: `/octocat`;
+      params?: never;
+      headers?: never;
       query: {
         /** The words to show in Octocat's speech bubble */
         s?: string;
       };
+      body?: never;
     };
     Response: WebhookConfigUrl;
   };
@@ -76189,6 +76536,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/organizations";
+      typedPath: `/organizations`;
+      params?: never;
+      headers?: never;
       query: {
         /** An organization ID. Only return organizations with an ID greater than this ID. */
         since?: number;
@@ -76198,6 +76548,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: OrganizationSimple[];
   };
@@ -76205,11 +76556,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/organizations/${org}/dependabot/repository-access";
-      typedPath?: `/organizations/${string}/dependabot/repository-access`;
+      typedPath: `/organizations/${string}/dependabot/repository-access`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of results to fetch.
@@ -76225,6 +76577,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: DependabotRepositoryAccessDetails;
   };
@@ -76232,11 +76585,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/organizations/${org}/dependabot/repository-access";
-      typedPath?: `/organizations/${string}/dependabot/repository-access`;
+      typedPath: `/organizations/${string}/dependabot/repository-access`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** List of repository IDs to add. */
         repository_ids_to_add?: number[];
@@ -76250,11 +76605,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/organizations/${org}/dependabot/repository-access/default-level";
-      typedPath?: `/organizations/${string}/dependabot/repository-access/default-level`;
+      typedPath: `/organizations/${string}/dependabot/repository-access/default-level`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The default repository access level for Dependabot updates.
@@ -76269,11 +76626,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/organizations/${org}/settings/billing/usage";
-      typedPath?: `/organizations/${string}/settings/billing/usage`;
+      typedPath: `/organizations/${string}/settings/billing/usage`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** If specified, only return results for a single year. The value of `year` is an integer with four digits representing a year. For example, `2025`. Default value is the current year. */
         year?: number;
@@ -76284,6 +76642,7 @@ type Routes = {
         /** If specified, only return results for a single hour. The value of `hour` is an integer between `0` and `23`. If no `year`, `month`, or `day` is specified, the default `year`, `month`, and `day` are used. */
         hour?: number;
       };
+      body?: never;
     };
     Response: BillingUsageReport;
   };
@@ -76291,11 +76650,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}";
-      typedPath?: `/orgs/${string}`;
+      typedPath: `/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrganizationFull;
   };
@@ -76303,11 +76665,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}";
-      typedPath?: `/orgs/${string}`;
+      typedPath: `/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Billing email address. This address is not publicized. */
         billing_email?: string;
@@ -76455,11 +76819,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}";
-      typedPath?: `/orgs/${string}`;
+      typedPath: `/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -76467,11 +76834,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/cache/usage";
-      typedPath?: `/orgs/${string}/actions/cache/usage`;
+      typedPath: `/orgs/${string}/actions/cache/usage`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsCacheUsageOrgEnterprise;
   };
@@ -76479,11 +76849,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/cache/usage-by-repository";
-      typedPath?: `/orgs/${string}/actions/cache/usage-by-repository`;
+      typedPath: `/orgs/${string}/actions/cache/usage-by-repository`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -76496,6 +76867,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76506,11 +76878,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners";
-      typedPath?: `/orgs/${string}/actions/hosted-runners`;
+      typedPath: `/orgs/${string}/actions/hosted-runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -76523,6 +76896,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76533,11 +76907,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/hosted-runners";
-      typedPath?: `/orgs/${string}/actions/hosted-runners`;
+      typedPath: `/orgs/${string}/actions/hosted-runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Name of the runner. Must be between 1 and 64 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'. */
         name: string;
@@ -76564,11 +76940,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners/images/github-owned";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/images/github-owned`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/images/github-owned`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76579,11 +76958,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners/images/partner";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/images/partner`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/images/partner`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76594,11 +76976,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners/limits";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/limits`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsHostedRunnerLimits;
   };
@@ -76606,11 +76991,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners/machine-sizes";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/machine-sizes`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/machine-sizes`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76621,11 +77009,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners/platforms";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/platforms`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/platforms`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76636,13 +77027,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/hosted-runners/${hostedRunnerId}";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/${number}`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the GitHub-hosted runner. */
         hostedRunnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsHostedRunner;
   };
@@ -76650,13 +77044,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/actions/hosted-runners/${hostedRunnerId}";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/${number}`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the GitHub-hosted runner. */
         hostedRunnerId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Name of the runner. Must be between 1 and 64 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'. */
         name?: string;
@@ -76674,13 +77070,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/hosted-runners/${hostedRunnerId}";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/${number}`;
+      typedPath: `/orgs/${string}/actions/hosted-runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the GitHub-hosted runner. */
         hostedRunnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsHostedRunner;
   };
@@ -76688,11 +77087,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/oidc/customization/sub";
-      typedPath?: `/orgs/${string}/actions/oidc/customization/sub`;
+      typedPath: `/orgs/${string}/actions/oidc/customization/sub`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OidcCustomSub;
   };
@@ -76700,11 +77102,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/oidc/customization/sub";
-      typedPath?: `/orgs/${string}/actions/oidc/customization/sub`;
+      typedPath: `/orgs/${string}/actions/oidc/customization/sub`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: OidcCustomSub;
     };
     Response: EmptyObject;
@@ -76713,11 +77117,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/permissions";
-      typedPath?: `/orgs/${string}/actions/permissions`;
+      typedPath: `/orgs/${string}/actions/permissions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsOrganizationPermissions;
   };
@@ -76725,11 +77132,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/permissions";
-      typedPath?: `/orgs/${string}/actions/permissions`;
+      typedPath: `/orgs/${string}/actions/permissions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The policy that controls the repositories in the organization that are allowed to run GitHub Actions. */
         enabled_repositories: EnabledRepositories;
@@ -76743,11 +77152,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/permissions/repositories";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories`;
+      typedPath: `/orgs/${string}/actions/permissions/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -76760,6 +77170,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76770,11 +77181,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/permissions/repositories";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories`;
+      typedPath: `/orgs/${string}/actions/permissions/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** List of repository IDs to enable for GitHub Actions. */
         selected_repository_ids: number[];
@@ -76786,13 +77199,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/permissions/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/permissions/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the repository. */
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -76800,13 +77216,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/permissions/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/permissions/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the repository. */
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -76814,11 +77233,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/permissions/selected-actions";
-      typedPath?: `/orgs/${string}/actions/permissions/selected-actions`;
+      typedPath: `/orgs/${string}/actions/permissions/selected-actions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: SelectedActions;
   };
@@ -76826,11 +77248,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/permissions/selected-actions";
-      typedPath?: `/orgs/${string}/actions/permissions/selected-actions`;
+      typedPath: `/orgs/${string}/actions/permissions/selected-actions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: SelectedActions;
     };
     Response: void;
@@ -76839,11 +77263,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/permissions/workflow";
-      typedPath?: `/orgs/${string}/actions/permissions/workflow`;
+      typedPath: `/orgs/${string}/actions/permissions/workflow`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsGetDefaultWorkflowPermissions;
   };
@@ -76851,11 +77278,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/permissions/workflow";
-      typedPath?: `/orgs/${string}/actions/permissions/workflow`;
+      typedPath: `/orgs/${string}/actions/permissions/workflow`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: ActionsSetDefaultWorkflowPermissions;
     };
     Response: void;
@@ -76864,11 +77293,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runner-groups";
-      typedPath?: `/orgs/${string}/actions/runner-groups`;
+      typedPath: `/orgs/${string}/actions/runner-groups`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -76883,6 +77313,7 @@ type Routes = {
         /** Only return runner groups that are allowed to be used by this repository. */
         visible_to_repository?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -76893,11 +77324,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/runner-groups";
-      typedPath?: `/orgs/${string}/actions/runner-groups`;
+      typedPath: `/orgs/${string}/actions/runner-groups`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Name of the runner group. */
         name: string;
@@ -76932,13 +77365,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RunnerGroupsOrg;
   };
@@ -76946,13 +77382,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Name of the runner group. */
         name: string;
@@ -76980,13 +77418,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -76994,13 +77435,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/hosted-runners";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/hosted-runners`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/hosted-runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77013,6 +77455,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77023,13 +77466,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77042,6 +77486,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77052,13 +77497,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** List of repository IDs that can access the runner group. */
         selected_repository_ids: number[];
@@ -77070,7 +77517,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77079,6 +77526,9 @@ type Routes = {
         /** The unique identifier of the repository. */
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77086,7 +77536,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77095,6 +77545,9 @@ type Routes = {
         /** The unique identifier of the repository. */
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77102,13 +77555,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77121,6 +77575,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77131,13 +77586,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner group. */
         runnerGroupId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** List of runner IDs to add to the runner group. */
         runners: number[];
@@ -77149,7 +77606,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77158,6 +77615,9 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77165,7 +77625,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners/${number}`;
+      typedPath: `/orgs/${string}/actions/runner-groups/${number}/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77174,6 +77634,9 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77181,11 +77644,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runners";
-      typedPath?: `/orgs/${string}/actions/runners`;
+      typedPath: `/orgs/${string}/actions/runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The name of a self-hosted runner. */
         name?: string;
@@ -77200,6 +77664,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77210,11 +77675,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runners/downloads";
-      typedPath?: `/orgs/${string}/actions/runners/downloads`;
+      typedPath: `/orgs/${string}/actions/runners/downloads`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RunnerApplication[];
   };
@@ -77222,11 +77690,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/runners/generate-jitconfig";
-      typedPath?: `/orgs/${string}/actions/runners/generate-jitconfig`;
+      typedPath: `/orgs/${string}/actions/runners/generate-jitconfig`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the new runner. */
         name: string;
@@ -77256,11 +77726,14 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/runners/registration-token";
-      typedPath?: `/orgs/${string}/actions/runners/registration-token`;
+      typedPath: `/orgs/${string}/actions/runners/registration-token`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: AuthenticationToken;
   };
@@ -77268,11 +77741,14 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/runners/remove-token";
-      typedPath?: `/orgs/${string}/actions/runners/remove-token`;
+      typedPath: `/orgs/${string}/actions/runners/remove-token`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: AuthenticationToken;
   };
@@ -77280,13 +77756,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runners/${number}`;
+      typedPath: `/orgs/${string}/actions/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Runner;
   };
@@ -77294,13 +77773,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runners/${number}`;
+      typedPath: `/orgs/${string}/actions/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77308,13 +77790,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
+      typedPath: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77325,13 +77810,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
+      typedPath: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The names of the custom labels to add to the runner.
@@ -77350,13 +77837,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
+      typedPath: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.
@@ -77375,13 +77864,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
+      typedPath: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77392,7 +77884,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/runners/${runnerId}/labels/${name}";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels/${string}`;
+      typedPath: `/orgs/${string}/actions/runners/${number}/labels/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77401,6 +77893,9 @@ type Routes = {
         /** The name of a self-hosted runner's custom label. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77411,11 +77906,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/secrets";
-      typedPath?: `/orgs/${string}/actions/secrets`;
+      typedPath: `/orgs/${string}/actions/secrets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77428,6 +77924,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77438,11 +77935,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/secrets/public-key";
-      typedPath?: `/orgs/${string}/actions/secrets/public-key`;
+      typedPath: `/orgs/${string}/actions/secrets/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsPublicKey;
   };
@@ -77450,13 +77950,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrganizationActionsSecret;
   };
@@ -77464,13 +77967,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/rest/actions/secrets#get-an-organization-public-key) endpoint.
@@ -77491,13 +77996,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77505,13 +78013,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77524,6 +78033,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77534,13 +78044,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Add selected repository to an organization secret](https://docs.github.com/rest/actions/secrets#add-selected-repository-to-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/rest/actions/secrets#remove-selected-repository-from-an-organization-secret) endpoints. */
         selected_repository_ids: number[];
@@ -77552,7 +78064,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77560,6 +78072,9 @@ type Routes = {
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77567,7 +78082,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77575,6 +78090,9 @@ type Routes = {
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77582,11 +78100,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/variables";
-      typedPath?: `/orgs/${string}/actions/variables`;
+      typedPath: `/orgs/${string}/actions/variables`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 30). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77599,6 +78118,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77609,11 +78129,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/actions/variables";
-      typedPath?: `/orgs/${string}/actions/variables`;
+      typedPath: `/orgs/${string}/actions/variables`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the variable. */
         name: string;
@@ -77631,13 +78153,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/variables/${name}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}`;
+      typedPath: `/orgs/${string}/actions/variables/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrganizationActionsVariable;
   };
@@ -77645,13 +78170,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/actions/variables/${name}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}`;
+      typedPath: `/orgs/${string}/actions/variables/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the variable. */
         name?: string;
@@ -77669,13 +78196,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/variables/${name}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}`;
+      typedPath: `/orgs/${string}/actions/variables/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77683,13 +78213,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/actions/variables/${name}/repositories";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories`;
+      typedPath: `/orgs/${string}/actions/variables/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77702,6 +78233,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -77712,13 +78244,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/variables/${name}/repositories";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories`;
+      typedPath: `/orgs/${string}/actions/variables/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The IDs of the repositories that can access the organization variable. */
         selected_repository_ids: number[];
@@ -77730,7 +78264,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/actions/variables/${name}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/variables/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77738,6 +78272,9 @@ type Routes = {
         name: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77745,7 +78282,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/actions/variables/${name}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/actions/variables/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77753,6 +78290,9 @@ type Routes = {
         name: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77760,11 +78300,12 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/attestations/bulk-list";
-      typedPath?: `/orgs/${string}/attestations/bulk-list`;
+      typedPath: `/orgs/${string}/attestations/bulk-list`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77823,11 +78364,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/attestations/delete-request";
-      typedPath?: `/orgs/${string}/attestations/delete-request`;
+      typedPath: `/orgs/${string}/attestations/delete-request`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -77852,13 +78395,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/attestations/digest/${subjectDigest}";
-      typedPath?: `/orgs/${string}/attestations/digest/${string}`;
+      typedPath: `/orgs/${string}/attestations/digest/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Subject Digest */
         subjectDigest: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77866,13 +78412,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/attestations/${attestationId}";
-      typedPath?: `/orgs/${string}/attestations/${number}`;
+      typedPath: `/orgs/${string}/attestations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Attestation ID */
         attestationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77880,13 +78429,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/attestations/${subjectDigest}";
-      typedPath?: `/orgs/${string}/attestations/${string}`;
+      typedPath: `/orgs/${string}/attestations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The parameter should be set to the attestation's subject's SHA256 digest, in the form `sha256:HEX_DIGEST`. */
         subjectDigest: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77903,6 +78453,7 @@ type Routes = {
          */
         predicate_type?: string;
       };
+      body?: never;
     };
     Response: {
       attestations?: {
@@ -77924,11 +78475,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/blocks";
-      typedPath?: `/orgs/${string}/blocks`;
+      typedPath: `/orgs/${string}/blocks`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -77941,6 +78493,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -77948,13 +78501,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/blocks/${username}";
-      typedPath?: `/orgs/${string}/blocks/${string}`;
+      typedPath: `/orgs/${string}/blocks/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77962,13 +78518,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/blocks/${username}";
-      typedPath?: `/orgs/${string}/blocks/${string}`;
+      typedPath: `/orgs/${string}/blocks/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77976,13 +78535,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/blocks/${username}";
-      typedPath?: `/orgs/${string}/blocks/${string}`;
+      typedPath: `/orgs/${string}/blocks/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -77990,11 +78552,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/campaigns";
-      typedPath?: `/orgs/${string}/campaigns`;
+      typedPath: `/orgs/${string}/campaigns`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -78019,6 +78582,7 @@ type Routes = {
          */
         sort?: "created" | "updated" | "ends_at" | "published";
       };
+      body?: never;
     };
     Response: CampaignSummary[];
   };
@@ -78026,11 +78590,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/campaigns";
-      typedPath?: `/orgs/${string}/campaigns`;
+      typedPath: `/orgs/${string}/campaigns`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The name of the campaign
@@ -78090,13 +78656,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/campaigns/${campaignNumber}";
-      typedPath?: `/orgs/${string}/campaigns/${number}`;
+      typedPath: `/orgs/${string}/campaigns/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The campaign number. */
         campaignNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CampaignSummary;
   };
@@ -78104,13 +78673,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/campaigns/${campaignNumber}";
-      typedPath?: `/orgs/${string}/campaigns/${number}`;
+      typedPath: `/orgs/${string}/campaigns/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The campaign number. */
         campaignNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The name of the campaign
@@ -78154,13 +78725,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/campaigns/${campaignNumber}";
-      typedPath?: `/orgs/${string}/campaigns/${number}`;
+      typedPath: `/orgs/${string}/campaigns/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The campaign number. */
         campaignNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -78168,11 +78742,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/code-scanning/alerts";
-      typedPath?: `/orgs/${string}/code-scanning/alerts`;
+      typedPath: `/orgs/${string}/code-scanning/alerts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
         tool_name?: CodeScanningAnalysisToolName;
@@ -78207,6 +78782,7 @@ type Routes = {
         /** If specified, only code scanning alerts with this severity will be returned. */
         severity?: CodeScanningAlertSeverity;
       };
+      body?: never;
     };
     Response: CodeScanningOrganizationAlertItems[];
   };
@@ -78214,11 +78790,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/code-security/configurations";
-      typedPath?: `/orgs/${string}/code-security/configurations`;
+      typedPath: `/orgs/${string}/code-security/configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The target type of the code security configuration
@@ -78235,6 +78812,7 @@ type Routes = {
         /** A cursor, as given in the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
         after?: string;
       };
+      body?: never;
     };
     Response: CodeSecurityConfiguration[];
   };
@@ -78242,11 +78820,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/code-security/configurations";
-      typedPath?: `/orgs/${string}/code-security/configurations`;
+      typedPath: `/orgs/${string}/code-security/configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the code security configuration. Must be unique within the organization. */
         name: string;
@@ -78360,11 +78940,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/code-security/configurations/defaults";
-      typedPath?: `/orgs/${string}/code-security/configurations/defaults`;
+      typedPath: `/orgs/${string}/code-security/configurations/defaults`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeSecurityDefaultConfigurations;
   };
@@ -78372,13 +78955,19 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/code-security/configurations/detach";
-      typedPath?: `/orgs/${string}/code-security/configurations/detach`;
+      typedPath: `/orgs/${string}/code-security/configurations/detach`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
-        /** An array of repository IDs to detach from configurations. */
+        /**
+         * An array of repository IDs to detach from configurations. Up to 1000 IDs can be provided.
+         * @maxItems 1000
+         * @minItems 1
+         */
         selected_repository_ids?: number[];
       };
     };
@@ -78388,13 +78977,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/code-security/configurations/${configurationId}";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}`;
+      typedPath: `/orgs/${string}/code-security/configurations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeSecurityConfiguration;
   };
@@ -78402,13 +78994,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/code-security/configurations/${configurationId}";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}`;
+      typedPath: `/orgs/${string}/code-security/configurations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the code security configuration. Must be unique within the organization. */
         name?: string;
@@ -78477,13 +79071,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/code-security/configurations/${configurationId}";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}`;
+      typedPath: `/orgs/${string}/code-security/configurations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -78491,13 +79088,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/code-security/configurations/${configurationId}/attach";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}/attach`;
+      typedPath: `/orgs/${string}/code-security/configurations/${number}/attach`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The type of repositories to attach the configuration to. `selected` means the configuration will be attached to only the repositories specified by `selected_repository_ids` */
         scope: "all" | "all_without_configurations" | "public" | "private_or_internal" | "selected";
@@ -78511,13 +79110,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/code-security/configurations/${configurationId}/defaults";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}/defaults`;
+      typedPath: `/orgs/${string}/code-security/configurations/${number}/defaults`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Specify which types of repository this security configuration should be applied to by default. */
         default_for_new_repos?: "all" | "none" | "private_and_internal" | "public";
@@ -78534,13 +79135,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/code-security/configurations/${configurationId}/repositories";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}/repositories`;
+      typedPath: `/orgs/${string}/code-security/configurations/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the code security configuration. */
         configurationId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -78559,6 +79161,7 @@ type Routes = {
          */
         status?: string;
       };
+      body?: never;
     };
     Response: CodeSecurityConfigurationRepositories[];
   };
@@ -78566,11 +79169,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/codespaces";
-      typedPath?: `/orgs/${string}/codespaces`;
+      typedPath: `/orgs/${string}/codespaces`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -78583,6 +79187,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -78593,11 +79198,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/codespaces/access";
-      typedPath?: `/orgs/${string}/codespaces/access`;
+      typedPath: `/orgs/${string}/codespaces/access`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Which users can access codespaces in the organization. `disabled` means that no users can access codespaces in the organization. */
         visibility: "disabled" | "selected_members" | "all_members" | "all_members_and_outside_collaborators";
@@ -78614,11 +79221,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/codespaces/access/selected_users";
-      typedPath?: `/orgs/${string}/codespaces/access/selected_users`;
+      typedPath: `/orgs/${string}/codespaces/access/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The usernames of the organization members whose codespaces be billed to the organization.
@@ -78633,11 +79242,13 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/codespaces/access/selected_users";
-      typedPath?: `/orgs/${string}/codespaces/access/selected_users`;
+      typedPath: `/orgs/${string}/codespaces/access/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The usernames of the organization members whose codespaces should not be billed to the organization.
@@ -78652,11 +79263,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/codespaces/secrets";
-      typedPath?: `/orgs/${string}/codespaces/secrets`;
+      typedPath: `/orgs/${string}/codespaces/secrets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -78669,6 +79281,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -78679,11 +79292,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/codespaces/secrets/public-key";
-      typedPath?: `/orgs/${string}/codespaces/secrets/public-key`;
+      typedPath: `/orgs/${string}/codespaces/secrets/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodespacesPublicKey;
   };
@@ -78691,13 +79307,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodespacesOrgSecret;
   };
@@ -78705,13 +79324,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/rest/codespaces/organization-secrets#get-an-organization-public-key) endpoint.
@@ -78732,13 +79353,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -78746,13 +79370,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -78765,6 +79390,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -78775,13 +79401,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/rest/codespaces/organization-secrets#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/rest/codespaces/organization-secrets#remove-selected-repository-from-an-organization-secret) endpoints. */
         selected_repository_ids: number[];
@@ -78793,7 +79421,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78801,6 +79429,9 @@ type Routes = {
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -78808,7 +79439,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78816,6 +79447,9 @@ type Routes = {
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -78823,11 +79457,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/copilot/billing";
-      typedPath?: `/orgs/${string}/copilot/billing`;
+      typedPath: `/orgs/${string}/copilot/billing`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CopilotOrganizationDetails;
   };
@@ -78835,11 +79472,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/copilot/billing/seats";
-      typedPath?: `/orgs/${string}/copilot/billing/seats`;
+      typedPath: `/orgs/${string}/copilot/billing/seats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -78852,6 +79490,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       /** Total number of Copilot seats for the organization currently being billed. */
@@ -78863,11 +79502,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/copilot/billing/selected_teams";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_teams`;
+      typedPath: `/orgs/${string}/copilot/billing/selected_teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * List of team names within the organization to which to grant access to GitHub Copilot.
@@ -78884,11 +79525,13 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/copilot/billing/selected_teams";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_teams`;
+      typedPath: `/orgs/${string}/copilot/billing/selected_teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The names of teams from which to revoke access to GitHub Copilot.
@@ -78905,11 +79548,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/copilot/billing/selected_users";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_users`;
+      typedPath: `/orgs/${string}/copilot/billing/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The usernames of the organization members to be granted access to GitHub Copilot.
@@ -78926,11 +79571,13 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/copilot/billing/selected_users";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_users`;
+      typedPath: `/orgs/${string}/copilot/billing/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The usernames of the organization members for which to revoke access to GitHub Copilot.
@@ -78947,11 +79594,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/copilot/metrics";
-      typedPath?: `/orgs/${string}/copilot/metrics`;
+      typedPath: `/orgs/${string}/copilot/metrics`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** Show usage metrics since this date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format (`YYYY-MM-DDTHH:MM:SSZ`). Maximum value is 28 days ago. */
         since?: string;
@@ -78968,6 +79616,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: CopilotUsageMetricsDay[];
   };
@@ -78975,11 +79624,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/dependabot/alerts";
-      typedPath?: `/orgs/${string}/dependabot/alerts`;
+      typedPath: `/orgs/${string}/dependabot/alerts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * A comma-separated list of states. If specified, only alerts with these states will be returned.
@@ -79057,6 +79707,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: DependabotAlertWithRepository[];
   };
@@ -79064,11 +79715,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/dependabot/secrets";
-      typedPath?: `/orgs/${string}/dependabot/secrets`;
+      typedPath: `/orgs/${string}/dependabot/secrets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79081,6 +79733,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -79091,11 +79744,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/dependabot/secrets/public-key";
-      typedPath?: `/orgs/${string}/dependabot/secrets/public-key`;
+      typedPath: `/orgs/${string}/dependabot/secrets/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DependabotPublicKey;
   };
@@ -79103,13 +79759,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrganizationDependabotSecret;
   };
@@ -79117,13 +79776,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key) endpoint.
@@ -79144,13 +79805,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79158,13 +79822,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79177,6 +79842,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -79187,13 +79853,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/rest/dependabot/secrets#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/rest/dependabot/secrets#remove-selected-repository-from-an-organization-secret) endpoints. */
         selected_repository_ids: number[];
@@ -79205,7 +79873,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79213,6 +79881,9 @@ type Routes = {
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79220,7 +79891,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories/${number}`;
+      typedPath: `/orgs/${string}/dependabot/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79228,6 +79899,9 @@ type Routes = {
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79235,11 +79909,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/docker/conflicts";
-      typedPath?: `/orgs/${string}/docker/conflicts`;
+      typedPath: `/orgs/${string}/docker/conflicts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Package[];
   };
@@ -79247,11 +79924,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/events";
-      typedPath?: `/orgs/${string}/events`;
+      typedPath: `/orgs/${string}/events`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79264,6 +79942,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -79271,11 +79950,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/failed_invitations";
-      typedPath?: `/orgs/${string}/failed_invitations`;
+      typedPath: `/orgs/${string}/failed_invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79288,6 +79968,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrganizationInvitation[];
   };
@@ -79295,11 +79976,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/hooks";
-      typedPath?: `/orgs/${string}/hooks`;
+      typedPath: `/orgs/${string}/hooks`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79312,6 +79994,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrgHook[];
   };
@@ -79319,11 +80002,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/hooks";
-      typedPath?: `/orgs/${string}/hooks`;
+      typedPath: `/orgs/${string}/hooks`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Must be passed as "web". */
         name: string;
@@ -79360,13 +80045,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/hooks/${hookId}";
-      typedPath?: `/orgs/${string}/hooks/${number}`;
+      typedPath: `/orgs/${string}/hooks/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrgHook;
   };
@@ -79374,13 +80062,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/hooks/${hookId}";
-      typedPath?: `/orgs/${string}/hooks/${number}`;
+      typedPath: `/orgs/${string}/hooks/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Key/value pairs to provide settings for this webhook. */
         config?: {
@@ -79413,13 +80103,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/hooks/${hookId}";
-      typedPath?: `/orgs/${string}/hooks/${number}`;
+      typedPath: `/orgs/${string}/hooks/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79427,13 +80120,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/hooks/${hookId}/config";
-      typedPath?: `/orgs/${string}/hooks/${number}/config`;
+      typedPath: `/orgs/${string}/hooks/${number}/config`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: WebhookConfig;
   };
@@ -79441,13 +80137,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/hooks/${hookId}/config";
-      typedPath?: `/orgs/${string}/hooks/${number}/config`;
+      typedPath: `/orgs/${string}/hooks/${number}/config`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The URL to which the payloads will be delivered. */
         url?: WebhookConfigUrl;
@@ -79465,13 +80163,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/hooks/${hookId}/deliveries";
-      typedPath?: `/orgs/${string}/hooks/${number}/deliveries`;
+      typedPath: `/orgs/${string}/hooks/${number}/deliveries`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79481,6 +80180,7 @@ type Routes = {
         /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
         cursor?: string;
       };
+      body?: never;
     };
     Response: HookDeliveryItem[];
   };
@@ -79488,7 +80188,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}";
-      typedPath?: `/orgs/${string}/hooks/${number}/deliveries/${number}`;
+      typedPath: `/orgs/${string}/hooks/${number}/deliveries/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79496,6 +80196,9 @@ type Routes = {
         hookId: number;
         deliveryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: HookDelivery;
   };
@@ -79503,7 +80206,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}/attempts";
-      typedPath?: `/orgs/${string}/hooks/${number}/deliveries/${number}/attempts`;
+      typedPath: `/orgs/${string}/hooks/${number}/deliveries/${number}/attempts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79511,6 +80214,9 @@ type Routes = {
         hookId: number;
         deliveryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -79518,13 +80224,16 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/hooks/${hookId}/pings";
-      typedPath?: `/orgs/${string}/hooks/${number}/pings`;
+      typedPath: `/orgs/${string}/hooks/${number}/pings`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79532,7 +80241,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/route-stats/${actorType}/${actorId}";
-      typedPath?: `/orgs/${string}/insights/api/route-stats/${
+      typedPath: `/orgs/${string}/insights/api/route-stats/${
         | "installation"
         | "classic_pat"
         | "fine_grained_pat"
@@ -79546,6 +80255,7 @@ type Routes = {
         /** The ID of the actor */
         actorId: number;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
@@ -79578,6 +80288,7 @@ type Routes = {
         /** Providing a substring will filter results where the API route contains the substring. This is a case-insensitive search. */
         api_route_substring?: string;
       };
+      body?: never;
     };
     Response: ApiInsightsRouteStats;
   };
@@ -79585,11 +80296,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/subject-stats";
-      typedPath?: `/orgs/${string}/insights/api/subject-stats`;
+      typedPath: `/orgs/${string}/insights/api/subject-stats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
@@ -79621,6 +80333,7 @@ type Routes = {
         /** Providing a substring will filter results where the subject name contains the substring. This is a case-insensitive search. */
         subject_name_substring?: string;
       };
+      body?: never;
     };
     Response: ApiInsightsSubjectStats;
   };
@@ -79628,17 +80341,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/summary-stats";
-      typedPath?: `/orgs/${string}/insights/api/summary-stats`;
+      typedPath: `/orgs/${string}/insights/api/summary-stats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
         /** The maximum timestamp to query for stats. Defaults to the time 30 days ago. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         max_timestamp?: string;
       };
+      body?: never;
     };
     Response: ApiInsightsSummaryStats;
   };
@@ -79646,19 +80361,21 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/summary-stats/users/${userId}";
-      typedPath?: `/orgs/${string}/insights/api/summary-stats/users/${string}`;
+      typedPath: `/orgs/${string}/insights/api/summary-stats/users/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the user to query for stats */
         userId: string;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
         /** The maximum timestamp to query for stats. Defaults to the time 30 days ago. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         max_timestamp?: string;
       };
+      body?: never;
     };
     Response: ApiInsightsSummaryStats;
   };
@@ -79666,7 +80383,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/summary-stats/${actorType}/${actorId}";
-      typedPath?: `/orgs/${string}/insights/api/summary-stats/${
+      typedPath: `/orgs/${string}/insights/api/summary-stats/${
         | "installation"
         | "classic_pat"
         | "fine_grained_pat"
@@ -79680,12 +80397,14 @@ type Routes = {
         /** The ID of the actor */
         actorId: number;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
         /** The maximum timestamp to query for stats. Defaults to the time 30 days ago. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         max_timestamp?: string;
       };
+      body?: never;
     };
     Response: ApiInsightsSummaryStats;
   };
@@ -79693,11 +80412,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/time-stats";
-      typedPath?: `/orgs/${string}/insights/api/time-stats`;
+      typedPath: `/orgs/${string}/insights/api/time-stats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
@@ -79706,6 +80426,7 @@ type Routes = {
         /** The increment of time used to breakdown the query results (5m, 10m, 1h, etc.) */
         timestamp_increment: string;
       };
+      body?: never;
     };
     Response: ApiInsightsTimeStats;
   };
@@ -79713,13 +80434,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/time-stats/users/${userId}";
-      typedPath?: `/orgs/${string}/insights/api/time-stats/users/${string}`;
+      typedPath: `/orgs/${string}/insights/api/time-stats/users/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the user to query for stats */
         userId: string;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
@@ -79728,6 +80450,7 @@ type Routes = {
         /** The increment of time used to breakdown the query results (5m, 10m, 1h, etc.) */
         timestamp_increment: string;
       };
+      body?: never;
     };
     Response: ApiInsightsTimeStats;
   };
@@ -79735,7 +80458,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/time-stats/${actorType}/${actorId}";
-      typedPath?: `/orgs/${string}/insights/api/time-stats/${
+      typedPath: `/orgs/${string}/insights/api/time-stats/${
         | "installation"
         | "classic_pat"
         | "fine_grained_pat"
@@ -79749,6 +80472,7 @@ type Routes = {
         /** The ID of the actor */
         actorId: number;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
@@ -79757,6 +80481,7 @@ type Routes = {
         /** The increment of time used to breakdown the query results (5m, 10m, 1h, etc.) */
         timestamp_increment: string;
       };
+      body?: never;
     };
     Response: ApiInsightsTimeStats;
   };
@@ -79764,13 +80489,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/insights/api/user-stats/${userId}";
-      typedPath?: `/orgs/${string}/insights/api/user-stats/${string}`;
+      typedPath: `/orgs/${string}/insights/api/user-stats/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the user to query for stats */
         userId: string;
       };
+      headers?: never;
       query: {
         /** The minimum timestamp to query for stats. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         min_timestamp: string;
@@ -79802,6 +80528,7 @@ type Routes = {
         /** Providing a substring will filter results where the actor name contains the substring. This is a case-insensitive search. */
         actor_name_substring?: string;
       };
+      body?: never;
     };
     Response: ApiInsightsUserStats;
   };
@@ -79809,11 +80536,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/installation";
-      typedPath?: `/orgs/${string}/installation`;
+      typedPath: `/orgs/${string}/installation`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Installation;
   };
@@ -79821,11 +80551,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/installations";
-      typedPath?: `/orgs/${string}/installations`;
+      typedPath: `/orgs/${string}/installations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79838,6 +80569,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -79848,11 +80580,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/interaction-limits";
-      typedPath?: `/orgs/${string}/interaction-limits`;
+      typedPath: `/orgs/${string}/interaction-limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: InteractionLimitResponse | object;
   };
@@ -79860,11 +80595,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/interaction-limits";
-      typedPath?: `/orgs/${string}/interaction-limits`;
+      typedPath: `/orgs/${string}/interaction-limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: InteractionLimit;
     };
     Response: InteractionLimitResponse;
@@ -79873,11 +80610,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/interaction-limits";
-      typedPath?: `/orgs/${string}/interaction-limits`;
+      typedPath: `/orgs/${string}/interaction-limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79885,11 +80625,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/invitations";
-      typedPath?: `/orgs/${string}/invitations`;
+      typedPath: `/orgs/${string}/invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79912,6 +80653,7 @@ type Routes = {
          */
         invitation_source?: "all" | "member" | "scim";
       };
+      body?: never;
     };
     Response: OrganizationInvitation[];
   };
@@ -79919,11 +80661,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/invitations";
-      typedPath?: `/orgs/${string}/invitations`;
+      typedPath: `/orgs/${string}/invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** **Required unless you provide `email`**. GitHub user ID for the person you are inviting. */
         invitee_id?: number;
@@ -79948,13 +80692,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/invitations/${invitationId}";
-      typedPath?: `/orgs/${string}/invitations/${number}`;
+      typedPath: `/orgs/${string}/invitations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the invitation. */
         invitationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -79962,13 +80709,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/invitations/${invitationId}/teams";
-      typedPath?: `/orgs/${string}/invitations/${number}/teams`;
+      typedPath: `/orgs/${string}/invitations/${number}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the invitation. */
         invitationId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -79981,6 +80729,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Team[];
   };
@@ -79988,11 +80737,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/issue-types";
-      typedPath?: `/orgs/${string}/issue-types`;
+      typedPath: `/orgs/${string}/issue-types`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: IssueType[];
   };
@@ -80000,11 +80752,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/issue-types";
-      typedPath?: `/orgs/${string}/issue-types`;
+      typedPath: `/orgs/${string}/issue-types`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: OrganizationCreateIssueType;
     };
     Response: IssueType;
@@ -80013,13 +80767,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/issue-types/${issueTypeId}";
-      typedPath?: `/orgs/${string}/issue-types/${number}`;
+      typedPath: `/orgs/${string}/issue-types/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the issue type. */
         issueTypeId: number;
       };
+      headers?: never;
+      query?: never;
       body: OrganizationUpdateIssueType;
     };
     Response: IssueType;
@@ -80028,13 +80784,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/issue-types/${issueTypeId}";
-      typedPath?: `/orgs/${string}/issue-types/${number}`;
+      typedPath: `/orgs/${string}/issue-types/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the issue type. */
         issueTypeId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80042,11 +80801,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/issues";
-      typedPath?: `/orgs/${string}/issues`;
+      typedPath: `/orgs/${string}/issues`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.
@@ -80088,6 +80848,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Issue[];
   };
@@ -80095,11 +80856,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/members";
-      typedPath?: `/orgs/${string}/members`;
+      typedPath: `/orgs/${string}/members`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * Filter members returned in the list. `2fa_disabled` means that only members without [two-factor authentication](https://github.com/blog/1614-two-factor-authentication) enabled will be returned. `2fa_insecure` means that only members with [insecure 2FA methods](https://docs.github.com/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization#requiring-secure-methods-of-two-factor-authentication-in-your-organization) will be returned. These options are only available for organization owners.
@@ -80122,6 +80884,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -80129,13 +80892,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/members/${username}";
-      typedPath?: `/orgs/${string}/members/${string}`;
+      typedPath: `/orgs/${string}/members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80143,13 +80909,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/members/${username}";
-      typedPath?: `/orgs/${string}/members/${string}`;
+      typedPath: `/orgs/${string}/members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80157,13 +80926,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/members/${username}/codespaces";
-      typedPath?: `/orgs/${string}/members/${string}/codespaces`;
+      typedPath: `/orgs/${string}/members/${string}/codespaces`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80176,6 +80946,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -80186,7 +80957,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/members/${username}/codespaces/${codespaceName}";
-      typedPath?: `/orgs/${string}/members/${string}/codespaces/${string}`;
+      typedPath: `/orgs/${string}/members/${string}/codespaces/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80195,6 +80966,9 @@ type Routes = {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -80202,7 +80976,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/members/${username}/codespaces/${codespaceName}/stop";
-      typedPath?: `/orgs/${string}/members/${string}/codespaces/${string}/stop`;
+      typedPath: `/orgs/${string}/members/${string}/codespaces/${string}/stop`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80211,6 +80985,9 @@ type Routes = {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Codespace;
   };
@@ -80218,13 +80995,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/members/${username}/copilot";
-      typedPath?: `/orgs/${string}/members/${string}/copilot`;
+      typedPath: `/orgs/${string}/members/${string}/copilot`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CopilotSeatDetails;
   };
@@ -80232,13 +81012,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/memberships/${username}";
-      typedPath?: `/orgs/${string}/memberships/${string}`;
+      typedPath: `/orgs/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrgMembership;
   };
@@ -80246,13 +81029,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/memberships/${username}";
-      typedPath?: `/orgs/${string}/memberships/${string}`;
+      typedPath: `/orgs/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The role to give the user in the organization. Can be one of:
@@ -80269,13 +81054,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/memberships/${username}";
-      typedPath?: `/orgs/${string}/memberships/${string}`;
+      typedPath: `/orgs/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80283,11 +81071,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/migrations";
-      typedPath?: `/orgs/${string}/migrations`;
+      typedPath: `/orgs/${string}/migrations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80302,6 +81091,7 @@ type Routes = {
         /** Exclude attributes from the API response to improve performance */
         exclude?: "repositories"[];
       };
+      body?: never;
     };
     Response: Migration[];
   };
@@ -80309,11 +81099,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/migrations";
-      typedPath?: `/orgs/${string}/migrations`;
+      typedPath: `/orgs/${string}/migrations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** A list of arrays indicating which repositories should be migrated. */
         repositories: string[];
@@ -80367,17 +81159,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/migrations/${migrationId}";
-      typedPath?: `/orgs/${string}/migrations/${number}`;
+      typedPath: `/orgs/${string}/migrations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
       query: {
         /** Exclude attributes from the API response to improve performance */
         exclude?: "repositories"[];
       };
+      body?: never;
     };
     Response: Migration;
   };
@@ -80385,13 +81179,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/migrations/${migrationId}/archive";
-      typedPath?: `/orgs/${string}/migrations/${number}/archive`;
+      typedPath: `/orgs/${string}/migrations/${number}/archive`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -80399,13 +81196,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/migrations/${migrationId}/archive";
-      typedPath?: `/orgs/${string}/migrations/${number}/archive`;
+      typedPath: `/orgs/${string}/migrations/${number}/archive`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80413,7 +81213,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/migrations/${migrationId}/repos/${repoName}/lock";
-      typedPath?: `/orgs/${string}/migrations/${number}/repos/${string}/lock`;
+      typedPath: `/orgs/${string}/migrations/${number}/repos/${string}/lock`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80422,6 +81222,9 @@ type Routes = {
         /** repo_name parameter */
         repoName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80429,13 +81232,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/migrations/${migrationId}/repositories";
-      typedPath?: `/orgs/${string}/migrations/${number}/repositories`;
+      typedPath: `/orgs/${string}/migrations/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80448,6 +81252,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -80455,11 +81260,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/organization-roles";
-      typedPath?: `/orgs/${string}/organization-roles`;
+      typedPath: `/orgs/${string}/organization-roles`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       /** The total number of organization roles available to the organization. */
@@ -80472,13 +81280,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/organization-roles/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/organization-roles/teams/${string}`;
+      typedPath: `/orgs/${string}/organization-roles/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80486,7 +81297,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/teams/${string}/${number}`;
+      typedPath: `/orgs/${string}/organization-roles/teams/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80495,6 +81306,9 @@ type Routes = {
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80502,7 +81316,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/teams/${string}/${number}`;
+      typedPath: `/orgs/${string}/organization-roles/teams/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80511,6 +81325,9 @@ type Routes = {
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80518,13 +81335,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/organization-roles/users/${username}";
-      typedPath?: `/orgs/${string}/organization-roles/users/${string}`;
+      typedPath: `/orgs/${string}/organization-roles/users/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80532,7 +81352,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/organization-roles/users/${username}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/users/${string}/${number}`;
+      typedPath: `/orgs/${string}/organization-roles/users/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80541,6 +81361,9 @@ type Routes = {
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80548,7 +81371,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/organization-roles/users/${username}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/users/${string}/${number}`;
+      typedPath: `/orgs/${string}/organization-roles/users/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80557,6 +81380,9 @@ type Routes = {
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80564,13 +81390,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/organization-roles/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/${number}`;
+      typedPath: `/orgs/${string}/organization-roles/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrganizationRole;
   };
@@ -80578,13 +81407,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/organization-roles/${roleId}/teams";
-      typedPath?: `/orgs/${string}/organization-roles/${number}/teams`;
+      typedPath: `/orgs/${string}/organization-roles/${number}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80597,6 +81427,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamRoleAssignment[];
   };
@@ -80604,13 +81435,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/organization-roles/${roleId}/users";
-      typedPath?: `/orgs/${string}/organization-roles/${number}/users`;
+      typedPath: `/orgs/${string}/organization-roles/${number}/users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the role. */
         roleId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80623,6 +81455,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: UserRoleAssignment[];
   };
@@ -80630,11 +81463,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/outside_collaborators";
-      typedPath?: `/orgs/${string}/outside_collaborators`;
+      typedPath: `/orgs/${string}/outside_collaborators`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * Filter the list of outside collaborators. `2fa_disabled` means that only outside collaborators without [two-factor authentication](https://github.com/blog/1614-two-factor-authentication) enabled will be returned. `2fa_insecure` means that only outside collaborators with [insecure 2FA methods](https://docs.github.com/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization#requiring-secure-methods-of-two-factor-authentication-in-your-organization) will be returned.
@@ -80652,6 +81486,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -80659,13 +81494,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/outside_collaborators/${username}";
-      typedPath?: `/orgs/${string}/outside_collaborators/${string}`;
+      typedPath: `/orgs/${string}/outside_collaborators/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * When set to `true`, the request will be performed asynchronously. Returns a 202 status code when the job is successfully queued.
@@ -80680,13 +81517,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/outside_collaborators/${username}";
-      typedPath?: `/orgs/${string}/outside_collaborators/${string}`;
+      typedPath: `/orgs/${string}/outside_collaborators/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80694,11 +81534,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/packages";
-      typedPath?: `/orgs/${string}/packages`;
+      typedPath: `/orgs/${string}/packages`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         package_type: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -80720,6 +81561,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: Package[];
   };
@@ -80727,7 +81569,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80742,6 +81584,9 @@ type Routes = {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Package;
   };
@@ -80749,7 +81594,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80764,6 +81609,9 @@ type Routes = {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80771,7 +81619,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}/restore";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80786,10 +81634,12 @@ type Routes = {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** package token */
         token?: string;
       };
+      body?: never;
     };
     Response: void;
   };
@@ -80797,7 +81647,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80812,6 +81662,7 @@ type Routes = {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80829,6 +81680,7 @@ type Routes = {
          */
         state?: "active" | "deleted";
       };
+      body?: never;
     };
     Response: PackageVersion[];
   };
@@ -80836,7 +81688,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80853,6 +81705,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PackageVersion;
   };
@@ -80860,7 +81715,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80877,6 +81732,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80884,7 +81742,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore";
-      typedPath?: `/orgs/${string}/packages/${
+      typedPath: `/orgs/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -80901,6 +81759,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -80908,11 +81769,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/personal-access-token-requests";
-      typedPath?: `/orgs/${string}/personal-access-token-requests`;
+      typedPath: `/orgs/${string}/personal-access-token-requests`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -80967,6 +81829,7 @@ type Routes = {
          */
         token_id?: string[];
       };
+      body?: never;
     };
     Response: OrganizationProgrammaticAccessGrantRequest[];
   };
@@ -80974,11 +81837,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/personal-access-token-requests";
-      typedPath?: `/orgs/${string}/personal-access-token-requests`;
+      typedPath: `/orgs/${string}/personal-access-token-requests`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Unique identifiers of the requests for access via fine-grained personal access token. Must be formed of between 1 and 100 `pat_request_id` values.
@@ -81001,13 +81866,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/personal-access-token-requests/${patRequestId}";
-      typedPath?: `/orgs/${string}/personal-access-token-requests/${number}`;
+      typedPath: `/orgs/${string}/personal-access-token-requests/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the request for access via fine-grained personal access token. */
         patRequestId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Action to apply to the request. */
         action: "approve" | "deny";
@@ -81024,13 +81891,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/personal-access-token-requests/${patRequestId}/repositories";
-      typedPath?: `/orgs/${string}/personal-access-token-requests/${number}/repositories`;
+      typedPath: `/orgs/${string}/personal-access-token-requests/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the request for access via fine-grained personal access token. */
         patRequestId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81043,6 +81911,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -81050,11 +81919,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/personal-access-tokens";
-      typedPath?: `/orgs/${string}/personal-access-tokens`;
+      typedPath: `/orgs/${string}/personal-access-tokens`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81109,6 +81979,7 @@ type Routes = {
          */
         token_id?: string[];
       };
+      body?: never;
     };
     Response: OrganizationProgrammaticAccessGrant[];
   };
@@ -81116,11 +81987,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/personal-access-tokens";
-      typedPath?: `/orgs/${string}/personal-access-tokens`;
+      typedPath: `/orgs/${string}/personal-access-tokens`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Action to apply to the fine-grained personal access token. */
         action: "revoke";
@@ -81138,13 +82011,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/personal-access-tokens/${patId}";
-      typedPath?: `/orgs/${string}/personal-access-tokens/${number}`;
+      typedPath: `/orgs/${string}/personal-access-tokens/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The unique identifier of the fine-grained personal access token. */
         patId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Action to apply to the fine-grained personal access token. */
         action: "revoke";
@@ -81156,13 +82031,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/personal-access-tokens/${patId}/repositories";
-      typedPath?: `/orgs/${string}/personal-access-tokens/${number}/repositories`;
+      typedPath: `/orgs/${string}/personal-access-tokens/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the fine-grained personal access token. */
         patId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81175,6 +82051,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -81182,11 +82059,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/private-registries";
-      typedPath?: `/orgs/${string}/private-registries`;
+      typedPath: `/orgs/${string}/private-registries`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81199,6 +82077,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -81209,11 +82088,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/private-registries";
-      typedPath?: `/orgs/${string}/private-registries`;
+      typedPath: `/orgs/${string}/private-registries`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The registry type. */
         registry_type: "maven_repository" | "nuget_feed" | "goproxy_server";
@@ -81243,11 +82124,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/private-registries/public-key";
-      typedPath?: `/orgs/${string}/private-registries/public-key`;
+      typedPath: `/orgs/${string}/private-registries/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       /**
@@ -81266,13 +82150,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/private-registries/${secretName}";
-      typedPath?: `/orgs/${string}/private-registries/${string}`;
+      typedPath: `/orgs/${string}/private-registries/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrgPrivateRegistryConfiguration;
   };
@@ -81280,13 +82167,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/private-registries/${secretName}";
-      typedPath?: `/orgs/${string}/private-registries/${string}`;
+      typedPath: `/orgs/${string}/private-registries/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The registry type. */
         registry_type?: "maven_repository" | "nuget_feed" | "goproxy_server";
@@ -81316,13 +82205,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/private-registries/${secretName}";
-      typedPath?: `/orgs/${string}/private-registries/${string}`;
+      typedPath: `/orgs/${string}/private-registries/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -81330,11 +82222,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/projects";
-      typedPath?: `/orgs/${string}/projects`;
+      typedPath: `/orgs/${string}/projects`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * Indicates the state of the projects to return.
@@ -81352,6 +82245,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Project[];
   };
@@ -81359,11 +82253,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/projects";
-      typedPath?: `/orgs/${string}/projects`;
+      typedPath: `/orgs/${string}/projects`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the project. */
         name: string;
@@ -81377,11 +82273,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/properties/schema";
-      typedPath?: `/orgs/${string}/properties/schema`;
+      typedPath: `/orgs/${string}/properties/schema`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CustomProperty[];
   };
@@ -81389,11 +82288,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/properties/schema";
-      typedPath?: `/orgs/${string}/properties/schema`;
+      typedPath: `/orgs/${string}/properties/schema`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The array of custom properties to create or update.
@@ -81409,13 +82310,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/properties/schema/${customPropertyName}";
-      typedPath?: `/orgs/${string}/properties/schema/${string}`;
+      typedPath: `/orgs/${string}/properties/schema/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The custom property name */
         customPropertyName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CustomProperty;
   };
@@ -81423,13 +82327,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/properties/schema/${customPropertyName}";
-      typedPath?: `/orgs/${string}/properties/schema/${string}`;
+      typedPath: `/orgs/${string}/properties/schema/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The custom property name */
         customPropertyName: string;
       };
+      headers?: never;
+      query?: never;
       body: CustomPropertySetPayload;
     };
     Response: CustomProperty;
@@ -81438,13 +82344,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/properties/schema/${customPropertyName}";
-      typedPath?: `/orgs/${string}/properties/schema/${string}`;
+      typedPath: `/orgs/${string}/properties/schema/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The custom property name */
         customPropertyName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -81452,11 +82361,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/properties/values";
-      typedPath?: `/orgs/${string}/properties/values`;
+      typedPath: `/orgs/${string}/properties/values`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81471,6 +82381,7 @@ type Routes = {
         /** Finds repositories in the organization with a query containing one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). See "[Searching for repositories](https://docs.github.com/articles/searching-for-repositories/)" for a detailed list of qualifiers. */
         repository_query?: string;
       };
+      body?: never;
     };
     Response: OrgRepoCustomPropertyValues[];
   };
@@ -81478,11 +82389,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/properties/values";
-      typedPath?: `/orgs/${string}/properties/values`;
+      typedPath: `/orgs/${string}/properties/values`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The names of repositories that the custom property values will be applied to.
@@ -81500,11 +82413,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/public_members";
-      typedPath?: `/orgs/${string}/public_members`;
+      typedPath: `/orgs/${string}/public_members`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81517,6 +82431,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -81524,13 +82439,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/public_members/${username}";
-      typedPath?: `/orgs/${string}/public_members/${string}`;
+      typedPath: `/orgs/${string}/public_members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -81538,13 +82456,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/public_members/${username}";
-      typedPath?: `/orgs/${string}/public_members/${string}`;
+      typedPath: `/orgs/${string}/public_members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -81552,13 +82473,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/public_members/${username}";
-      typedPath?: `/orgs/${string}/public_members/${string}`;
+      typedPath: `/orgs/${string}/public_members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -81566,11 +82490,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/repos";
-      typedPath?: `/orgs/${string}/repos`;
+      typedPath: `/orgs/${string}/repos`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * Specifies the types of repositories you want returned.
@@ -81595,6 +82520,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -81602,11 +82528,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/repos";
-      typedPath?: `/orgs/${string}/repos`;
+      typedPath: `/orgs/${string}/repos`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the repository. */
         name: string;
@@ -81733,11 +82661,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/rulesets";
-      typedPath?: `/orgs/${string}/rulesets`;
+      typedPath: `/orgs/${string}/rulesets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81757,6 +82686,7 @@ type Routes = {
          */
         targets?: string;
       };
+      body?: never;
     };
     Response: RepositoryRuleset[];
   };
@@ -81764,11 +82694,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/rulesets";
-      typedPath?: `/orgs/${string}/rulesets`;
+      typedPath: `/orgs/${string}/rulesets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the ruleset. */
         name: string;
@@ -81798,11 +82730,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/rulesets/rule-suites";
-      typedPath?: `/orgs/${string}/rulesets/rule-suites`;
+      typedPath: `/orgs/${string}/rulesets/rule-suites`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** The name of the ref. Cannot contain wildcard characters. Optionally prefix with `refs/heads/` to limit to branches or `refs/tags/` to limit to tags. Omit the prefix to search across all refs. When specified, only rule evaluations triggered for this ref will be returned. */
         ref?: string;
@@ -81833,6 +82766,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RuleSuites;
   };
@@ -81840,7 +82774,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/rulesets/rule-suites/${ruleSuiteId}";
-      typedPath?: `/orgs/${string}/rulesets/rule-suites/${number}`;
+      typedPath: `/orgs/${string}/rulesets/rule-suites/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81852,6 +82786,9 @@ type Routes = {
          */
         ruleSuiteId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RuleSuite;
   };
@@ -81859,13 +82796,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/rulesets/${rulesetId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}`;
+      typedPath: `/orgs/${string}/rulesets/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RepositoryRuleset;
   };
@@ -81873,13 +82813,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/rulesets/${rulesetId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}`;
+      typedPath: `/orgs/${string}/rulesets/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the ruleset. */
         name?: string;
@@ -81906,13 +82848,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/rulesets/${rulesetId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}`;
+      typedPath: `/orgs/${string}/rulesets/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -81920,13 +82865,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/rulesets/${rulesetId}/history";
-      typedPath?: `/orgs/${string}/rulesets/${number}/history`;
+      typedPath: `/orgs/${string}/rulesets/${number}/history`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -81939,6 +82885,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RulesetVersion[];
   };
@@ -81946,7 +82893,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/rulesets/${rulesetId}/history/${versionId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}/history/${number}`;
+      typedPath: `/orgs/${string}/rulesets/${number}/history/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81955,6 +82902,9 @@ type Routes = {
         /** The ID of the version */
         versionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RulesetVersionWithState;
   };
@@ -81962,11 +82912,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/secret-scanning/alerts";
-      typedPath?: `/orgs/${string}/secret-scanning/alerts`;
+      typedPath: `/orgs/${string}/secret-scanning/alerts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /** Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
         state?: "open" | "resolved";
@@ -82016,6 +82967,7 @@ type Routes = {
          */
         hide_secret?: boolean;
       };
+      body?: never;
     };
     Response: OrganizationSecretScanningAlert[];
   };
@@ -82023,11 +82975,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/security-advisories";
-      typedPath?: `/orgs/${string}/security-advisories`;
+      typedPath: `/orgs/${string}/security-advisories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -82053,6 +83006,7 @@ type Routes = {
         /** Filter by the state of the repository advisories. Only advisories of this state will be returned. */
         state?: "triage" | "draft" | "published" | "closed";
       };
+      body?: never;
     };
     Response: RepositoryAdvisory[];
   };
@@ -82060,11 +83014,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/security-managers";
-      typedPath?: `/orgs/${string}/security-managers`;
+      typedPath: `/orgs/${string}/security-managers`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamSimple[];
   };
@@ -82072,13 +83029,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/security-managers/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/security-managers/teams/${string}`;
+      typedPath: `/orgs/${string}/security-managers/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82086,13 +83046,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/security-managers/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/security-managers/teams/${string}`;
+      typedPath: `/orgs/${string}/security-managers/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82100,11 +83063,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/settings/billing/actions";
-      typedPath?: `/orgs/${string}/settings/billing/actions`;
+      typedPath: `/orgs/${string}/settings/billing/actions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsBillingUsage;
   };
@@ -82112,11 +83078,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/settings/billing/packages";
-      typedPath?: `/orgs/${string}/settings/billing/packages`;
+      typedPath: `/orgs/${string}/settings/billing/packages`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PackagesBillingUsage;
   };
@@ -82124,11 +83093,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/settings/billing/shared-storage";
-      typedPath?: `/orgs/${string}/settings/billing/shared-storage`;
+      typedPath: `/orgs/${string}/settings/billing/shared-storage`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CombinedBillingUsage;
   };
@@ -82136,11 +83108,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/settings/network-configurations";
-      typedPath?: `/orgs/${string}/settings/network-configurations`;
+      typedPath: `/orgs/${string}/settings/network-configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -82153,6 +83126,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -82163,11 +83137,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/settings/network-configurations";
-      typedPath?: `/orgs/${string}/settings/network-configurations`;
+      typedPath: `/orgs/${string}/settings/network-configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Name of the network configuration. Must be between 1 and 100 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'. */
         name: string;
@@ -82187,13 +83163,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/settings/network-configurations/${networkConfigurationId}";
-      typedPath?: `/orgs/${string}/settings/network-configurations/${string}`;
+      typedPath: `/orgs/${string}/settings/network-configurations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the hosted compute network configuration. */
         networkConfigurationId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: NetworkConfiguration;
   };
@@ -82201,13 +83180,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/settings/network-configurations/${networkConfigurationId}";
-      typedPath?: `/orgs/${string}/settings/network-configurations/${string}`;
+      typedPath: `/orgs/${string}/settings/network-configurations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the hosted compute network configuration. */
         networkConfigurationId: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Name of the network configuration. Must be between 1 and 100 characters and may only contain upper and lowercase letters a-z, numbers 0-9, '.', '-', and '_'. */
         name?: string;
@@ -82227,13 +83208,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/settings/network-configurations/${networkConfigurationId}";
-      typedPath?: `/orgs/${string}/settings/network-configurations/${string}`;
+      typedPath: `/orgs/${string}/settings/network-configurations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the hosted compute network configuration. */
         networkConfigurationId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82241,13 +83225,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/settings/network-settings/${networkSettingsId}";
-      typedPath?: `/orgs/${string}/settings/network-settings/${string}`;
+      typedPath: `/orgs/${string}/settings/network-settings/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** Unique identifier of the hosted compute network settings. */
         networkSettingsId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: NetworkSettings;
   };
@@ -82255,13 +83242,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/team/${teamSlug}/copilot/metrics";
-      typedPath?: `/orgs/${string}/team/${string}/copilot/metrics`;
+      typedPath: `/orgs/${string}/team/${string}/copilot/metrics`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /** Show usage metrics since this date. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format (`YYYY-MM-DDTHH:MM:SSZ`). Maximum value is 28 days ago. */
         since?: string;
@@ -82278,6 +83266,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: CopilotUsageMetricsDay[];
   };
@@ -82285,11 +83274,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams";
-      typedPath?: `/orgs/${string}/teams`;
+      typedPath: `/orgs/${string}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -82302,6 +83292,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Team[];
   };
@@ -82309,11 +83300,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/teams";
-      typedPath?: `/orgs/${string}/teams`;
+      typedPath: `/orgs/${string}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the team. */
         name: string;
@@ -82356,13 +83349,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/teams/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamFull;
   };
@@ -82370,13 +83366,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/teams/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the team. */
         name?: string;
@@ -82412,13 +83410,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/teams/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82426,13 +83427,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -82452,6 +83454,7 @@ type Routes = {
         /** Pinned discussions only filter */
         pinned?: string;
       };
+      body?: never;
     };
     Response: TeamDiscussion[];
   };
@@ -82459,13 +83462,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion post's title. */
         title: string;
@@ -82484,7 +83489,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82493,6 +83498,9 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamDiscussion;
   };
@@ -82500,7 +83508,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82509,6 +83517,8 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion post's title. */
         title?: string;
@@ -82522,7 +83532,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82531,6 +83541,9 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82538,7 +83551,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82547,6 +83560,7 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -82564,6 +83578,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamDiscussionComment[];
   };
@@ -82571,7 +83586,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82580,6 +83595,8 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion comment's body text. */
         body: string;
@@ -82591,7 +83608,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82602,6 +83619,9 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamDiscussionComment;
   };
@@ -82609,7 +83629,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82620,6 +83640,8 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion comment's body text. */
         body: string;
@@ -82631,7 +83653,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82642,6 +83664,9 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82649,7 +83674,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82660,6 +83685,7 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion comment. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -82674,6 +83700,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -82681,7 +83708,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82692,6 +83719,8 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the team discussion comment. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -82703,7 +83732,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions/${reactionId}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82716,6 +83745,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82723,7 +83755,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/reactions`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82732,6 +83764,7 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -82746,6 +83779,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -82753,7 +83787,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/reactions`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82762,6 +83796,8 @@ type Routes = {
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the team discussion. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -82773,7 +83809,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions/${reactionId}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/reactions/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/discussions/${number}/reactions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82784,6 +83820,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82791,13 +83830,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/invitations";
-      typedPath?: `/orgs/${string}/teams/${string}/invitations`;
+      typedPath: `/orgs/${string}/teams/${string}/invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -82810,6 +83850,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrganizationInvitation[];
   };
@@ -82817,13 +83858,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/members";
-      typedPath?: `/orgs/${string}/teams/${string}/members`;
+      typedPath: `/orgs/${string}/teams/${string}/members`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /**
          * Filters members returned by their role in the team.
@@ -82841,6 +83883,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -82848,7 +83891,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/memberships/${username}";
-      typedPath?: `/orgs/${string}/teams/${string}/memberships/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82857,6 +83900,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamMembership;
   };
@@ -82864,7 +83910,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/teams/${teamSlug}/memberships/${username}";
-      typedPath?: `/orgs/${string}/teams/${string}/memberships/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82873,6 +83919,8 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The role that this user should have in the team.
@@ -82887,7 +83935,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/memberships/${username}";
-      typedPath?: `/orgs/${string}/teams/${string}/memberships/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82896,6 +83944,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82903,13 +83954,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/projects";
-      typedPath?: `/orgs/${string}/teams/${string}/projects`;
+      typedPath: `/orgs/${string}/teams/${string}/projects`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -82922,6 +83974,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamProject[];
   };
@@ -82929,7 +83982,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/projects/${projectId}";
-      typedPath?: `/orgs/${string}/teams/${string}/projects/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/projects/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82938,6 +83991,9 @@ type Routes = {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamProject;
   };
@@ -82945,7 +84001,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/teams/${teamSlug}/projects/${projectId}";
-      typedPath?: `/orgs/${string}/teams/${string}/projects/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/projects/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82954,6 +84010,8 @@ type Routes = {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
         permission?: "read" | "write" | "admin";
@@ -82965,7 +84023,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/projects/${projectId}";
-      typedPath?: `/orgs/${string}/teams/${string}/projects/${number}`;
+      typedPath: `/orgs/${string}/teams/${string}/projects/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82974,6 +84032,9 @@ type Routes = {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -82981,13 +84042,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/repos";
-      typedPath?: `/orgs/${string}/teams/${string}/repos`;
+      typedPath: `/orgs/${string}/teams/${string}/repos`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -83000,6 +84062,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -83007,7 +84070,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}";
-      typedPath?: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83018,6 +84081,9 @@ type Routes = {
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamRepository;
   };
@@ -83025,7 +84091,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}";
-      typedPath?: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83036,6 +84102,8 @@ type Routes = {
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository. */
         permission?: string;
@@ -83047,7 +84115,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}";
-      typedPath?: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
+      typedPath: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83058,6 +84126,9 @@ type Routes = {
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83065,13 +84136,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/orgs/${org}/teams/${teamSlug}/teams";
-      typedPath?: `/orgs/${string}/teams/${string}/teams`;
+      typedPath: `/orgs/${string}/teams/${string}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
         /** The slug of the team name. */
         teamSlug: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -83084,6 +84156,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Team[];
   };
@@ -83091,7 +84164,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/orgs/${org}/${securityProduct}/${enablement}";
-      typedPath?: `/orgs/${string}/${
+      typedPath: `/orgs/${string}/${
         | "dependency_graph"
         | "dependabot_alerts"
         | "dependabot_security_updates"
@@ -83119,6 +84192,8 @@ type Routes = {
          */
         enablement: "enable_all" | "disable_all";
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * CodeQL query suite to be used. If you specify the `query_suite` parameter, the default setup will be configured with this query suite only on all repositories that didn't have default setup already configured. It will not change the query suite on repositories that already have default setup configured.
@@ -83133,11 +84208,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/columns/cards/${cardId}";
-      typedPath?: `/projects/columns/cards/${number}`;
+      typedPath: `/projects/columns/cards/${number}`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProjectCard;
   };
@@ -83145,11 +84223,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/projects/columns/cards/${cardId}";
-      typedPath?: `/projects/columns/cards/${number}`;
+      typedPath: `/projects/columns/cards/${number}`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The project card's note
@@ -83169,11 +84249,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/projects/columns/cards/${cardId}";
-      typedPath?: `/projects/columns/cards/${number}`;
+      typedPath: `/projects/columns/cards/${number}`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83181,11 +84264,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/projects/columns/cards/${cardId}/moves";
-      typedPath?: `/projects/columns/cards/${number}/moves`;
+      typedPath: `/projects/columns/cards/${number}/moves`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The position of the card in a column. Can be one of: `top`, `bottom`, or `after:<card_id>` to place after the specified card.
@@ -83206,11 +84291,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/columns/${columnId}";
-      typedPath?: `/projects/columns/${number}`;
+      typedPath: `/projects/columns/${number}`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProjectColumn;
   };
@@ -83218,11 +84306,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/projects/columns/${columnId}";
-      typedPath?: `/projects/columns/${number}`;
+      typedPath: `/projects/columns/${number}`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Name of the project column
@@ -83237,11 +84327,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/projects/columns/${columnId}";
-      typedPath?: `/projects/columns/${number}`;
+      typedPath: `/projects/columns/${number}`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83249,11 +84342,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/columns/${columnId}/cards";
-      typedPath?: `/projects/columns/${number}/cards`;
+      typedPath: `/projects/columns/${number}/cards`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
       };
+      headers?: never;
       query: {
         /**
          * Filters the project cards that are returned by the card's state.
@@ -83271,6 +84365,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: ProjectCard[];
   };
@@ -83278,11 +84373,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/projects/columns/${columnId}/cards";
-      typedPath?: `/projects/columns/${number}/cards`;
+      typedPath: `/projects/columns/${number}/cards`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -83310,11 +84407,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/projects/columns/${columnId}/moves";
-      typedPath?: `/projects/columns/${number}/moves`;
+      typedPath: `/projects/columns/${number}/moves`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The position of the column in a project. Can be one of: `first`, `last`, or `after:<column_id>` to place after the specified column.
@@ -83330,11 +84429,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/${projectId}";
-      typedPath?: `/projects/${number}`;
+      typedPath: `/projects/${number}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Project;
   };
@@ -83342,11 +84444,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/projects/${projectId}";
-      typedPath?: `/projects/${number}`;
+      typedPath: `/projects/${number}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Name of the project
@@ -83375,11 +84479,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/projects/${projectId}";
-      typedPath?: `/projects/${number}`;
+      typedPath: `/projects/${number}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83387,11 +84494,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/${projectId}/collaborators";
-      typedPath?: `/projects/${number}/collaborators`;
+      typedPath: `/projects/${number}/collaborators`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
       query: {
         /**
          * Filters the collaborators by their affiliation. `outside` means outside collaborators of a project that are not a member of the project's organization. `direct` means collaborators with permissions to a project, regardless of organization membership status. `all` means all collaborators the authenticated user can see.
@@ -83409,6 +84517,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -83416,13 +84525,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/projects/${projectId}/collaborators/${username}";
-      typedPath?: `/projects/${number}/collaborators/${string}`;
+      typedPath: `/projects/${number}/collaborators/${string}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The permission to grant the collaborator.
@@ -83438,13 +84549,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/projects/${projectId}/collaborators/${username}";
-      typedPath?: `/projects/${number}/collaborators/${string}`;
+      typedPath: `/projects/${number}/collaborators/${string}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83452,13 +84566,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/${projectId}/collaborators/${username}/permission";
-      typedPath?: `/projects/${number}/collaborators/${string}/permission`;
+      typedPath: `/projects/${number}/collaborators/${string}/permission`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProjectCollaboratorPermission;
   };
@@ -83466,11 +84583,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/projects/${projectId}/columns";
-      typedPath?: `/projects/${number}/columns`;
+      typedPath: `/projects/${number}/columns`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -83483,6 +84601,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: ProjectColumn[];
   };
@@ -83490,11 +84609,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/projects/${projectId}/columns";
-      typedPath?: `/projects/${number}/columns`;
+      typedPath: `/projects/${number}/columns`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Name of the project column
@@ -83505,18 +84626,32 @@ type Routes = {
     };
     Response: ProjectColumn;
   };
-  ["GET /rate_limit"]: { Request: { method?: "GET"; path?: "/rate_limit" }; Response: RateLimitOverview };
+  ["GET /rate_limit"]: {
+    Request: {
+      method?: "GET";
+      path?: "/rate_limit";
+      typedPath: `/rate_limit`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: RateLimitOverview;
+  };
   ["GET /repos/${owner}/${repo}"]: {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}";
-      typedPath?: `/repos/${string}/${string}`;
+      typedPath: `/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: FullRepository;
   };
@@ -83524,13 +84659,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}";
-      typedPath?: `/repos/${string}/${string}`;
+      typedPath: `/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the repository. */
         name?: string;
@@ -83703,13 +84840,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}";
-      typedPath?: `/repos/${string}/${string}`;
+      typedPath: `/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83717,13 +84857,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/artifacts";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts`;
+      typedPath: `/repos/${string}/${string}/actions/artifacts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -83738,6 +84879,7 @@ type Routes = {
         /** The name field of an artifact. When specified, only artifacts with this name will be returned. */
         name?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -83748,7 +84890,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/artifacts/${artifactId}";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/artifacts/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83757,6 +84899,9 @@ type Routes = {
         /** The unique identifier of the artifact. */
         artifactId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Artifact;
   };
@@ -83764,7 +84909,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/artifacts/${artifactId}";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/artifacts/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83773,6 +84918,9 @@ type Routes = {
         /** The unique identifier of the artifact. */
         artifactId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83780,7 +84928,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/artifacts/${artifactId}/${archiveFormat}";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts/${number}/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/artifacts/${number}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83790,6 +84938,9 @@ type Routes = {
         artifactId: number;
         archiveFormat: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -83797,13 +84948,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/cache/usage";
-      typedPath?: `/repos/${string}/${string}/actions/cache/usage`;
+      typedPath: `/repos/${string}/${string}/actions/cache/usage`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsCacheUsageByRepository;
   };
@@ -83811,13 +84965,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/caches";
-      typedPath?: `/repos/${string}/${string}/actions/caches`;
+      typedPath: `/repos/${string}/${string}/actions/caches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -83844,6 +84999,7 @@ type Routes = {
          */
         direction?: "asc" | "desc";
       };
+      body?: never;
     };
     Response: ActionsCacheList;
   };
@@ -83851,19 +85007,21 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/caches";
-      typedPath?: `/repos/${string}/${string}/actions/caches`;
+      typedPath: `/repos/${string}/${string}/actions/caches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** A key for identifying the cache. */
         key: string;
         /** The full Git reference for narrowing down the cache. The `ref` for a branch should be formatted as `refs/heads/<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
         ref?: string;
       };
+      body?: never;
     };
     Response: ActionsCacheList;
   };
@@ -83871,7 +85029,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/caches/${cacheId}";
-      typedPath?: `/repos/${string}/${string}/actions/caches/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/caches/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83880,6 +85038,9 @@ type Routes = {
         /** The unique identifier of the GitHub Actions cache. */
         cacheId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -83887,7 +85048,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/jobs/${jobId}";
-      typedPath?: `/repos/${string}/${string}/actions/jobs/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/jobs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83896,6 +85057,9 @@ type Routes = {
         /** The unique identifier of the job. */
         jobId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Job;
   };
@@ -83903,7 +85067,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/jobs/${jobId}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/jobs/${number}/logs`;
+      typedPath: `/repos/${string}/${string}/actions/jobs/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83912,6 +85076,9 @@ type Routes = {
         /** The unique identifier of the job. */
         jobId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -83919,7 +85086,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/jobs/${jobId}/rerun";
-      typedPath?: `/repos/${string}/${string}/actions/jobs/${number}/rerun`;
+      typedPath: `/repos/${string}/${string}/actions/jobs/${number}/rerun`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -83928,6 +85095,8 @@ type Routes = {
         /** The unique identifier of the job. */
         jobId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Whether to enable debug logging for the re-run.
@@ -83942,13 +85111,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/oidc/customization/sub";
-      typedPath?: `/repos/${string}/${string}/actions/oidc/customization/sub`;
+      typedPath: `/repos/${string}/${string}/actions/oidc/customization/sub`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OidcCustomSubRepo;
   };
@@ -83956,13 +85128,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/oidc/customization/sub";
-      typedPath?: `/repos/${string}/${string}/actions/oidc/customization/sub`;
+      typedPath: `/repos/${string}/${string}/actions/oidc/customization/sub`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Whether to use the default template or not. If `true`, the `include_claim_keys` field is ignored. */
         use_default: boolean;
@@ -83976,13 +85150,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/organization-secrets";
-      typedPath?: `/repos/${string}/${string}/actions/organization-secrets`;
+      typedPath: `/repos/${string}/${string}/actions/organization-secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -83995,6 +85170,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84005,13 +85181,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/organization-variables";
-      typedPath?: `/repos/${string}/${string}/actions/organization-variables`;
+      typedPath: `/repos/${string}/${string}/actions/organization-variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 30). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -84024,6 +85201,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84034,13 +85212,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/permissions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions`;
+      typedPath: `/repos/${string}/${string}/actions/permissions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsRepositoryPermissions;
   };
@@ -84048,13 +85229,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/permissions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions`;
+      typedPath: `/repos/${string}/${string}/actions/permissions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Whether GitHub Actions is enabled on the repository. */
         enabled: ActionsEnabled;
@@ -84068,13 +85251,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/permissions/access";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/access`;
+      typedPath: `/repos/${string}/${string}/actions/permissions/access`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsWorkflowAccessToRepository;
   };
@@ -84082,13 +85268,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/permissions/access";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/access`;
+      typedPath: `/repos/${string}/${string}/actions/permissions/access`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: ActionsWorkflowAccessToRepository;
     };
     Response: void;
@@ -84097,13 +85285,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/permissions/selected-actions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/selected-actions`;
+      typedPath: `/repos/${string}/${string}/actions/permissions/selected-actions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: SelectedActions;
   };
@@ -84111,13 +85302,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/permissions/selected-actions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/selected-actions`;
+      typedPath: `/repos/${string}/${string}/actions/permissions/selected-actions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: SelectedActions;
     };
     Response: void;
@@ -84126,13 +85319,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/permissions/workflow";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/workflow`;
+      typedPath: `/repos/${string}/${string}/actions/permissions/workflow`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsGetDefaultWorkflowPermissions;
   };
@@ -84140,13 +85336,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/permissions/workflow";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/workflow`;
+      typedPath: `/repos/${string}/${string}/actions/permissions/workflow`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: ActionsSetDefaultWorkflowPermissions;
     };
     Response: void;
@@ -84155,13 +85353,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runners";
-      typedPath?: `/repos/${string}/${string}/actions/runners`;
+      typedPath: `/repos/${string}/${string}/actions/runners`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** The name of a self-hosted runner. */
         name?: string;
@@ -84176,6 +85375,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84186,13 +85386,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runners/downloads";
-      typedPath?: `/repos/${string}/${string}/actions/runners/downloads`;
+      typedPath: `/repos/${string}/${string}/actions/runners/downloads`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RunnerApplication[];
   };
@@ -84200,13 +85403,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runners/generate-jitconfig";
-      typedPath?: `/repos/${string}/${string}/actions/runners/generate-jitconfig`;
+      typedPath: `/repos/${string}/${string}/actions/runners/generate-jitconfig`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the new runner. */
         name: string;
@@ -84236,13 +85441,16 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runners/registration-token";
-      typedPath?: `/repos/${string}/${string}/actions/runners/registration-token`;
+      typedPath: `/repos/${string}/${string}/actions/runners/registration-token`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: AuthenticationToken;
   };
@@ -84250,13 +85458,16 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runners/remove-token";
-      typedPath?: `/repos/${string}/${string}/actions/runners/remove-token`;
+      typedPath: `/repos/${string}/${string}/actions/runners/remove-token`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: AuthenticationToken;
   };
@@ -84264,7 +85475,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84273,6 +85484,9 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Runner;
   };
@@ -84280,7 +85494,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84289,6 +85503,9 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -84296,7 +85513,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84305,6 +85522,9 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84315,7 +85535,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84324,6 +85544,8 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The names of the custom labels to add to the runner.
@@ -84342,7 +85564,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84351,6 +85573,8 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The names of the custom labels to set for the runner. You can pass an empty array to remove all custom labels.
@@ -84369,7 +85593,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84378,6 +85602,9 @@ type Routes = {
         /** Unique identifier of the self-hosted runner. */
         runnerId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84388,7 +85615,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/runners/${number}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84399,6 +85626,9 @@ type Routes = {
         /** The name of a self-hosted runner's custom label. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84409,13 +85639,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs";
-      typedPath?: `/repos/${string}/${string}/actions/runs`;
+      typedPath: `/repos/${string}/${string}/actions/runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run. */
         actor?: string;
@@ -84464,6 +85695,7 @@ type Routes = {
         /** Only returns workflow runs that are associated with the specified `head_sha`. */
         head_sha?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84474,7 +85706,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84483,6 +85715,7 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
       query: {
         /**
          * If `true` pull requests are omitted from the response (empty array).
@@ -84490,6 +85723,7 @@ type Routes = {
          */
         exclude_pull_requests?: boolean;
       };
+      body?: never;
     };
     Response: WorkflowRun;
   };
@@ -84497,7 +85731,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84506,6 +85740,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -84513,7 +85750,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/approvals";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/approvals`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/approvals`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84522,6 +85759,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: EnvironmentApprovals[];
   };
@@ -84529,7 +85769,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/approve";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/approve`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/approve`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84538,6 +85778,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: EmptyObject;
   };
@@ -84545,7 +85788,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/artifacts";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/artifacts`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/artifacts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84554,6 +85797,7 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -84568,6 +85812,7 @@ type Routes = {
         /** The name field of an artifact. When specified, only artifacts with this name will be returned. */
         name?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84578,7 +85823,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84589,6 +85834,7 @@ type Routes = {
         /** The attempt number of the workflow run. */
         attemptNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * If `true` pull requests are omitted from the response (empty array).
@@ -84596,6 +85842,7 @@ type Routes = {
          */
         exclude_pull_requests?: boolean;
       };
+      body?: never;
     };
     Response: WorkflowRun;
   };
@@ -84603,7 +85850,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/jobs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}/jobs`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}/jobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84614,6 +85861,7 @@ type Routes = {
         /** The attempt number of the workflow run. */
         attemptNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -84626,6 +85874,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84636,7 +85885,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}/logs`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84647,6 +85896,9 @@ type Routes = {
         /** The attempt number of the workflow run. */
         attemptNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -84654,7 +85906,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/cancel";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/cancel`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/cancel`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84663,6 +85915,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: EmptyObject;
   };
@@ -84670,7 +85925,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/deployment_protection_rule";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/deployment_protection_rule`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/deployment_protection_rule`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84679,6 +85934,8 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
       body: ReviewCustomGatesCommentRequired | ReviewCustomGatesStateRequired;
     };
     Response: void;
@@ -84687,7 +85944,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/force-cancel";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/force-cancel`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/force-cancel`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84696,6 +85953,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: EmptyObject;
   };
@@ -84703,7 +85963,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/jobs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/jobs`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/jobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84712,6 +85972,7 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
       query: {
         /**
          * Filters jobs by their `completed_at` timestamp. `latest` returns jobs from the most recent execution of the workflow run. `all` returns all jobs for a workflow run, including from old executions of the workflow run.
@@ -84729,6 +85990,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84739,7 +86001,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/logs`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84748,6 +86010,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -84755,7 +86020,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/logs`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84764,6 +86029,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -84771,7 +86039,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/pending_deployments`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/pending_deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84780,6 +86048,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PendingDeployment[];
   };
@@ -84787,7 +86058,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/pending_deployments`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/pending_deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84796,6 +86067,8 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The list of environment ids to approve or reject
@@ -84820,7 +86093,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/rerun";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/rerun`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/rerun`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84829,6 +86102,8 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Whether to enable debug logging for the re-run.
@@ -84843,7 +86118,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/rerun-failed-jobs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/rerun-failed-jobs`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/rerun-failed-jobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84852,6 +86127,8 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Whether to enable debug logging for the re-run.
@@ -84866,7 +86143,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/runs/${runId}/timing";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/timing`;
+      typedPath: `/repos/${string}/${string}/actions/runs/${number}/timing`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84875,6 +86152,9 @@ type Routes = {
         /** The unique identifier of the workflow run. */
         runId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: WorkflowRunUsage;
   };
@@ -84882,13 +86162,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/secrets";
-      typedPath?: `/repos/${string}/${string}/actions/secrets`;
+      typedPath: `/repos/${string}/${string}/actions/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -84901,6 +86182,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -84911,13 +86193,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/public-key`;
+      typedPath: `/repos/${string}/${string}/actions/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsPublicKey;
   };
@@ -84925,7 +86210,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84934,6 +86219,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsSecret;
   };
@@ -84941,7 +86229,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84950,6 +86238,8 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/rest/actions/secrets#get-a-repository-public-key) endpoint.
@@ -84966,7 +86256,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84975,6 +86265,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -84982,13 +86275,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/variables";
-      typedPath?: `/repos/${string}/${string}/actions/variables`;
+      typedPath: `/repos/${string}/${string}/actions/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 30). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -85001,6 +86295,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -85011,13 +86306,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/variables";
-      typedPath?: `/repos/${string}/${string}/actions/variables`;
+      typedPath: `/repos/${string}/${string}/actions/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the variable. */
         name: string;
@@ -85031,7 +86328,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/variables/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85040,6 +86337,9 @@ type Routes = {
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsVariable;
   };
@@ -85047,7 +86347,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/actions/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/variables/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85056,6 +86356,8 @@ type Routes = {
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the variable. */
         name?: string;
@@ -85069,7 +86371,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/actions/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/variables/${string}`;
+      typedPath: `/repos/${string}/${string}/actions/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85078,6 +86380,9 @@ type Routes = {
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85085,13 +86390,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/workflows";
-      typedPath?: `/repos/${string}/${string}/actions/workflows`;
+      typedPath: `/repos/${string}/${string}/actions/workflows`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -85104,6 +86410,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -85114,7 +86421,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}`;
+      typedPath: `/repos/${string}/${string}/actions/workflows/${number | string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85123,6 +86430,9 @@ type Routes = {
         /** The ID of the workflow. You can also pass the workflow file name as a string. */
         workflowId: number | string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Workflow;
   };
@@ -85130,7 +86440,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/disable";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/disable`;
+      typedPath: `/repos/${string}/${string}/actions/workflows/${number | string}/disable`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85139,6 +86449,9 @@ type Routes = {
         /** The ID of the workflow. You can also pass the workflow file name as a string. */
         workflowId: number | string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85146,7 +86459,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/dispatches`;
+      typedPath: `/repos/${string}/${string}/actions/workflows/${number | string}/dispatches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85155,6 +86468,8 @@ type Routes = {
         /** The ID of the workflow. You can also pass the workflow file name as a string. */
         workflowId: number | string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The git reference for the workflow. The reference can be a branch or tag name. */
         ref: string;
@@ -85168,7 +86483,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/enable";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/enable`;
+      typedPath: `/repos/${string}/${string}/actions/workflows/${number | string}/enable`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85177,6 +86492,9 @@ type Routes = {
         /** The ID of the workflow. You can also pass the workflow file name as a string. */
         workflowId: number | string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85184,7 +86502,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/runs";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/runs`;
+      typedPath: `/repos/${string}/${string}/actions/workflows/${number | string}/runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85193,6 +86511,7 @@ type Routes = {
         /** The ID of the workflow. You can also pass the workflow file name as a string. */
         workflowId: number | string;
       };
+      headers?: never;
       query: {
         /** Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run. */
         actor?: string;
@@ -85241,6 +86560,7 @@ type Routes = {
         /** Only returns workflow runs that are associated with the specified `head_sha`. */
         head_sha?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -85251,7 +86571,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/timing";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/timing`;
+      typedPath: `/repos/${string}/${string}/actions/workflows/${number | string}/timing`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85260,6 +86580,9 @@ type Routes = {
         /** The ID of the workflow. You can also pass the workflow file name as a string. */
         workflowId: number | string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: WorkflowUsage;
   };
@@ -85267,13 +86590,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/activity";
-      typedPath?: `/repos/${string}/${string}/activity`;
+      typedPath: `/repos/${string}/${string}/activity`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -85316,6 +86640,7 @@ type Routes = {
           | "pr_merge"
           | "merge_queue_merge";
       };
+      body?: never;
     };
     Response: Activity[];
   };
@@ -85323,13 +86648,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/assignees";
-      typedPath?: `/repos/${string}/${string}/assignees`;
+      typedPath: `/repos/${string}/${string}/assignees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -85342,6 +86668,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -85349,7 +86676,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/assignees/${assignee}";
-      typedPath?: `/repos/${string}/${string}/assignees/${string}`;
+      typedPath: `/repos/${string}/${string}/assignees/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85357,6 +86684,9 @@ type Routes = {
         repo: string;
         assignee: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85364,13 +86694,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/attestations";
-      typedPath?: `/repos/${string}/${string}/attestations`;
+      typedPath: `/repos/${string}/${string}/attestations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The attestation's Sigstore Bundle.
@@ -85392,7 +86724,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/attestations/${subjectDigest}";
-      typedPath?: `/repos/${string}/${string}/attestations/${string}`;
+      typedPath: `/repos/${string}/${string}/attestations/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85401,6 +86733,7 @@ type Routes = {
         /** The parameter should be set to the attestation's subject's SHA256 digest, in the form `sha256:HEX_DIGEST`. */
         subjectDigest: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -85417,6 +86750,7 @@ type Routes = {
          */
         predicate_type?: string;
       };
+      body?: never;
     };
     Response: {
       attestations?: {
@@ -85438,13 +86772,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/autolinks";
-      typedPath?: `/repos/${string}/${string}/autolinks`;
+      typedPath: `/repos/${string}/${string}/autolinks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Autolink[];
   };
@@ -85452,13 +86789,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/autolinks";
-      typedPath?: `/repos/${string}/${string}/autolinks`;
+      typedPath: `/repos/${string}/${string}/autolinks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** This prefix appended by certain characters will generate a link any time it is found in an issue, pull request, or commit. */
         key_prefix: string;
@@ -85477,7 +86816,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/autolinks/${autolinkId}";
-      typedPath?: `/repos/${string}/${string}/autolinks/${number}`;
+      typedPath: `/repos/${string}/${string}/autolinks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85486,6 +86825,9 @@ type Routes = {
         /** The unique identifier of the autolink. */
         autolinkId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Autolink;
   };
@@ -85493,7 +86835,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/autolinks/${autolinkId}";
-      typedPath?: `/repos/${string}/${string}/autolinks/${number}`;
+      typedPath: `/repos/${string}/${string}/autolinks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85502,6 +86844,9 @@ type Routes = {
         /** The unique identifier of the autolink. */
         autolinkId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85509,13 +86854,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/automated-security-fixes";
-      typedPath?: `/repos/${string}/${string}/automated-security-fixes`;
+      typedPath: `/repos/${string}/${string}/automated-security-fixes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CheckAutomatedSecurityFixes;
   };
@@ -85523,13 +86871,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/automated-security-fixes";
-      typedPath?: `/repos/${string}/${string}/automated-security-fixes`;
+      typedPath: `/repos/${string}/${string}/automated-security-fixes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85537,13 +86888,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/automated-security-fixes";
-      typedPath?: `/repos/${string}/${string}/automated-security-fixes`;
+      typedPath: `/repos/${string}/${string}/automated-security-fixes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85551,13 +86905,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches";
-      typedPath?: `/repos/${string}/${string}/branches`;
+      typedPath: `/repos/${string}/${string}/branches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** Setting to `true` returns only branches protected by branch protections or rulesets. When set to `false`, only unprotected branches are returned. Omitting this parameter returns all branches. */
         protected?: boolean;
@@ -85572,6 +86927,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: ShortBranch[];
   };
@@ -85579,7 +86935,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}";
-      typedPath?: `/repos/${string}/${string}/branches/${string}`;
+      typedPath: `/repos/${string}/${string}/branches/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85588,6 +86944,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: BranchWithProtection;
   };
@@ -85595,7 +86954,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85604,6 +86963,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: BranchProtection;
   };
@@ -85611,7 +86973,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85620,6 +86982,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Require status checks to pass before merging. Set to `null` to disable. */
         required_status_checks: {
@@ -85709,7 +87073,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85718,6 +87082,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85725,7 +87092,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85734,6 +87101,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProtectedBranchAdminEnforced;
   };
@@ -85741,7 +87111,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85750,6 +87120,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProtectedBranchAdminEnforced;
   };
@@ -85757,7 +87130,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85766,6 +87139,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85773,7 +87149,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85782,6 +87158,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProtectedBranchPullRequestReview;
   };
@@ -85789,7 +87168,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85798,6 +87177,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Specify which users, teams, and apps can dismiss pull request reviews. Pass an empty `dismissal_restrictions` object to disable. User and team `dismissal_restrictions` are only available for organization-owned repositories. Omit this parameter for personal repositories. */
         dismissal_restrictions?: {
@@ -85836,7 +87217,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85845,6 +87226,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85852,7 +87236,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_signatures";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85861,6 +87245,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProtectedBranchAdminEnforced;
   };
@@ -85868,7 +87255,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_signatures";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85877,6 +87264,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ProtectedBranchAdminEnforced;
   };
@@ -85884,7 +87274,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_signatures";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85893,6 +87283,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85900,7 +87293,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85909,6 +87302,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: StatusCheckPolicy;
   };
@@ -85916,7 +87312,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85925,6 +87321,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Require branches to be up to date before merging. */
         strict?: boolean;
@@ -85948,7 +87346,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85957,6 +87355,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -85964,7 +87365,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85973,6 +87374,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: string[];
   };
@@ -85980,7 +87384,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85989,6 +87393,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /** The name of the status checks */
@@ -86002,7 +87408,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86011,6 +87417,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /** The name of the status checks */
@@ -86024,7 +87432,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86033,6 +87441,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /** The name of the status checks */
@@ -86046,7 +87456,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86055,6 +87465,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: BranchRestrictionPolicy;
   };
@@ -86062,7 +87475,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86071,6 +87484,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -86078,7 +87494,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86087,6 +87503,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Integration[];
   };
@@ -86094,7 +87513,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86103,6 +87522,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items. */
         apps: string[];
@@ -86114,7 +87535,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86123,6 +87544,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items. */
         apps: string[];
@@ -86134,7 +87557,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86143,6 +87566,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items. */
         apps: string[];
@@ -86154,7 +87579,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86163,6 +87588,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Team[];
   };
@@ -86170,7 +87598,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86179,6 +87607,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /** The slug values for teams */
@@ -86192,7 +87622,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86201,6 +87631,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /** The slug values for teams */
@@ -86214,7 +87646,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86223,6 +87655,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /** The slug values for teams */
@@ -86236,7 +87670,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86245,6 +87679,9 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -86252,7 +87689,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86261,6 +87698,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The username for users */
         users: string[];
@@ -86272,7 +87711,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86281,6 +87720,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The username for users */
         users: string[];
@@ -86292,7 +87733,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86301,6 +87742,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The username for users */
         users: string[];
@@ -86312,7 +87755,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/branches/${branch}/rename";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/rename`;
+      typedPath: `/repos/${string}/${string}/branches/${string}/rename`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86321,6 +87764,8 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The new name of the branch. */
         new_name: string;
@@ -86332,13 +87777,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/check-runs";
-      typedPath?: `/repos/${string}/${string}/check-runs`;
+      typedPath: `/repos/${string}/${string}/check-runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: (
         | {
             status: "completed";
@@ -86462,7 +87909,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}`;
+      typedPath: `/repos/${string}/${string}/check-runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86471,6 +87918,9 @@ type Routes = {
         /** The unique identifier of the check run. */
         checkRunId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CheckRun;
   };
@@ -86478,7 +87928,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}`;
+      typedPath: `/repos/${string}/${string}/check-runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86487,6 +87937,8 @@ type Routes = {
         /** The unique identifier of the check run. */
         checkRunId: number;
       };
+      headers?: never;
+      query?: never;
       body: (
         | {
             status?: "completed";
@@ -86605,7 +88057,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}/annotations";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}/annotations`;
+      typedPath: `/repos/${string}/${string}/check-runs/${number}/annotations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86614,6 +88066,7 @@ type Routes = {
         /** The unique identifier of the check run. */
         checkRunId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -86626,6 +88079,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: CheckAnnotation[];
   };
@@ -86633,7 +88087,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}/rerequest";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}/rerequest`;
+      typedPath: `/repos/${string}/${string}/check-runs/${number}/rerequest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86642,6 +88096,9 @@ type Routes = {
         /** The unique identifier of the check run. */
         checkRunId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: EmptyObject;
   };
@@ -86649,13 +88106,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/check-suites";
-      typedPath?: `/repos/${string}/${string}/check-suites`;
+      typedPath: `/repos/${string}/${string}/check-suites`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The sha of the head commit. */
         head_sha: string;
@@ -86667,13 +88126,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/check-suites/preferences";
-      typedPath?: `/repos/${string}/${string}/check-suites/preferences`;
+      typedPath: `/repos/${string}/${string}/check-suites/preferences`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Enables or disables automatic creation of CheckSuite events upon pushes to the repository. Enabled by default. */
         auto_trigger_checks?: {
@@ -86693,7 +88154,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/check-suites/${checkSuiteId}";
-      typedPath?: `/repos/${string}/${string}/check-suites/${number}`;
+      typedPath: `/repos/${string}/${string}/check-suites/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86702,6 +88163,9 @@ type Routes = {
         /** The unique identifier of the check suite. */
         checkSuiteId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CheckSuite;
   };
@@ -86709,7 +88173,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/check-suites/${checkSuiteId}/check-runs";
-      typedPath?: `/repos/${string}/${string}/check-suites/${number}/check-runs`;
+      typedPath: `/repos/${string}/${string}/check-suites/${number}/check-runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86718,6 +88182,7 @@ type Routes = {
         /** The unique identifier of the check suite. */
         checkSuiteId: number;
       };
+      headers?: never;
       query: {
         /** Returns check runs with the specified `name`. */
         check_name?: string;
@@ -86739,6 +88204,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -86749,7 +88215,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/check-suites/${checkSuiteId}/rerequest";
-      typedPath?: `/repos/${string}/${string}/check-suites/${number}/rerequest`;
+      typedPath: `/repos/${string}/${string}/check-suites/${number}/rerequest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86758,6 +88224,9 @@ type Routes = {
         /** The unique identifier of the check suite. */
         checkSuiteId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: EmptyObject;
   };
@@ -86765,13 +88234,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
         tool_name?: CodeScanningAnalysisToolName;
@@ -86810,6 +88280,7 @@ type Routes = {
         /** If specified, only code scanning alerts with this severity will be returned. */
         severity?: CodeScanningAlertSeverity;
       };
+      body?: never;
     };
     Response: CodeScanningAlertItems[];
   };
@@ -86817,7 +88288,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86826,6 +88297,9 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningAlert;
   };
@@ -86833,7 +88307,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86842,6 +88316,8 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Sets the state of the code scanning alert. You must provide `dismissed_reason` when you set the state to `dismissed`. */
         state: CodeScanningAlertSetState;
@@ -86859,7 +88335,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86868,6 +88344,9 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningAutofix;
   };
@@ -86875,7 +88354,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86884,6 +88363,9 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningAutofix;
   };
@@ -86891,7 +88373,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix/commits";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix/commits`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86900,6 +88382,8 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
       body: CodeScanningAutofixCommits;
     };
     Response: CodeScanningAutofixCommitsResponse;
@@ -86908,7 +88392,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/instances";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/instances`;
+      typedPath: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/instances`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86917,6 +88401,7 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -86933,6 +88418,7 @@ type Routes = {
         /** The number of the pull request for the results you want to list. */
         pr?: number;
       };
+      body?: never;
     };
     Response: CodeScanningAlertInstance[];
   };
@@ -86940,13 +88426,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/analyses";
-      typedPath?: `/repos/${string}/${string}/code-scanning/analyses`;
+      typedPath: `/repos/${string}/${string}/code-scanning/analyses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
         tool_name?: CodeScanningAnalysisToolName;
@@ -86979,6 +88466,7 @@ type Routes = {
          */
         sort?: "created";
       };
+      body?: never;
     };
     Response: CodeScanningAnalysis[];
   };
@@ -86986,7 +88474,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/analyses/${analysisId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/analyses/${number}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/analyses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86995,6 +88483,9 @@ type Routes = {
         /** The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation. */
         analysisId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningAnalysis;
   };
@@ -87002,7 +88493,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/code-scanning/analyses/${analysisId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/analyses/${number}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/analyses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87011,10 +88502,12 @@ type Routes = {
         /** The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation. */
         analysisId: number;
       };
+      headers?: never;
       query: {
         /** Allow deletion if the specified analysis is the last in a set. If you attempt to delete the final analysis in a set without setting this parameter to `true`, you'll get a 400 response with the message: `Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm_delete.` */
         confirm_delete?: string | null;
       };
+      body?: never;
     };
     Response: CodeScanningAnalysisDeletion;
   };
@@ -87022,13 +88515,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/codeql/databases";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/databases`;
+      typedPath: `/repos/${string}/${string}/code-scanning/codeql/databases`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningCodeqlDatabase[];
   };
@@ -87036,7 +88532,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/codeql/databases/${language}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/databases/${string}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/codeql/databases/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87045,6 +88541,9 @@ type Routes = {
         /** The language of the CodeQL database. */
         language: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningCodeqlDatabase;
   };
@@ -87052,7 +88551,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/code-scanning/codeql/databases/${language}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/databases/${string}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/codeql/databases/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87061,6 +88560,9 @@ type Routes = {
         /** The language of the CodeQL database. */
         language: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -87068,13 +88570,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/code-scanning/codeql/variant-analyses";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses`;
+      typedPath: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The language targeted by the CodeQL query */
         language: CodeScanningVariantAnalysisLanguage;
@@ -87100,7 +88604,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses/${number}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87109,6 +88613,9 @@ type Routes = {
         /** The unique identifier of the variant analysis. */
         codeqlVariantAnalysisId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningVariantAnalysis;
   };
@@ -87116,7 +88623,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}/repos/${repoOwner}/${repoName}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses/${number}/repos/${string}/${string}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses/${number}/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87129,6 +88636,9 @@ type Routes = {
         /** The name of the variant analysis repository. */
         repoName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningVariantAnalysisRepoTask;
   };
@@ -87136,13 +88646,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/default-setup";
-      typedPath?: `/repos/${string}/${string}/code-scanning/default-setup`;
+      typedPath: `/repos/${string}/${string}/code-scanning/default-setup`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningDefaultSetup;
   };
@@ -87150,13 +88663,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/code-scanning/default-setup";
-      typedPath?: `/repos/${string}/${string}/code-scanning/default-setup`;
+      typedPath: `/repos/${string}/${string}/code-scanning/default-setup`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: CodeScanningDefaultSetupUpdate;
     };
     Response: EmptyObject;
@@ -87165,13 +88680,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/code-scanning/sarifs";
-      typedPath?: `/repos/${string}/${string}/code-scanning/sarifs`;
+      typedPath: `/repos/${string}/${string}/code-scanning/sarifs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The SHA of the commit to which the analysis you are uploading relates. */
         commit_sha: CodeScanningAnalysisCommitSha;
@@ -87209,7 +88726,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-scanning/sarifs/${sarifId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/sarifs/${string}`;
+      typedPath: `/repos/${string}/${string}/code-scanning/sarifs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87218,6 +88735,9 @@ type Routes = {
         /** The SARIF ID obtained after uploading. */
         sarifId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeScanningSarifsStatus;
   };
@@ -87225,13 +88745,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/code-security-configuration";
-      typedPath?: `/repos/${string}/${string}/code-security-configuration`;
+      typedPath: `/repos/${string}/${string}/code-security-configuration`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeSecurityConfigurationForRepository;
   };
@@ -87239,17 +88762,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codeowners/errors";
-      typedPath?: `/repos/${string}/${string}/codeowners/errors`;
+      typedPath: `/repos/${string}/${string}/codeowners/errors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** A branch, tag or commit name used to determine which version of the CODEOWNERS file to use. Default: the repository's default branch (e.g. `main`) */
         ref?: string;
       };
+      body?: never;
     };
     Response: CodeownersErrors;
   };
@@ -87257,13 +88782,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces";
-      typedPath?: `/repos/${string}/${string}/codespaces`;
+      typedPath: `/repos/${string}/${string}/codespaces`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87276,6 +88802,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -87286,13 +88813,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/codespaces";
-      typedPath?: `/repos/${string}/${string}/codespaces`;
+      typedPath: `/repos/${string}/${string}/codespaces`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Git ref (typically a branch name) for this codespace */
         ref?: string;
@@ -87324,13 +88853,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/devcontainers";
-      typedPath?: `/repos/${string}/${string}/codespaces/devcontainers`;
+      typedPath: `/repos/${string}/${string}/codespaces/devcontainers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87343,6 +88873,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -87357,13 +88888,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/machines";
-      typedPath?: `/repos/${string}/${string}/codespaces/machines`;
+      typedPath: `/repos/${string}/${string}/codespaces/machines`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The location to check for available machines. Assigned by IP if not provided.
@@ -87378,6 +88910,7 @@ type Routes = {
          */
         ref?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -87388,13 +88921,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/new";
-      typedPath?: `/repos/${string}/${string}/codespaces/new`;
+      typedPath: `/repos/${string}/${string}/codespaces/new`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The branch or commit to check for a default devcontainer path. If not specified, the default branch will be checked.
@@ -87407,6 +88941,7 @@ type Routes = {
          */
         client_ip?: string;
       };
+      body?: never;
     };
     Response: {
       /** A GitHub user. */
@@ -87421,13 +88956,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/permissions_check";
-      typedPath?: `/repos/${string}/${string}/codespaces/permissions_check`;
+      typedPath: `/repos/${string}/${string}/codespaces/permissions_check`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The git reference that points to the location of the devcontainer configuration to use for the permission check. The value of `ref` will typically be a branch name (`heads/BRANCH_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
@@ -87440,6 +88976,7 @@ type Routes = {
          */
         devcontainer_path: string;
       };
+      body?: never;
     };
     Response: CodespacesPermissionsCheckForDevcontainer;
   };
@@ -87447,13 +88984,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/secrets";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets`;
+      typedPath: `/repos/${string}/${string}/codespaces/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87466,6 +89004,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -87476,13 +89015,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/public-key`;
+      typedPath: `/repos/${string}/${string}/codespaces/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodespacesPublicKey;
   };
@@ -87490,7 +89032,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/codespaces/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/codespaces/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87499,6 +89041,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RepoCodespacesSecret;
   };
@@ -87506,7 +89051,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/codespaces/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/codespaces/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87515,6 +89060,8 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/rest/codespaces/repository-secrets#get-a-repository-public-key) endpoint.
@@ -87531,7 +89078,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/codespaces/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/codespaces/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87540,6 +89087,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -87547,13 +89097,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/collaborators";
-      typedPath?: `/repos/${string}/${string}/collaborators`;
+      typedPath: `/repos/${string}/${string}/collaborators`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * Filter collaborators returned by their affiliation. `outside` means all outside collaborators of an organization-owned repository. `direct` means all collaborators with permissions to an organization-owned repository, regardless of organization membership status. `all` means all collaborators the authenticated user can see.
@@ -87573,6 +89124,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Collaborator[];
   };
@@ -87580,7 +89132,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/collaborators/${username}";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}`;
+      typedPath: `/repos/${string}/${string}/collaborators/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87589,6 +89141,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -87596,7 +89151,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/collaborators/${username}";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}`;
+      typedPath: `/repos/${string}/${string}/collaborators/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87605,6 +89160,8 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The permission to grant the collaborator. **Only valid on organization-owned repositories.** We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any.
@@ -87619,7 +89176,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/collaborators/${username}";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}`;
+      typedPath: `/repos/${string}/${string}/collaborators/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87628,6 +89185,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -87635,7 +89195,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/collaborators/${username}/permission";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}/permission`;
+      typedPath: `/repos/${string}/${string}/collaborators/${string}/permission`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87644,6 +89204,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RepositoryCollaboratorPermission;
   };
@@ -87651,13 +89214,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/comments";
-      typedPath?: `/repos/${string}/${string}/comments`;
+      typedPath: `/repos/${string}/${string}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87670,6 +89234,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: CommitComment[];
   };
@@ -87677,7 +89242,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87689,6 +89254,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CommitComment;
   };
@@ -87696,7 +89264,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87708,6 +89276,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The contents of the comment */
         body: string;
@@ -87719,7 +89289,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87731,6 +89301,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -87738,7 +89311,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/comments/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87750,6 +89323,7 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a commit comment. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -87764,6 +89338,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -87771,7 +89346,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/comments/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87783,6 +89358,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the commit comment. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -87794,7 +89371,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/comments/${commentId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}/reactions/${number}`;
+      typedPath: `/repos/${string}/${string}/comments/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87808,6 +89385,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -87815,13 +89395,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits";
-      typedPath?: `/repos/${string}/${string}/commits`;
+      typedPath: `/repos/${string}/${string}/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** SHA or branch to start listing commits from. Default: the repository’s default branch (usually `main`). */
         sha?: string;
@@ -87852,6 +89433,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Commit[];
   };
@@ -87859,7 +89441,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${commitSha}/branches-where-head";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/branches-where-head`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/branches-where-head`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87868,6 +89450,9 @@ type Routes = {
         /** The SHA of the commit. */
         commitSha: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: BranchShort[];
   };
@@ -87875,7 +89460,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${commitSha}/comments";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/comments`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87884,6 +89469,7 @@ type Routes = {
         /** The SHA of the commit. */
         commitSha: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87896,6 +89482,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: CommitComment[];
   };
@@ -87903,7 +89490,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/commits/${commitSha}/comments";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/comments`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87912,6 +89499,8 @@ type Routes = {
         /** The SHA of the commit. */
         commitSha: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The contents of the comment. */
         body: string;
@@ -87929,7 +89518,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${commitSha}/pulls";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/pulls`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/pulls`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87938,6 +89527,7 @@ type Routes = {
         /** The SHA of the commit. */
         commitSha: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87950,6 +89540,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: PullRequestSimple[];
   };
@@ -87957,7 +89548,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${ref}";
-      typedPath?: `/repos/${string}/${string}/commits/${string}`;
+      typedPath: `/repos/${string}/${string}/commits/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87966,6 +89557,7 @@ type Routes = {
         /** The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
         ref: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -87978,6 +89570,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: Commit;
   };
@@ -87985,7 +89578,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${ref}/check-runs";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/check-runs`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/check-runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87994,6 +89587,7 @@ type Routes = {
         /** The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
         ref: string;
       };
+      headers?: never;
       query: {
         /** Returns check runs with the specified `name`. */
         check_name?: string;
@@ -88016,6 +89610,7 @@ type Routes = {
         page?: number;
         app_id?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -88026,7 +89621,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${ref}/check-suites";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/check-suites`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/check-suites`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88035,6 +89630,7 @@ type Routes = {
         /** The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
         ref: string;
       };
+      headers?: never;
       query: {
         /**
          * Filters check suites by GitHub App `id`.
@@ -88054,6 +89650,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -88064,7 +89661,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${ref}/status";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/status`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/status`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88073,6 +89670,7 @@ type Routes = {
         /** The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
         ref: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88085,6 +89683,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: CombinedCommitStatus;
   };
@@ -88092,7 +89691,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/commits/${ref}/statuses";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/statuses`;
+      typedPath: `/repos/${string}/${string}/commits/${string}/statuses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88101,6 +89700,7 @@ type Routes = {
         /** The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
         ref: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88113,6 +89713,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Status[];
   };
@@ -88120,13 +89721,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/community/profile";
-      typedPath?: `/repos/${string}/${string}/community/profile`;
+      typedPath: `/repos/${string}/${string}/community/profile`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CommunityProfile;
   };
@@ -88134,7 +89738,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/compare/${basehead}";
-      typedPath?: `/repos/${string}/${string}/compare/${string}`;
+      typedPath: `/repos/${string}/${string}/compare/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88143,6 +89747,7 @@ type Routes = {
         /** The base branch and head branch to compare. This parameter expects the format `BASE...HEAD`. Both must be branch names in `repo`. To compare with a branch that exists in a different repository in the same network as `repo`, the `basehead` parameter expects the format `USERNAME:BASE...USERNAME:HEAD`. */
         basehead: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88155,6 +89760,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: CommitComparison;
   };
@@ -88162,7 +89768,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/contents/${path}";
-      typedPath?: `/repos/${string}/${string}/contents/${string}`;
+      typedPath: `/repos/${string}/${string}/contents/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88171,10 +89777,12 @@ type Routes = {
         /** path parameter */
         path: string;
       };
+      headers?: never;
       query: {
         /** The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
+      body?: never;
     };
     Response: ContentTree;
   };
@@ -88182,7 +89790,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/contents/${path}";
-      typedPath?: `/repos/${string}/${string}/contents/${string}`;
+      typedPath: `/repos/${string}/${string}/contents/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88191,6 +89799,8 @@ type Routes = {
         /** path parameter */
         path: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The commit message. */
         message: string;
@@ -88226,7 +89836,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/contents/${path}";
-      typedPath?: `/repos/${string}/${string}/contents/${string}`;
+      typedPath: `/repos/${string}/${string}/contents/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88235,6 +89845,8 @@ type Routes = {
         /** path parameter */
         path: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The commit message. */
         message: string;
@@ -88264,13 +89876,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/contributors";
-      typedPath?: `/repos/${string}/${string}/contributors`;
+      typedPath: `/repos/${string}/${string}/contributors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** Set to `1` or `true` to include anonymous contributors in results. */
         anon?: string;
@@ -88285,6 +89898,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Contributor[];
   };
@@ -88292,13 +89906,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependabot/alerts";
-      typedPath?: `/repos/${string}/${string}/dependabot/alerts`;
+      typedPath: `/repos/${string}/${string}/dependabot/alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * A comma-separated list of states. If specified, only alerts with these states will be returned.
@@ -88385,6 +90000,7 @@ type Routes = {
          */
         last?: number;
       };
+      body?: never;
     };
     Response: DependabotAlert[];
   };
@@ -88392,7 +90008,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependabot/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/dependabot/alerts/${AlertNumber}`;
+      typedPath: `/repos/${string}/${string}/dependabot/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88406,6 +90022,9 @@ type Routes = {
          */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DependabotAlert;
   };
@@ -88413,7 +90032,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/dependabot/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/dependabot/alerts/${AlertNumber}`;
+      typedPath: `/repos/${string}/${string}/dependabot/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88427,6 +90046,8 @@ type Routes = {
          */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The state of the Dependabot alert.
@@ -88448,13 +90069,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependabot/secrets";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets`;
+      typedPath: `/repos/${string}/${string}/dependabot/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88467,6 +90089,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -88477,13 +90100,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependabot/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/public-key`;
+      typedPath: `/repos/${string}/${string}/dependabot/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DependabotPublicKey;
   };
@@ -88491,7 +90117,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependabot/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/dependabot/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88500,6 +90126,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DependabotSecret;
   };
@@ -88507,7 +90136,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/dependabot/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/dependabot/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88516,6 +90145,8 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key) endpoint.
@@ -88532,7 +90163,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/dependabot/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/dependabot/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88541,6 +90172,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -88548,7 +90182,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependency-graph/compare/${basehead}";
-      typedPath?: `/repos/${string}/${string}/dependency-graph/compare/${string}`;
+      typedPath: `/repos/${string}/${string}/dependency-graph/compare/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88557,10 +90191,12 @@ type Routes = {
         /** The base and head Git revisions to compare. The Git revisions will be resolved to commit SHAs. Named revisions will be resolved to their corresponding HEAD commits, and an appropriate merge base will be determined. This parameter expects the format `{base}...{head}`. */
         basehead: string;
       };
+      headers?: never;
       query: {
         /** The full path, relative to the repository root, of the dependency manifest file. */
         name?: string;
       };
+      body?: never;
     };
     Response: DependencyGraphDiff;
   };
@@ -88568,13 +90204,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/dependency-graph/sbom";
-      typedPath?: `/repos/${string}/${string}/dependency-graph/sbom`;
+      typedPath: `/repos/${string}/${string}/dependency-graph/sbom`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DependencyGraphSpdxSbom;
   };
@@ -88582,13 +90221,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/dependency-graph/snapshots";
-      typedPath?: `/repos/${string}/${string}/dependency-graph/snapshots`;
+      typedPath: `/repos/${string}/${string}/dependency-graph/snapshots`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: Snapshot;
     };
     Response: {
@@ -88606,13 +90247,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/deployments";
-      typedPath?: `/repos/${string}/${string}/deployments`;
+      typedPath: `/repos/${string}/${string}/deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The SHA recorded at creation time.
@@ -88645,6 +90287,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Deployment[];
   };
@@ -88652,13 +90295,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/deployments";
-      typedPath?: `/repos/${string}/${string}/deployments`;
+      typedPath: `/repos/${string}/${string}/deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The ref to deploy. This can be a branch, tag, or SHA. */
         ref: string;
@@ -88701,7 +90346,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/deployments/${deploymentId}";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}`;
+      typedPath: `/repos/${string}/${string}/deployments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88710,6 +90355,9 @@ type Routes = {
         /** deployment_id parameter */
         deploymentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Deployment;
   };
@@ -88717,7 +90365,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/deployments/${deploymentId}";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}`;
+      typedPath: `/repos/${string}/${string}/deployments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88726,6 +90374,9 @@ type Routes = {
         /** deployment_id parameter */
         deploymentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -88733,7 +90384,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/deployments/${deploymentId}/statuses";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}/statuses`;
+      typedPath: `/repos/${string}/${string}/deployments/${number}/statuses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88742,6 +90393,7 @@ type Routes = {
         /** deployment_id parameter */
         deploymentId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88754,6 +90406,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: DeploymentStatus[];
   };
@@ -88761,7 +90414,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/deployments/${deploymentId}/statuses";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}/statuses`;
+      typedPath: `/repos/${string}/${string}/deployments/${number}/statuses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88770,6 +90423,8 @@ type Routes = {
         /** deployment_id parameter */
         deploymentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The state of the status. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
         state: "error" | "failure" | "inactive" | "in_progress" | "queued" | "pending" | "success";
@@ -88808,7 +90463,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/deployments/${deploymentId}/statuses/${statusId}";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}/statuses/${number}`;
+      typedPath: `/repos/${string}/${string}/deployments/${number}/statuses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88818,6 +90473,9 @@ type Routes = {
         deploymentId: number;
         statusId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DeploymentStatus;
   };
@@ -88825,13 +90483,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/dispatches";
-      typedPath?: `/repos/${string}/${string}/dispatches`;
+      typedPath: `/repos/${string}/${string}/dispatches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * A custom webhook event name. Must be 100 characters or fewer.
@@ -88849,13 +90509,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments";
-      typedPath?: `/repos/${string}/${string}/environments`;
+      typedPath: `/repos/${string}/${string}/environments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88868,6 +90529,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       /**
@@ -88882,7 +90544,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88891,6 +90553,9 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Environment;
   };
@@ -88898,7 +90563,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88907,6 +90572,8 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The amount of time to delay a job after the job is initially triggered. The time (in minutes) must be an integer between 0 and 43,200 (30 days). */
         wait_timer?: WaitTimer;
@@ -88934,7 +90601,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88943,6 +90610,9 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -88950,7 +90620,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88959,6 +90629,7 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -88971,6 +90642,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       /**
@@ -88985,7 +90657,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88994,6 +90666,8 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
       body: DeploymentBranchPolicyNamePatternWithType;
     };
     Response: DeploymentBranchPolicy;
@@ -89002,7 +90676,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89013,6 +90687,9 @@ type Routes = {
         /** The unique identifier of the branch policy. */
         branchPolicyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DeploymentBranchPolicy;
   };
@@ -89020,7 +90697,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89031,6 +90708,8 @@ type Routes = {
         /** The unique identifier of the branch policy. */
         branchPolicyId: number;
       };
+      headers?: never;
+      query?: never;
       body: DeploymentBranchPolicyNamePattern;
     };
     Response: DeploymentBranchPolicy;
@@ -89039,7 +90718,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89050,6 +90729,9 @@ type Routes = {
         /** The unique identifier of the branch policy. */
         branchPolicyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -89057,7 +90739,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -89066,6 +90748,9 @@ type Routes = {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       /**
@@ -89080,7 +90765,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -89089,6 +90774,8 @@ type Routes = {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The ID of the custom app that will be enabled on the environment. */
         integration_id?: number;
@@ -89100,7 +90787,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/apps";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/apps`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/apps`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -89109,6 +90796,7 @@ type Routes = {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -89121,6 +90809,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: {
       /**
@@ -89135,7 +90824,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/${number}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89146,6 +90835,9 @@ type Routes = {
         /** The unique identifier of the protection rule. */
         protectionRuleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DeploymentProtectionRule;
   };
@@ -89153,7 +90845,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/${number}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/${number}`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -89164,6 +90856,9 @@ type Routes = {
         /** The unique identifier of the protection rule. */
         protectionRuleId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -89171,7 +90866,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89180,6 +90875,7 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -89192,6 +90888,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -89202,7 +90899,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/public-key`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89211,6 +90908,9 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsPublicKey;
   };
@@ -89218,7 +90918,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89229,6 +90929,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsSecret;
   };
@@ -89236,7 +90939,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89247,6 +90950,8 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/rest/actions/secrets#get-an-environment-public-key) endpoint.
@@ -89263,7 +90968,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89274,6 +90979,9 @@ type Routes = {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -89281,7 +90989,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89290,6 +90998,7 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 30). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -89302,6 +91011,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -89312,7 +91022,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89321,6 +91031,8 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the variable. */
         name: string;
@@ -89334,7 +91046,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89345,6 +91057,9 @@ type Routes = {
         /** The name of the variable. */
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsVariable;
   };
@@ -89352,7 +91067,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89363,6 +91078,8 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the variable. */
         name?: string;
@@ -89376,7 +91093,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
+      typedPath: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89387,6 +91104,9 @@ type Routes = {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -89394,13 +91114,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/events";
-      typedPath?: `/repos/${string}/${string}/events`;
+      typedPath: `/repos/${string}/${string}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -89413,6 +91134,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -89420,13 +91142,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/forks";
-      typedPath?: `/repos/${string}/${string}/forks`;
+      typedPath: `/repos/${string}/${string}/forks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The sort order. `stargazers` will sort by star count.
@@ -89444,6 +91167,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -89451,13 +91175,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/forks";
-      typedPath?: `/repos/${string}/${string}/forks`;
+      typedPath: `/repos/${string}/${string}/forks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Optional parameter to specify the organization name if forking into an organization. */
         organization?: string;
@@ -89473,13 +91199,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/git/blobs";
-      typedPath?: `/repos/${string}/${string}/git/blobs`;
+      typedPath: `/repos/${string}/${string}/git/blobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The new blob's content. */
         content: string;
@@ -89496,7 +91224,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/git/blobs/${fileSha}";
-      typedPath?: `/repos/${string}/${string}/git/blobs/${string}`;
+      typedPath: `/repos/${string}/${string}/git/blobs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89504,6 +91232,9 @@ type Routes = {
         repo: string;
         fileSha: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Blob;
   };
@@ -89511,13 +91242,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/git/commits";
-      typedPath?: `/repos/${string}/${string}/git/commits`;
+      typedPath: `/repos/${string}/${string}/git/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The commit message */
         message: string;
@@ -89559,7 +91292,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/git/commits/${commitSha}";
-      typedPath?: `/repos/${string}/${string}/git/commits/${string}`;
+      typedPath: `/repos/${string}/${string}/git/commits/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89568,6 +91301,9 @@ type Routes = {
         /** The SHA of the commit. */
         commitSha: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GitCommit;
   };
@@ -89575,7 +91311,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/git/matching-refs/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/matching-refs/${string}`;
+      typedPath: `/repos/${string}/${string}/git/matching-refs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89587,6 +91323,9 @@ type Routes = {
          */
         ref: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GitRef[];
   };
@@ -89594,7 +91333,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/git/ref/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/ref/${string}`;
+      typedPath: `/repos/${string}/${string}/git/ref/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89606,6 +91345,9 @@ type Routes = {
          */
         ref: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GitRef;
   };
@@ -89613,13 +91355,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/git/refs";
-      typedPath?: `/repos/${string}/${string}/git/refs`;
+      typedPath: `/repos/${string}/${string}/git/refs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the fully qualified reference (ie: `refs/heads/master`). If it doesn't start with 'refs' and have at least two slashes, it will be rejected. */
         ref: string;
@@ -89633,7 +91377,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/git/refs/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/refs/${string}`;
+      typedPath: `/repos/${string}/${string}/git/refs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89645,6 +91389,8 @@ type Routes = {
          */
         ref: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The SHA1 value to set this reference to */
         sha: string;
@@ -89661,7 +91407,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/git/refs/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/refs/${string}`;
+      typedPath: `/repos/${string}/${string}/git/refs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89673,6 +91419,9 @@ type Routes = {
          */
         ref: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -89680,13 +91429,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/git/tags";
-      typedPath?: `/repos/${string}/${string}/git/tags`;
+      typedPath: `/repos/${string}/${string}/git/tags`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The tag's name. This is typically a version (e.g., "v0.0.1"). */
         tag: string;
@@ -89716,7 +91467,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/git/tags/${tagSha}";
-      typedPath?: `/repos/${string}/${string}/git/tags/${string}`;
+      typedPath: `/repos/${string}/${string}/git/tags/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89724,6 +91475,9 @@ type Routes = {
         repo: string;
         tagSha: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GitTag;
   };
@@ -89731,13 +91485,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/git/trees";
-      typedPath?: `/repos/${string}/${string}/git/trees`;
+      typedPath: `/repos/${string}/${string}/git/trees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Objects (of `path`, `mode`, `type`, and `sha`) specifying a tree structure. */
         tree: {
@@ -89773,7 +91529,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/git/trees/${treeSha}";
-      typedPath?: `/repos/${string}/${string}/git/trees/${string}`;
+      typedPath: `/repos/${string}/${string}/git/trees/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89782,10 +91538,12 @@ type Routes = {
         /** The SHA1 value or ref (branch or tag) name of the tree. */
         treeSha: string;
       };
+      headers?: never;
       query: {
         /** Setting this parameter to any value returns the objects or subtrees referenced by the tree specified in `:tree_sha`. For example, setting `recursive` to any of the following will enable returning objects or subtrees: `0`, `1`, `"true"`, and `"false"`. Omit this parameter to prevent recursively returning objects or subtrees. */
         recursive?: string;
       };
+      body?: never;
     };
     Response: GitTree;
   };
@@ -89793,13 +91551,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/hooks";
-      typedPath?: `/repos/${string}/${string}/hooks`;
+      typedPath: `/repos/${string}/${string}/hooks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -89812,6 +91571,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Hook[];
   };
@@ -89819,13 +91579,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/hooks";
-      typedPath?: `/repos/${string}/${string}/hooks`;
+      typedPath: `/repos/${string}/${string}/hooks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Use `web` to create a webhook. Default: `web`. This parameter only accepts the value `web`. */
         name?: string;
@@ -89858,7 +91620,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89867,6 +91629,9 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Hook;
   };
@@ -89874,7 +91639,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89883,6 +91648,8 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Configuration object of the webhook */
         config?: WebhookConfig;
@@ -89908,7 +91675,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89917,6 +91684,9 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -89924,7 +91694,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/config";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/config`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/config`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89933,6 +91703,9 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: WebhookConfig;
   };
@@ -89940,7 +91713,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/config";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/config`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/config`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89949,6 +91722,8 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The URL to which the payloads will be delivered. */
         url?: WebhookConfigUrl;
@@ -89966,7 +91741,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/deliveries";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/deliveries`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/deliveries`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89975,6 +91750,7 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -89984,6 +91760,7 @@ type Routes = {
         /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
         cursor?: string;
       };
+      body?: never;
     };
     Response: HookDeliveryItem[];
   };
@@ -89991,7 +91768,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/deliveries/${number}`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/deliveries/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90001,6 +91778,9 @@ type Routes = {
         hookId: number;
         deliveryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: HookDelivery;
   };
@@ -90008,7 +91788,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}/attempts";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/deliveries/${number}/attempts`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/deliveries/${number}/attempts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90018,6 +91798,9 @@ type Routes = {
         hookId: number;
         deliveryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -90025,7 +91808,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/pings";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/pings`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/pings`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90034,6 +91817,9 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90041,7 +91827,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/hooks/${hookId}/tests";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/tests`;
+      typedPath: `/repos/${string}/${string}/hooks/${number}/tests`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90050,6 +91836,9 @@ type Routes = {
         /** The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
         hookId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90057,13 +91846,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
+      typedPath: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Import;
   };
@@ -90071,13 +91863,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
+      typedPath: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The URL of the originating repository. */
         vcs_url: string;
@@ -90097,13 +91891,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
+      typedPath: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The username to provide to the originating repository. */
         vcs_username?: string;
@@ -90127,13 +91923,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
+      typedPath: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90141,17 +91940,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/import/authors";
-      typedPath?: `/repos/${string}/${string}/import/authors`;
+      typedPath: `/repos/${string}/${string}/import/authors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** A user ID. Only return users with an ID greater than this ID. */
         since?: number;
       };
+      body?: never;
     };
     Response: PorterAuthor[];
   };
@@ -90159,7 +91960,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/import/authors/${authorId}";
-      typedPath?: `/repos/${string}/${string}/import/authors/${number}`;
+      typedPath: `/repos/${string}/${string}/import/authors/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90167,6 +91968,8 @@ type Routes = {
         repo: string;
         authorId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The new Git author email. */
         email?: string;
@@ -90180,13 +91983,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/import/large_files";
-      typedPath?: `/repos/${string}/${string}/import/large_files`;
+      typedPath: `/repos/${string}/${string}/import/large_files`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PorterLargeFile[];
   };
@@ -90194,13 +92000,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/import/lfs";
-      typedPath?: `/repos/${string}/${string}/import/lfs`;
+      typedPath: `/repos/${string}/${string}/import/lfs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Whether to store large files during the import. `opt_in` means large files will be stored using Git LFS. `opt_out` means large files will be removed during the import. */
         use_lfs: "opt_in" | "opt_out";
@@ -90212,13 +92020,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/installation";
-      typedPath?: `/repos/${string}/${string}/installation`;
+      typedPath: `/repos/${string}/${string}/installation`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Installation;
   };
@@ -90226,13 +92037,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/interaction-limits";
-      typedPath?: `/repos/${string}/${string}/interaction-limits`;
+      typedPath: `/repos/${string}/${string}/interaction-limits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: InteractionLimitResponse | object;
   };
@@ -90240,13 +92054,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/interaction-limits";
-      typedPath?: `/repos/${string}/${string}/interaction-limits`;
+      typedPath: `/repos/${string}/${string}/interaction-limits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: InteractionLimit;
     };
     Response: InteractionLimitResponse;
@@ -90255,13 +92071,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/interaction-limits";
-      typedPath?: `/repos/${string}/${string}/interaction-limits`;
+      typedPath: `/repos/${string}/${string}/interaction-limits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90269,13 +92088,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/invitations";
-      typedPath?: `/repos/${string}/${string}/invitations`;
+      typedPath: `/repos/${string}/${string}/invitations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -90288,6 +92108,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RepositoryInvitation[];
   };
@@ -90295,7 +92116,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/invitations/${invitationId}";
-      typedPath?: `/repos/${string}/${string}/invitations/${number}`;
+      typedPath: `/repos/${string}/${string}/invitations/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90304,6 +92125,8 @@ type Routes = {
         /** The unique identifier of the invitation. */
         invitationId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The permissions that the associated user will have on the repository. Valid values are `read`, `write`, `maintain`, `triage`, and `admin`. */
         permissions?: "read" | "write" | "maintain" | "triage" | "admin";
@@ -90315,7 +92138,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/invitations/${invitationId}";
-      typedPath?: `/repos/${string}/${string}/invitations/${number}`;
+      typedPath: `/repos/${string}/${string}/invitations/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90324,6 +92147,9 @@ type Routes = {
         /** The unique identifier of the invitation. */
         invitationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90331,13 +92157,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues";
-      typedPath?: `/repos/${string}/${string}/issues`;
+      typedPath: `/repos/${string}/${string}/issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** If an `integer` is passed, it should refer to a milestone by its `number` field. If the string `*` is passed, issues with any milestone are accepted. If the string `none` is passed, issues without milestones are returned. */
         milestone?: string;
@@ -90382,6 +92209,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Issue[];
   };
@@ -90389,13 +92217,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues";
-      typedPath?: `/repos/${string}/${string}/issues`;
+      typedPath: `/repos/${string}/${string}/issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The title of the issue. */
         title: string | number;
@@ -90430,13 +92260,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/comments";
-      typedPath?: `/repos/${string}/${string}/issues/comments`;
+      typedPath: `/repos/${string}/${string}/issues/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The property to sort the results by.
@@ -90461,6 +92292,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: IssueComment[];
   };
@@ -90468,7 +92300,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90480,6 +92312,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: IssueComment;
   };
@@ -90487,7 +92322,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/issues/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90499,6 +92334,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The contents of the comment. */
         body: string;
@@ -90510,7 +92347,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90522,6 +92359,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90529,7 +92369,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/issues/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90541,6 +92381,7 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to an issue comment. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -90555,6 +92396,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -90562,7 +92404,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/issues/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90574,6 +92416,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the issue comment. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -90585,7 +92429,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/comments/${commentId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}/reactions/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/comments/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90599,6 +92443,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90606,13 +92453,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/events";
-      typedPath?: `/repos/${string}/${string}/issues/events`;
+      typedPath: `/repos/${string}/${string}/issues/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -90625,6 +92473,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: IssueEvent[];
   };
@@ -90632,7 +92481,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/events/${eventId}";
-      typedPath?: `/repos/${string}/${string}/issues/events/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/events/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90640,6 +92489,9 @@ type Routes = {
         repo: string;
         eventId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: IssueEvent;
   };
@@ -90647,7 +92499,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90656,6 +92508,9 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Issue;
   };
@@ -90663,7 +92518,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90672,6 +92527,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The title of the issue. */
         title?: string | number | null;
@@ -90713,7 +92570,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/assignees";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/assignees`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/assignees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90722,6 +92579,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Usernames of people to assign this issue to. _NOTE: Only users with push access can add assignees to an issue. Assignees are silently ignored otherwise._ */
         assignees?: string[];
@@ -90733,7 +92592,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/assignees";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/assignees`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/assignees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90742,6 +92601,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Usernames of assignees to remove from an issue. _NOTE: Only users with push access can remove assignees from an issue. Assignees are silently ignored otherwise._ */
         assignees?: string[];
@@ -90753,7 +92614,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/assignees/${assignee}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/assignees/${string}`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/assignees/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90763,6 +92624,9 @@ type Routes = {
         issueNumber: number;
         assignee: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90770,7 +92634,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/comments`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90779,6 +92643,7 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -90796,6 +92661,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: IssueComment[];
   };
@@ -90803,7 +92669,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/comments`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90812,6 +92678,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The contents of the comment. */
         body: string;
@@ -90823,7 +92691,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/events";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/events`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90832,6 +92700,7 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -90844,6 +92713,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: IssueEventForIssue[];
   };
@@ -90851,7 +92721,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90860,6 +92730,7 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -90872,6 +92743,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Label[];
   };
@@ -90879,7 +92751,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90888,6 +92760,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -90914,7 +92788,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90923,6 +92797,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -90949,7 +92825,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90958,6 +92834,9 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -90965,7 +92844,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels/${string}`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90975,6 +92854,9 @@ type Routes = {
         issueNumber: number;
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Label[];
   };
@@ -90982,7 +92864,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/lock";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/lock`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/lock`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90991,6 +92873,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The reason for locking the issue or pull request conversation. Lock will fail if you don't use one of these reasons:
@@ -91008,7 +92892,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/lock";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/lock`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/lock`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91017,6 +92901,9 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -91024,7 +92911,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91033,6 +92920,7 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to an issue. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -91047,6 +92935,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -91054,7 +92943,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91063,6 +92952,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the issue. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -91074,7 +92965,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/reactions/${number}`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91085,6 +92976,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -91092,7 +92986,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issue";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issue`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/sub_issue`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91101,6 +92995,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The id of the sub-issue to remove */
         sub_issue_id: number;
@@ -91112,7 +93008,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issues";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issues`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/sub_issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91121,6 +93017,7 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -91133,6 +93030,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Issue[];
   };
@@ -91140,7 +93038,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issues";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issues`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/sub_issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91149,6 +93047,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The id of the sub-issue to add. The sub-issue must belong to the same repository owner as the parent issue */
         sub_issue_id: number;
@@ -91162,7 +93062,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issues/priority";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issues/priority`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/sub_issues/priority`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91171,6 +93071,8 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The id of the sub-issue to reprioritize */
         sub_issue_id: number;
@@ -91186,7 +93088,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/issues/${issueNumber}/timeline";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/timeline`;
+      typedPath: `/repos/${string}/${string}/issues/${number}/timeline`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91195,6 +93097,7 @@ type Routes = {
         /** The number that identifies the issue. */
         issueNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -91207,6 +93110,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TimelineIssueEvents[];
   };
@@ -91214,13 +93118,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/keys";
-      typedPath?: `/repos/${string}/${string}/keys`;
+      typedPath: `/repos/${string}/${string}/keys`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -91233,6 +93138,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: DeployKey[];
   };
@@ -91240,13 +93146,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/keys";
-      typedPath?: `/repos/${string}/${string}/keys`;
+      typedPath: `/repos/${string}/${string}/keys`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** A name for the key. */
         title?: string;
@@ -91266,7 +93174,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/keys/${keyId}";
-      typedPath?: `/repos/${string}/${string}/keys/${number}`;
+      typedPath: `/repos/${string}/${string}/keys/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91275,6 +93183,9 @@ type Routes = {
         /** The unique identifier of the key. */
         keyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: DeployKey;
   };
@@ -91282,7 +93193,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/keys/${keyId}";
-      typedPath?: `/repos/${string}/${string}/keys/${number}`;
+      typedPath: `/repos/${string}/${string}/keys/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91291,6 +93202,9 @@ type Routes = {
         /** The unique identifier of the key. */
         keyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -91298,13 +93212,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/labels";
-      typedPath?: `/repos/${string}/${string}/labels`;
+      typedPath: `/repos/${string}/${string}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -91317,6 +93232,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Label[];
   };
@@ -91324,13 +93240,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/labels";
-      typedPath?: `/repos/${string}/${string}/labels`;
+      typedPath: `/repos/${string}/${string}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see "[Emoji cheat sheet](https://github.com/ikatyang/emoji-cheat-sheet)." */
         name: string;
@@ -91346,7 +93264,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/labels/${string}`;
+      typedPath: `/repos/${string}/${string}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91354,6 +93272,9 @@ type Routes = {
         repo: string;
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Label;
   };
@@ -91361,7 +93282,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/labels/${string}`;
+      typedPath: `/repos/${string}/${string}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91369,6 +93290,8 @@ type Routes = {
         repo: string;
         name: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The new name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see "[Emoji cheat sheet](https://github.com/ikatyang/emoji-cheat-sheet)." */
         new_name?: string;
@@ -91384,7 +93307,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/labels/${string}`;
+      typedPath: `/repos/${string}/${string}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91392,6 +93315,9 @@ type Routes = {
         repo: string;
         name: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -91399,13 +93325,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/languages";
-      typedPath?: `/repos/${string}/${string}/languages`;
+      typedPath: `/repos/${string}/${string}/languages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Language;
   };
@@ -91413,17 +93342,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/license";
-      typedPath?: `/repos/${string}/${string}/license`;
+      typedPath: `/repos/${string}/${string}/license`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
         ref?: CodeScanningRef;
       };
+      body?: never;
     };
     Response: LicenseContent;
   };
@@ -91431,13 +93362,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/merge-upstream";
-      typedPath?: `/repos/${string}/${string}/merge-upstream`;
+      typedPath: `/repos/${string}/${string}/merge-upstream`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the branch which should be updated to match upstream. */
         branch: string;
@@ -91449,13 +93382,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/merges";
-      typedPath?: `/repos/${string}/${string}/merges`;
+      typedPath: `/repos/${string}/${string}/merges`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the base branch that the head will be merged into. */
         base: string;
@@ -91471,13 +93406,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/milestones";
-      typedPath?: `/repos/${string}/${string}/milestones`;
+      typedPath: `/repos/${string}/${string}/milestones`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The state of the milestone. Either `open`, `closed`, or `all`.
@@ -91505,6 +93441,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Milestone[];
   };
@@ -91512,13 +93449,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/milestones";
-      typedPath?: `/repos/${string}/${string}/milestones`;
+      typedPath: `/repos/${string}/${string}/milestones`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The title of the milestone. */
         title: string;
@@ -91542,7 +93481,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}`;
+      typedPath: `/repos/${string}/${string}/milestones/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91551,6 +93490,9 @@ type Routes = {
         /** The number that identifies the milestone. */
         milestoneNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Milestone;
   };
@@ -91558,7 +93500,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}`;
+      typedPath: `/repos/${string}/${string}/milestones/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91567,6 +93509,8 @@ type Routes = {
         /** The number that identifies the milestone. */
         milestoneNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The title of the milestone. */
         title?: string;
@@ -91590,7 +93534,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}`;
+      typedPath: `/repos/${string}/${string}/milestones/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91599,6 +93543,9 @@ type Routes = {
         /** The number that identifies the milestone. */
         milestoneNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -91606,7 +93553,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}/labels`;
+      typedPath: `/repos/${string}/${string}/milestones/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91615,6 +93562,7 @@ type Routes = {
         /** The number that identifies the milestone. */
         milestoneNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -91627,6 +93575,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Label[];
   };
@@ -91634,13 +93583,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/notifications";
-      typedPath?: `/repos/${string}/${string}/notifications`;
+      typedPath: `/repos/${string}/${string}/notifications`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * If `true`, show notifications marked as read.
@@ -91673,6 +93623,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Thread[];
   };
@@ -91680,13 +93631,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/notifications";
-      typedPath?: `/repos/${string}/${string}/notifications`;
+      typedPath: `/repos/${string}/${string}/notifications`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Describes the last point that notifications were checked. Anything updated since this time will not be marked as read. If you omit this parameter, all notifications are marked as read. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. Default: The current timestamp.
@@ -91704,13 +93657,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
+      typedPath: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Page;
   };
@@ -91718,13 +93674,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
+      typedPath: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: null &
         ({
           /** The process in which the Page will be built. Possible values are `"legacy"` and `"workflow"`. */
@@ -91747,13 +93705,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
+      typedPath: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Specify a custom domain for the repository. Sending a `null` value will remove the custom domain. For more about custom domains, see "[Using a custom domain with GitHub Pages](https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site)." */
         cname?: string | null;
@@ -91780,13 +93740,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
+      typedPath: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -91794,13 +93757,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pages/builds";
-      typedPath?: `/repos/${string}/${string}/pages/builds`;
+      typedPath: `/repos/${string}/${string}/pages/builds`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -91813,6 +93777,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: PageBuild[];
   };
@@ -91820,13 +93785,16 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pages/builds";
-      typedPath?: `/repos/${string}/${string}/pages/builds`;
+      typedPath: `/repos/${string}/${string}/pages/builds`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PageBuildStatus;
   };
@@ -91834,13 +93802,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pages/builds/latest";
-      typedPath?: `/repos/${string}/${string}/pages/builds/latest`;
+      typedPath: `/repos/${string}/${string}/pages/builds/latest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PageBuild;
   };
@@ -91848,7 +93819,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pages/builds/${buildId}";
-      typedPath?: `/repos/${string}/${string}/pages/builds/${number}`;
+      typedPath: `/repos/${string}/${string}/pages/builds/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91856,6 +93827,9 @@ type Routes = {
         repo: string;
         buildId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PageBuild;
   };
@@ -91863,13 +93837,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pages/deployments";
-      typedPath?: `/repos/${string}/${string}/pages/deployments`;
+      typedPath: `/repos/${string}/${string}/pages/deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The ID of an artifact that contains the .zip or .tar of static assets to deploy. The artifact belongs to the repository. Either `artifact_id` or `artifact_url` are required. */
         artifact_id?: number;
@@ -91895,7 +93871,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}";
-      typedPath?: `/repos/${string}/${string}/pages/deployments/${number | string}`;
+      typedPath: `/repos/${string}/${string}/pages/deployments/${number | string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91904,6 +93880,9 @@ type Routes = {
         /** The ID of the Pages deployment. You can also give the commit SHA of the deployment. */
         pagesDeploymentId: number | string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PagesDeploymentStatus;
   };
@@ -91911,7 +93890,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}/cancel";
-      typedPath?: `/repos/${string}/${string}/pages/deployments/${number | string}/cancel`;
+      typedPath: `/repos/${string}/${string}/pages/deployments/${number | string}/cancel`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91920,6 +93899,9 @@ type Routes = {
         /** The ID of the Pages deployment. You can also give the commit SHA of the deployment. */
         pagesDeploymentId: number | string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -91927,13 +93909,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pages/health";
-      typedPath?: `/repos/${string}/${string}/pages/health`;
+      typedPath: `/repos/${string}/${string}/pages/health`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PagesHealthCheck;
   };
@@ -91941,13 +93926,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/private-vulnerability-reporting";
-      typedPath?: `/repos/${string}/${string}/private-vulnerability-reporting`;
+      typedPath: `/repos/${string}/${string}/private-vulnerability-reporting`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       /** Whether or not private vulnerability reporting is enabled for the repository. */
@@ -91958,13 +93946,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/private-vulnerability-reporting";
-      typedPath?: `/repos/${string}/${string}/private-vulnerability-reporting`;
+      typedPath: `/repos/${string}/${string}/private-vulnerability-reporting`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -91972,13 +93963,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/private-vulnerability-reporting";
-      typedPath?: `/repos/${string}/${string}/private-vulnerability-reporting`;
+      typedPath: `/repos/${string}/${string}/private-vulnerability-reporting`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -91986,13 +93980,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/projects";
-      typedPath?: `/repos/${string}/${string}/projects`;
+      typedPath: `/repos/${string}/${string}/projects`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * Indicates the state of the projects to return.
@@ -92010,6 +94005,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Project[];
   };
@@ -92017,13 +94013,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/projects";
-      typedPath?: `/repos/${string}/${string}/projects`;
+      typedPath: `/repos/${string}/${string}/projects`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the project. */
         name: string;
@@ -92037,13 +94035,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/properties/values";
-      typedPath?: `/repos/${string}/${string}/properties/values`;
+      typedPath: `/repos/${string}/${string}/properties/values`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CustomPropertyValue[];
   };
@@ -92051,13 +94052,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/properties/values";
-      typedPath?: `/repos/${string}/${string}/properties/values`;
+      typedPath: `/repos/${string}/${string}/properties/values`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** A list of custom property names and associated values to apply to the repositories. */
         properties: CustomPropertyValue[];
@@ -92069,13 +94072,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls";
-      typedPath?: `/repos/${string}/${string}/pulls`;
+      typedPath: `/repos/${string}/${string}/pulls`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * Either `open`, `closed`, or `all` to filter by state.
@@ -92104,6 +94108,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: PullRequestSimple[];
   };
@@ -92111,13 +94116,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls";
-      typedPath?: `/repos/${string}/${string}/pulls`;
+      typedPath: `/repos/${string}/${string}/pulls`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The title of the new pull request. Required unless `issue` is specified. */
         title?: string;
@@ -92151,13 +94158,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/comments`;
+      typedPath: `/repos/${string}/${string}/pulls/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         sort?: "created" | "updated" | "created_at";
         /** The direction to sort results. Ignored without `sort` parameter. */
@@ -92178,6 +94186,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: PullRequestReviewComment[];
   };
@@ -92185,7 +94194,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92197,6 +94206,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PullRequestReviewComment;
   };
@@ -92204,7 +94216,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92216,6 +94228,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The text of the reply to the review comment. */
         body: string;
@@ -92227,7 +94241,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92239,6 +94253,9 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -92246,7 +94263,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/pulls/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92258,6 +94275,7 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a pull request review comment. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -92272,6 +94290,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -92279,7 +94298,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/pulls/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92291,6 +94310,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the pull request review comment. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -92302,7 +94323,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}/reactions/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/comments/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92316,6 +94337,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -92323,7 +94347,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92332,6 +94356,9 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PullRequest;
   };
@@ -92339,7 +94366,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92348,6 +94375,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The title of the pull request. */
         title?: string;
@@ -92367,7 +94396,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/codespaces";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/codespaces`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/codespaces`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92376,6 +94405,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The requested location for a new codespace. Best efforts are made to respect this upon creation. Assigned by IP if not provided. */
         location?: string;
@@ -92405,7 +94436,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/comments`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92414,6 +94445,7 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The property to sort the results by.
@@ -92438,6 +94470,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: PullRequestReviewComment[];
   };
@@ -92445,7 +94478,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/comments`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92454,6 +94487,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The text of the review comment. */
         body: string;
@@ -92489,7 +94524,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/comments/${commentId}/replies";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/comments/${number}/replies`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/comments/${number}/replies`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92503,6 +94538,8 @@ type Routes = {
          */
         commentId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The text of the review comment. */
         body: string;
@@ -92514,7 +94551,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/commits";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/commits`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92523,6 +94560,7 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -92535,6 +94573,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Commit[];
   };
@@ -92542,7 +94581,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/files";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/files`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/files`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92551,6 +94590,7 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -92563,6 +94603,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: DiffEntry[];
   };
@@ -92570,7 +94611,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/merge";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/merge`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/merge`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92579,6 +94620,9 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -92586,7 +94630,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/merge";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/merge`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/merge`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92595,6 +94639,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Title for the automatic commit message. */
         commit_title?: string;
@@ -92612,7 +94658,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92621,6 +94667,9 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PullRequestReviewRequest;
   };
@@ -92628,7 +94677,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92637,6 +94686,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of user `login`s that will be requested. */
         reviewers?: string[];
@@ -92650,7 +94701,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92659,6 +94710,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of user `login`s that will be removed. */
         reviewers: string[];
@@ -92672,7 +94725,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92681,6 +94734,7 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -92693,6 +94747,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: PullRequestReview[];
   };
@@ -92700,7 +94755,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92709,6 +94764,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The SHA of the commit that needs a review. Not using the latest commit SHA may render your review comment outdated if a subsequent commit modifies the line you specify as the `position`. Defaults to the most recent commit in the pull request when you do not specify a value. */
         commit_id?: string;
@@ -92741,7 +94798,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92752,6 +94809,9 @@ type Routes = {
         /** The unique identifier of the review. */
         reviewId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PullRequestReview;
   };
@@ -92759,7 +94819,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92770,6 +94830,8 @@ type Routes = {
         /** The unique identifier of the review. */
         reviewId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The body text of the pull request review. */
         body: string;
@@ -92781,7 +94843,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92792,6 +94854,9 @@ type Routes = {
         /** The unique identifier of the review. */
         reviewId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PullRequestReview;
   };
@@ -92799,7 +94864,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/comments`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92810,6 +94875,7 @@ type Routes = {
         /** The unique identifier of the review. */
         reviewId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -92822,6 +94888,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: ReviewComment[];
   };
@@ -92829,7 +94896,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/dismissals";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/dismissals`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/dismissals`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92840,6 +94907,8 @@ type Routes = {
         /** The unique identifier of the review. */
         reviewId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The message for the pull request review dismissal */
         message: string;
@@ -92853,7 +94922,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/events";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/events`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92864,6 +94933,8 @@ type Routes = {
         /** The unique identifier of the review. */
         reviewId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The body text of the pull request review */
         body?: string;
@@ -92877,7 +94948,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/update-branch";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/update-branch`;
+      typedPath: `/repos/${string}/${string}/pulls/${number}/update-branch`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92886,6 +94957,8 @@ type Routes = {
         /** The number that identifies the pull request. */
         pullNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The expected SHA of the pull request's HEAD ref. This is the most recent commit on the pull request's branch. If the expected SHA does not match the pull request's HEAD, you will receive a `422 Unprocessable Entity` status. You can use the "[List commits](https://docs.github.com/rest/commits/commits#list-commits)" endpoint to find the most recent commit SHA. Default: SHA of the pull request's current HEAD ref. */
         expected_head_sha?: string;
@@ -92900,17 +94973,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/readme";
-      typedPath?: `/repos/${string}/${string}/readme`;
+      typedPath: `/repos/${string}/${string}/readme`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
+      body?: never;
     };
     Response: ContentFile;
   };
@@ -92918,7 +94993,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/readme/${dir}";
-      typedPath?: `/repos/${string}/${string}/readme/${string}`;
+      typedPath: `/repos/${string}/${string}/readme/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92927,10 +95002,12 @@ type Routes = {
         /** The alternate path to look for a README file */
         dir: string;
       };
+      headers?: never;
       query: {
         /** The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
+      body?: never;
     };
     Response: ContentFile;
   };
@@ -92938,13 +95015,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases";
-      typedPath?: `/repos/${string}/${string}/releases`;
+      typedPath: `/repos/${string}/${string}/releases`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -92957,6 +95035,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Release[];
   };
@@ -92964,13 +95043,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/releases";
-      typedPath?: `/repos/${string}/${string}/releases`;
+      typedPath: `/repos/${string}/${string}/releases`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the tag. */
         tag_name: string;
@@ -93010,7 +95091,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases/assets/${assetId}";
-      typedPath?: `/repos/${string}/${string}/releases/assets/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/assets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93019,6 +95100,9 @@ type Routes = {
         /** The unique identifier of the asset. */
         assetId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ReleaseAsset;
   };
@@ -93026,7 +95110,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/releases/assets/${assetId}";
-      typedPath?: `/repos/${string}/${string}/releases/assets/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/assets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93035,6 +95119,8 @@ type Routes = {
         /** The unique identifier of the asset. */
         assetId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The file name of the asset. */
         name?: string;
@@ -93050,7 +95136,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/releases/assets/${assetId}";
-      typedPath?: `/repos/${string}/${string}/releases/assets/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/assets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93059,6 +95145,9 @@ type Routes = {
         /** The unique identifier of the asset. */
         assetId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -93066,13 +95155,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/releases/generate-notes";
-      typedPath?: `/repos/${string}/${string}/releases/generate-notes`;
+      typedPath: `/repos/${string}/${string}/releases/generate-notes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The tag name for the release. This can be an existing tag or a new one. */
         tag_name: string;
@@ -93090,13 +95181,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases/latest";
-      typedPath?: `/repos/${string}/${string}/releases/latest`;
+      typedPath: `/repos/${string}/${string}/releases/latest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Release;
   };
@@ -93104,7 +95198,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases/tags/${tag}";
-      typedPath?: `/repos/${string}/${string}/releases/tags/${string}`;
+      typedPath: `/repos/${string}/${string}/releases/tags/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93113,6 +95207,9 @@ type Routes = {
         /** tag parameter */
         tag: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Release;
   };
@@ -93120,7 +95217,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93129,6 +95226,9 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Release;
   };
@@ -93136,7 +95236,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93145,6 +95245,8 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the tag. */
         tag_name?: string;
@@ -93173,7 +95275,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93182,6 +95284,9 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -93189,7 +95294,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}/assets";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/assets`;
+      typedPath: `/repos/${string}/${string}/releases/${number}/assets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93198,6 +95303,7 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -93210,6 +95316,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: ReleaseAsset[];
   };
@@ -93217,7 +95324,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}/assets";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/assets`;
+      typedPath: `/repos/${string}/${string}/releases/${number}/assets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93226,6 +95333,7 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
       query: {
         name: string;
         label?: string;
@@ -93238,7 +95346,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}/reactions";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/releases/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93247,6 +95355,7 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a release. */
         content?: "+1" | "laugh" | "heart" | "hooray" | "rocket" | "eyes";
@@ -93261,6 +95370,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -93268,7 +95378,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}/reactions";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/reactions`;
+      typedPath: `/repos/${string}/${string}/releases/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93277,6 +95387,8 @@ type Routes = {
         /** The unique identifier of the release. */
         releaseId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the release. */
         content: "+1" | "laugh" | "heart" | "hooray" | "rocket" | "eyes";
@@ -93288,7 +95400,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/releases/${releaseId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/reactions/${number}`;
+      typedPath: `/repos/${string}/${string}/releases/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93299,6 +95411,9 @@ type Routes = {
         /** The unique identifier of the reaction. */
         reactionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -93306,7 +95421,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rules/branches/${branch}";
-      typedPath?: `/repos/${string}/${string}/rules/branches/${string}`;
+      typedPath: `/repos/${string}/${string}/rules/branches/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93315,6 +95430,7 @@ type Routes = {
         /** The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql). */
         branch: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -93327,6 +95443,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RepositoryRuleDetailed[];
   };
@@ -93334,13 +95451,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rulesets";
-      typedPath?: `/repos/${string}/${string}/rulesets`;
+      typedPath: `/repos/${string}/${string}/rulesets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -93365,6 +95483,7 @@ type Routes = {
          */
         targets?: string;
       };
+      body?: never;
     };
     Response: RepositoryRuleset[];
   };
@@ -93372,13 +95491,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/rulesets";
-      typedPath?: `/repos/${string}/${string}/rulesets`;
+      typedPath: `/repos/${string}/${string}/rulesets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the ruleset. */
         name: string;
@@ -93403,13 +95524,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rulesets/rule-suites";
-      typedPath?: `/repos/${string}/${string}/rulesets/rule-suites`;
+      typedPath: `/repos/${string}/${string}/rulesets/rule-suites`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** The name of the ref. Cannot contain wildcard characters. Optionally prefix with `refs/heads/` to limit to branches or `refs/tags/` to limit to tags. Omit the prefix to search across all refs. When specified, only rule evaluations triggered for this ref will be returned. */
         ref?: string;
@@ -93438,6 +95560,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RuleSuites;
   };
@@ -93445,7 +95568,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rulesets/rule-suites/${ruleSuiteId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/rule-suites/${number}`;
+      typedPath: `/repos/${string}/${string}/rulesets/rule-suites/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93459,6 +95582,9 @@ type Routes = {
          */
         ruleSuiteId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RuleSuite;
   };
@@ -93466,7 +95592,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}`;
+      typedPath: `/repos/${string}/${string}/rulesets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93475,6 +95601,7 @@ type Routes = {
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
       query: {
         /**
          * Include rulesets configured at higher levels that apply to this repository
@@ -93482,6 +95609,7 @@ type Routes = {
          */
         includes_parents?: boolean;
       };
+      body?: never;
     };
     Response: RepositoryRuleset;
   };
@@ -93489,7 +95617,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}`;
+      typedPath: `/repos/${string}/${string}/rulesets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93498,6 +95626,8 @@ type Routes = {
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the ruleset. */
         name?: string;
@@ -93519,7 +95649,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}`;
+      typedPath: `/repos/${string}/${string}/rulesets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93528,6 +95658,9 @@ type Routes = {
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -93535,7 +95668,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}/history";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}/history`;
+      typedPath: `/repos/${string}/${string}/rulesets/${number}/history`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93544,6 +95677,7 @@ type Routes = {
         /** The ID of the ruleset. */
         rulesetId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -93556,6 +95690,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RulesetVersion[];
   };
@@ -93563,7 +95698,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}/history/${versionId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}/history/${number}`;
+      typedPath: `/repos/${string}/${string}/rulesets/${number}/history/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93574,6 +95709,9 @@ type Routes = {
         /** The ID of the version */
         versionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RulesetVersionWithState;
   };
@@ -93581,13 +95719,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/secret-scanning/alerts";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts`;
+      typedPath: `/repos/${string}/${string}/secret-scanning/alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /** Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
         state?: "open" | "resolved";
@@ -93637,6 +95776,7 @@ type Routes = {
          */
         hide_secret?: boolean;
       };
+      body?: never;
     };
     Response: SecretScanningAlert[];
   };
@@ -93644,7 +95784,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}`;
+      typedPath: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93653,6 +95793,7 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
       query: {
         /**
          * A boolean value representing whether or not to hide literal secrets in the results.
@@ -93660,6 +95801,7 @@ type Routes = {
          */
         hide_secret?: boolean;
       };
+      body?: never;
     };
     Response: SecretScanningAlert;
   };
@@ -93667,7 +95809,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}`;
+      typedPath: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93676,6 +95818,8 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Sets the state of the secret scanning alert. You must provide `resolution` when you set the state to `resolved`. */
         state: SecretScanningAlertState;
@@ -93691,7 +95835,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}/locations";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}/locations`;
+      typedPath: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}/locations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93700,6 +95844,7 @@ type Routes = {
         /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alertNumber: AlertNumber;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -93712,6 +95857,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: SecretScanningLocation[];
   };
@@ -93719,13 +95865,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/secret-scanning/push-protection-bypasses";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/push-protection-bypasses`;
+      typedPath: `/repos/${string}/${string}/secret-scanning/push-protection-bypasses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The reason for bypassing push protection. */
         reason: SecretScanningPushProtectionBypassReason;
@@ -93739,13 +95887,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/secret-scanning/scan-history";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/scan-history`;
+      typedPath: `/repos/${string}/${string}/secret-scanning/scan-history`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: SecretScanningScanHistory;
   };
@@ -93753,13 +95904,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/security-advisories";
-      typedPath?: `/repos/${string}/${string}/security-advisories`;
+      typedPath: `/repos/${string}/${string}/security-advisories`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -93785,6 +95937,7 @@ type Routes = {
         /** Filter by state of the repository advisories. Only advisories of this state will be returned. */
         state?: "triage" | "draft" | "published" | "closed";
       };
+      body?: never;
     };
     Response: RepositoryAdvisory[];
   };
@@ -93792,13 +95945,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/security-advisories";
-      typedPath?: `/repos/${string}/${string}/security-advisories`;
+      typedPath: `/repos/${string}/${string}/security-advisories`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: RepositoryAdvisoryCreate;
     };
     Response: RepositoryAdvisory;
@@ -93807,13 +95962,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/security-advisories/reports";
-      typedPath?: `/repos/${string}/${string}/security-advisories/reports`;
+      typedPath: `/repos/${string}/${string}/security-advisories/reports`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: PrivateVulnerabilityReportCreate;
     };
     Response: RepositoryAdvisory;
@@ -93822,7 +95979,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}`;
+      typedPath: `/repos/${string}/${string}/security-advisories/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93831,6 +95988,9 @@ type Routes = {
         /** The GHSA (GitHub Security Advisory) identifier of the advisory. */
         ghsaId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RepositoryAdvisory;
   };
@@ -93838,7 +95998,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}`;
+      typedPath: `/repos/${string}/${string}/security-advisories/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93847,6 +96007,8 @@ type Routes = {
         /** The GHSA (GitHub Security Advisory) identifier of the advisory. */
         ghsaId: string;
       };
+      headers?: never;
+      query?: never;
       body: RepositoryAdvisoryUpdate;
     };
     Response: RepositoryAdvisory;
@@ -93855,7 +96017,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}/cve";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}/cve`;
+      typedPath: `/repos/${string}/${string}/security-advisories/${string}/cve`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93864,6 +96026,9 @@ type Routes = {
         /** The GHSA (GitHub Security Advisory) identifier of the advisory. */
         ghsaId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -93871,7 +96036,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}/forks";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}/forks`;
+      typedPath: `/repos/${string}/${string}/security-advisories/${string}/forks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93880,6 +96045,9 @@ type Routes = {
         /** The GHSA (GitHub Security Advisory) identifier of the advisory. */
         ghsaId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: FullRepository;
   };
@@ -93887,13 +96055,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/stargazers";
-      typedPath?: `/repos/${string}/${string}/stargazers`;
+      typedPath: `/repos/${string}/${string}/stargazers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -93906,6 +96075,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[] | Stargazer[];
   };
@@ -93913,13 +96083,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/stats/code_frequency";
-      typedPath?: `/repos/${string}/${string}/stats/code_frequency`;
+      typedPath: `/repos/${string}/${string}/stats/code_frequency`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeFrequencyStat[];
   };
@@ -93927,13 +96100,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/stats/commit_activity";
-      typedPath?: `/repos/${string}/${string}/stats/commit_activity`;
+      typedPath: `/repos/${string}/${string}/stats/commit_activity`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CommitActivity[];
   };
@@ -93941,13 +96117,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/stats/contributors";
-      typedPath?: `/repos/${string}/${string}/stats/contributors`;
+      typedPath: `/repos/${string}/${string}/stats/contributors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ContributorActivity[];
   };
@@ -93955,13 +96134,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/stats/participation";
-      typedPath?: `/repos/${string}/${string}/stats/participation`;
+      typedPath: `/repos/${string}/${string}/stats/participation`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ParticipationStats;
   };
@@ -93969,13 +96151,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/stats/punch_card";
-      typedPath?: `/repos/${string}/${string}/stats/punch_card`;
+      typedPath: `/repos/${string}/${string}/stats/punch_card`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodeFrequencyStat[];
   };
@@ -93983,7 +96168,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/statuses/${sha}";
-      typedPath?: `/repos/${string}/${string}/statuses/${string}`;
+      typedPath: `/repos/${string}/${string}/statuses/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93991,6 +96176,8 @@ type Routes = {
         repo: string;
         sha: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The state of the status. */
         state: "error" | "failure" | "pending" | "success";
@@ -94015,13 +96202,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/subscribers";
-      typedPath?: `/repos/${string}/${string}/subscribers`;
+      typedPath: `/repos/${string}/${string}/subscribers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -94034,6 +96222,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -94041,13 +96230,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/subscription";
-      typedPath?: `/repos/${string}/${string}/subscription`;
+      typedPath: `/repos/${string}/${string}/subscription`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: RepositorySubscription;
   };
@@ -94055,13 +96247,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/subscription";
-      typedPath?: `/repos/${string}/${string}/subscription`;
+      typedPath: `/repos/${string}/${string}/subscription`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** Determines if notifications should be received from this repository. */
         subscribed?: boolean;
@@ -94075,13 +96269,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/subscription";
-      typedPath?: `/repos/${string}/${string}/subscription`;
+      typedPath: `/repos/${string}/${string}/subscription`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94089,13 +96286,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/tags";
-      typedPath?: `/repos/${string}/${string}/tags`;
+      typedPath: `/repos/${string}/${string}/tags`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -94108,6 +96306,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Tag[];
   };
@@ -94115,13 +96314,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/tags/protection";
-      typedPath?: `/repos/${string}/${string}/tags/protection`;
+      typedPath: `/repos/${string}/${string}/tags/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TagProtection[];
   };
@@ -94129,13 +96331,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/tags/protection";
-      typedPath?: `/repos/${string}/${string}/tags/protection`;
+      typedPath: `/repos/${string}/${string}/tags/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An optional glob pattern to match against when enforcing tag protection. */
         pattern: string;
@@ -94147,7 +96351,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/tags/protection/${tagProtectionId}";
-      typedPath?: `/repos/${string}/${string}/tags/protection/${number}`;
+      typedPath: `/repos/${string}/${string}/tags/protection/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94156,6 +96360,9 @@ type Routes = {
         /** The unique identifier of the tag protection. */
         tagProtectionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94163,7 +96370,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/tarball/${ref}";
-      typedPath?: `/repos/${string}/${string}/tarball/${string}`;
+      typedPath: `/repos/${string}/${string}/tarball/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94171,6 +96378,9 @@ type Routes = {
         repo: string;
         ref: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -94178,13 +96388,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/teams";
-      typedPath?: `/repos/${string}/${string}/teams`;
+      typedPath: `/repos/${string}/${string}/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -94197,6 +96408,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Team[];
   };
@@ -94204,13 +96416,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/topics";
-      typedPath?: `/repos/${string}/${string}/topics`;
+      typedPath: `/repos/${string}/${string}/topics`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -94223,6 +96436,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: Topic;
   };
@@ -94230,13 +96444,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/topics";
-      typedPath?: `/repos/${string}/${string}/topics`;
+      typedPath: `/repos/${string}/${string}/topics`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of topics to add to the repository. Pass one or more topics to _replace_ the set of existing topics. Send an empty array (`[]`) to clear all topics from the repository. **Note:** Topic `names` will be saved as lowercase. */
         names: string[];
@@ -94248,13 +96464,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/traffic/clones";
-      typedPath?: `/repos/${string}/${string}/traffic/clones`;
+      typedPath: `/repos/${string}/${string}/traffic/clones`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The time frame to display results for.
@@ -94262,6 +96479,7 @@ type Routes = {
          */
         per?: "day" | "week";
       };
+      body?: never;
     };
     Response: CloneTraffic;
   };
@@ -94269,13 +96487,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/traffic/popular/paths";
-      typedPath?: `/repos/${string}/${string}/traffic/popular/paths`;
+      typedPath: `/repos/${string}/${string}/traffic/popular/paths`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ContentTraffic[];
   };
@@ -94283,13 +96504,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/traffic/popular/referrers";
-      typedPath?: `/repos/${string}/${string}/traffic/popular/referrers`;
+      typedPath: `/repos/${string}/${string}/traffic/popular/referrers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ReferrerTraffic[];
   };
@@ -94297,13 +96521,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/traffic/views";
-      typedPath?: `/repos/${string}/${string}/traffic/views`;
+      typedPath: `/repos/${string}/${string}/traffic/views`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
       query: {
         /**
          * The time frame to display results for.
@@ -94311,6 +96536,7 @@ type Routes = {
          */
         per?: "day" | "week";
       };
+      body?: never;
     };
     Response: ViewTraffic;
   };
@@ -94318,13 +96544,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${owner}/${repo}/transfer";
-      typedPath?: `/repos/${string}/${string}/transfer`;
+      typedPath: `/repos/${string}/${string}/transfer`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The username or organization name the repository will be transferred to. */
         new_owner: string;
@@ -94340,13 +96568,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/vulnerability-alerts";
-      typedPath?: `/repos/${string}/${string}/vulnerability-alerts`;
+      typedPath: `/repos/${string}/${string}/vulnerability-alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94354,13 +96585,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/repos/${owner}/${repo}/vulnerability-alerts";
-      typedPath?: `/repos/${string}/${string}/vulnerability-alerts`;
+      typedPath: `/repos/${string}/${string}/vulnerability-alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94368,13 +96602,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/repos/${owner}/${repo}/vulnerability-alerts";
-      typedPath?: `/repos/${string}/${string}/vulnerability-alerts`;
+      typedPath: `/repos/${string}/${string}/vulnerability-alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94382,7 +96619,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repos/${owner}/${repo}/zipball/${ref}";
-      typedPath?: `/repos/${string}/${string}/zipball/${string}`;
+      typedPath: `/repos/${string}/${string}/zipball/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94390,6 +96627,9 @@ type Routes = {
         repo: string;
         ref: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -94397,13 +96637,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/repos/${templateOwner}/${templateRepo}/generate";
-      typedPath?: `/repos/${string}/${string}/generate`;
+      typedPath: `/repos/${string}/${string}/generate`;
       params: {
         /** The account owner of the template repository. The name is not case sensitive. */
         templateOwner: string;
         /** The name of the template repository without the `.git` extension. The name is not case sensitive. */
         templateRepo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The organization or person who will own the new repository. To create a new repository in an organization, the authenticated user must be a member of the specified organization. */
         owner?: string;
@@ -94429,10 +96671,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/repositories";
+      typedPath: `/repositories`;
+      params?: never;
+      headers?: never;
       query: {
         /** A repository ID. Only return repositories with an ID greater than this ID. */
         since?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -94440,6 +96686,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/code";
+      typedPath: `/search/code`;
+      params?: never;
+      headers?: never;
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). See "[Searching code](https://docs.github.com/search-github/searching-on-github/searching-code)" for a detailed list of qualifiers. */
         q: string;
@@ -94465,6 +96714,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94476,6 +96726,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/commits";
+      typedPath: `/search/commits`;
+      params?: never;
+      headers?: never;
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). See "[Searching commits](https://docs.github.com/search-github/searching-on-github/searching-commits)" for a detailed list of qualifiers. */
         q: string;
@@ -94497,6 +96750,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94508,6 +96762,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/issues";
+      typedPath: `/search/issues`;
+      params?: never;
+      headers?: never;
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). See "[Searching issues and pull requests](https://docs.github.com/search-github/searching-on-github/searching-issues-and-pull-requests)" for a detailed list of qualifiers. */
         q: string;
@@ -94545,6 +96802,7 @@ type Routes = {
          */
         advanced_search?: string;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94556,6 +96814,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/labels";
+      typedPath: `/search/labels`;
+      params?: never;
+      headers?: never;
       query: {
         /** The id of the repository. */
         repository_id: number;
@@ -94579,6 +96840,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94590,6 +96852,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/repositories";
+      typedPath: `/search/repositories`;
+      params?: never;
+      headers?: never;
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). See "[Searching for repositories](https://docs.github.com/articles/searching-for-repositories/)" for a detailed list of qualifiers. */
         q: string;
@@ -94611,6 +96876,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94622,6 +96888,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/topics";
+      typedPath: `/search/topics`;
+      params?: never;
+      headers?: never;
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). */
         q: string;
@@ -94636,6 +96905,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94647,6 +96917,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/search/users";
+      typedPath: `/search/users`;
+      params?: never;
+      headers?: never;
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as the web interface for GitHub. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/search/search#constructing-a-search-query). See "[Searching users](https://docs.github.com/search-github/searching-on-github/searching-users)" for a detailed list of qualifiers. */
         q: string;
@@ -94668,6 +96941,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -94679,11 +96953,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}";
-      typedPath?: `/teams/${number}`;
+      typedPath: `/teams/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamFull;
   };
@@ -94691,11 +96968,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/teams/${teamId}";
-      typedPath?: `/teams/${number}`;
+      typedPath: `/teams/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The name of the team. */
         name: string;
@@ -94731,11 +97010,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}";
-      typedPath?: `/teams/${number}`;
+      typedPath: `/teams/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94743,11 +97025,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/discussions";
-      typedPath?: `/teams/${number}/discussions`;
+      typedPath: `/teams/${number}/discussions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -94765,6 +97048,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamDiscussion[];
   };
@@ -94772,11 +97056,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/teams/${teamId}/discussions";
-      typedPath?: `/teams/${number}/discussions`;
+      typedPath: `/teams/${number}/discussions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion post's title. */
         title: string;
@@ -94795,13 +97081,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/discussions/${discussionNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}`;
+      typedPath: `/teams/${number}/discussions/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamDiscussion;
   };
@@ -94809,13 +97098,15 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/teams/${teamId}/discussions/${discussionNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}`;
+      typedPath: `/teams/${number}/discussions/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion post's title. */
         title?: string;
@@ -94829,13 +97120,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}/discussions/${discussionNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}`;
+      typedPath: `/teams/${number}/discussions/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94843,13 +97137,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments";
-      typedPath?: `/teams/${number}/discussions/${number}/comments`;
+      typedPath: `/teams/${number}/discussions/${number}/comments`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
       query: {
         /**
          * The direction to sort the results by.
@@ -94867,6 +97162,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamDiscussionComment[];
   };
@@ -94874,13 +97170,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments";
-      typedPath?: `/teams/${number}/discussions/${number}/comments`;
+      typedPath: `/teams/${number}/discussions/${number}/comments`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion comment's body text. */
         body: string;
@@ -94892,7 +97190,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}`;
+      typedPath: `/teams/${number}/discussions/${number}/comments/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -94901,6 +97199,9 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamDiscussionComment;
   };
@@ -94908,7 +97209,7 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}`;
+      typedPath: `/teams/${number}/discussions/${number}/comments/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -94917,6 +97218,8 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The discussion comment's body text. */
         body: string;
@@ -94928,7 +97231,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}`;
+      typedPath: `/teams/${number}/discussions/${number}/comments/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -94937,6 +97240,9 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -94944,7 +97250,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}/reactions`;
+      typedPath: `/teams/${number}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -94953,6 +97259,7 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion comment. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -94967,6 +97274,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -94974,7 +97282,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}/reactions`;
+      typedPath: `/teams/${number}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -94983,6 +97291,8 @@ type Routes = {
         /** The number that identifies the comment. */
         commentNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the team discussion comment. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -94994,13 +97304,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/reactions`;
+      typedPath: `/teams/${number}/discussions/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
       query: {
         /** Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion. */
         content?: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -95015,6 +97326,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Reaction[];
   };
@@ -95022,13 +97334,15 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/teams/${teamId}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/reactions`;
+      typedPath: `/teams/${number}/discussions/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The number that identifies the discussion. */
         discussionNumber: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the team discussion. */
         content: "+1" | "-1" | "laugh" | "confused" | "heart" | "hooray" | "rocket" | "eyes";
@@ -95040,11 +97354,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/invitations";
-      typedPath?: `/teams/${number}/invitations`;
+      typedPath: `/teams/${number}/invitations`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95057,6 +97372,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrganizationInvitation[];
   };
@@ -95064,11 +97380,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/members";
-      typedPath?: `/teams/${number}/members`;
+      typedPath: `/teams/${number}/members`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
       query: {
         /**
          * Filters members returned by their role in the team.
@@ -95086,6 +97403,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -95093,13 +97411,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/members/${username}";
-      typedPath?: `/teams/${number}/members/${string}`;
+      typedPath: `/teams/${number}/members/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95107,13 +97428,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/teams/${teamId}/members/${username}";
-      typedPath?: `/teams/${number}/members/${string}`;
+      typedPath: `/teams/${number}/members/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95121,13 +97445,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}/members/${username}";
-      typedPath?: `/teams/${number}/members/${string}`;
+      typedPath: `/teams/${number}/members/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95135,13 +97462,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/memberships/${username}";
-      typedPath?: `/teams/${number}/memberships/${string}`;
+      typedPath: `/teams/${number}/memberships/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamMembership;
   };
@@ -95149,13 +97479,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/teams/${teamId}/memberships/${username}";
-      typedPath?: `/teams/${number}/memberships/${string}`;
+      typedPath: `/teams/${number}/memberships/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The role that this user should have in the team.
@@ -95170,13 +97502,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}/memberships/${username}";
-      typedPath?: `/teams/${number}/memberships/${string}`;
+      typedPath: `/teams/${number}/memberships/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95184,11 +97519,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/projects";
-      typedPath?: `/teams/${number}/projects`;
+      typedPath: `/teams/${number}/projects`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95201,6 +97537,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamProject[];
   };
@@ -95208,13 +97545,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/projects/${projectId}";
-      typedPath?: `/teams/${number}/projects/${number}`;
+      typedPath: `/teams/${number}/projects/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamProject;
   };
@@ -95222,13 +97562,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/teams/${teamId}/projects/${projectId}";
-      typedPath?: `/teams/${number}/projects/${number}`;
+      typedPath: `/teams/${number}/projects/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
         permission?: "read" | "write" | "admin";
@@ -95240,13 +97582,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}/projects/${projectId}";
-      typedPath?: `/teams/${number}/projects/${number}`;
+      typedPath: `/teams/${number}/projects/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
         /** The unique identifier of the project. */
         projectId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95254,11 +97599,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/repos";
-      typedPath?: `/teams/${number}/repos`;
+      typedPath: `/teams/${number}/repos`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95271,6 +97617,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -95278,7 +97625,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/repos/${owner}/${repo}";
-      typedPath?: `/teams/${number}/repos/${string}/${string}`;
+      typedPath: `/teams/${number}/repos/${string}/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -95287,6 +97634,9 @@ type Routes = {
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: TeamRepository;
   };
@@ -95294,7 +97644,7 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/teams/${teamId}/repos/${owner}/${repo}";
-      typedPath?: `/teams/${number}/repos/${string}/${string}`;
+      typedPath: `/teams/${number}/repos/${string}/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -95303,6 +97653,8 @@ type Routes = {
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The permission to grant the team on this repository. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository. */
         permission?: "pull" | "push" | "admin";
@@ -95314,7 +97666,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/teams/${teamId}/repos/${owner}/${repo}";
-      typedPath?: `/teams/${number}/repos/${string}/${string}`;
+      typedPath: `/teams/${number}/repos/${string}/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -95323,6 +97675,9 @@ type Routes = {
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95330,11 +97685,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/teams/${teamId}/teams";
-      typedPath?: `/teams/${number}/teams`;
+      typedPath: `/teams/${number}/teams`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95347,11 +97703,20 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Team[];
   };
   ["GET /user"]: {
-    Request: { method?: "GET"; path?: "/user" };
+    Request: {
+      method?: "GET";
+      path?: "/user";
+      typedPath: `/user`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
     Response:
       | ({
           user_view_type: "public";
@@ -95364,6 +97729,10 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/user";
+      typedPath: `/user`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The new name of the user.
@@ -95407,6 +97776,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/blocks";
+      typedPath: `/user/blocks`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95419,6 +97791,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -95426,11 +97799,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/blocks/${username}";
-      typedPath?: `/user/blocks/${string}`;
+      typedPath: `/user/blocks/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95438,11 +97814,14 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/blocks/${username}";
-      typedPath?: `/user/blocks/${string}`;
+      typedPath: `/user/blocks/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95450,11 +97829,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/blocks/${username}";
-      typedPath?: `/user/blocks/${string}`;
+      typedPath: `/user/blocks/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95462,6 +97844,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/codespaces";
+      typedPath: `/user/codespaces`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95476,6 +97861,7 @@ type Routes = {
         /** ID of the Repository to filter on */
         repository_id?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -95486,6 +97872,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/codespaces";
+      typedPath: `/user/codespaces`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body:
         | {
             /** Repository id for this codespace */
@@ -95541,6 +97931,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/codespaces/secrets";
+      typedPath: `/user/codespaces/secrets`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95553,6 +97946,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -95560,18 +97954,29 @@ type Routes = {
     };
   };
   ["GET /user/codespaces/secrets/public-key"]: {
-    Request: { method?: "GET"; path?: "/user/codespaces/secrets/public-key" };
+    Request: {
+      method?: "GET";
+      path?: "/user/codespaces/secrets/public-key";
+      typedPath: `/user/codespaces/secrets/public-key`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
     Response: CodespacesUserPublicKey;
   };
   ["GET /user/codespaces/secrets/${secretName}"]: {
     Request: {
       method?: "GET";
       path?: "/user/codespaces/secrets/${secretName}";
-      typedPath?: `/user/codespaces/secrets/${string}`;
+      typedPath: `/user/codespaces/secrets/${string}`;
       params: {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodespacesSecret;
   };
@@ -95579,11 +97984,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/codespaces/secrets/${secretName}";
-      typedPath?: `/user/codespaces/secrets/${string}`;
+      typedPath: `/user/codespaces/secrets/${string}`;
       params: {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get the public key for the authenticated user](https://docs.github.com/rest/codespaces/secrets#get-public-key-for-the-authenticated-user) endpoint.
@@ -95602,11 +98009,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/codespaces/secrets/${secretName}";
-      typedPath?: `/user/codespaces/secrets/${string}`;
+      typedPath: `/user/codespaces/secrets/${string}`;
       params: {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95614,11 +98024,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories`;
+      typedPath: `/user/codespaces/secrets/${string}/repositories`;
       params: {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -95629,11 +98042,13 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories`;
+      typedPath: `/user/codespaces/secrets/${string}/repositories`;
       params: {
         /** The name of the secret. */
         secretName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** An array of repository ids for which a codespace can access the secret. You can manage the list of selected repositories using the [List selected repositories for a user secret](https://docs.github.com/rest/codespaces/secrets#list-selected-repositories-for-a-user-secret), [Add a selected repository to a user secret](https://docs.github.com/rest/codespaces/secrets#add-a-selected-repository-to-a-user-secret), and [Remove a selected repository from a user secret](https://docs.github.com/rest/codespaces/secrets#remove-a-selected-repository-from-a-user-secret) endpoints. */
         selected_repository_ids: number[];
@@ -95645,12 +98060,15 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories/${number}`;
+      typedPath: `/user/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The name of the secret. */
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95658,12 +98076,15 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories/${number}`;
+      typedPath: `/user/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The name of the secret. */
         secretName: string;
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95671,11 +98092,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/codespaces/${codespaceName}";
-      typedPath?: `/user/codespaces/${string}`;
+      typedPath: `/user/codespaces/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Codespace;
   };
@@ -95683,11 +98107,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/user/codespaces/${codespaceName}";
-      typedPath?: `/user/codespaces/${string}`;
+      typedPath: `/user/codespaces/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** A valid machine to transition this codespace to. */
         machine?: string;
@@ -95703,11 +98129,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/codespaces/${codespaceName}";
-      typedPath?: `/user/codespaces/${string}`;
+      typedPath: `/user/codespaces/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: object;
   };
@@ -95715,11 +98144,14 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/codespaces/${codespaceName}/exports";
-      typedPath?: `/user/codespaces/${string}/exports`;
+      typedPath: `/user/codespaces/${string}/exports`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodespaceExportDetails;
   };
@@ -95727,13 +98159,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/codespaces/${codespaceName}/exports/${exportId}";
-      typedPath?: `/user/codespaces/${string}/exports/${string}`;
+      typedPath: `/user/codespaces/${string}/exports/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
         /** The ID of the export operation, or `latest`. Currently only `latest` is currently supported. */
         exportId: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CodespaceExportDetails;
   };
@@ -95741,11 +98176,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/codespaces/${codespaceName}/machines";
-      typedPath?: `/user/codespaces/${string}/machines`;
+      typedPath: `/user/codespaces/${string}/machines`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -95756,11 +98194,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/codespaces/${codespaceName}/publish";
-      typedPath?: `/user/codespaces/${string}/publish`;
+      typedPath: `/user/codespaces/${string}/publish`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** A name for the new repository. */
         name?: string;
@@ -95777,11 +98217,14 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/codespaces/${codespaceName}/start";
-      typedPath?: `/user/codespaces/${string}/start`;
+      typedPath: `/user/codespaces/${string}/start`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Codespace;
   };
@@ -95789,19 +98232,37 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/codespaces/${codespaceName}/stop";
-      typedPath?: `/user/codespaces/${string}/stop`;
+      typedPath: `/user/codespaces/${string}/stop`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Codespace;
   };
-  ["GET /user/docker/conflicts"]: { Request: { method?: "GET"; path?: "/user/docker/conflicts" }; Response: Package[] };
+  ["GET /user/docker/conflicts"]: {
+    Request: {
+      method?: "GET";
+      path?: "/user/docker/conflicts";
+      typedPath: `/user/docker/conflicts`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: Package[];
+  };
   ["PATCH /user/email/visibility"]: {
     Request: {
       method?: "PATCH";
       path?: "/user/email/visibility";
+      typedPath: `/user/email/visibility`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /** Denotes whether an email is publicly visible. */
         visibility: "public" | "private";
@@ -95813,6 +98274,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/emails";
+      typedPath: `/user/emails`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95825,6 +98289,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Email[];
   };
@@ -95832,6 +98297,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/emails";
+      typedPath: `/user/emails`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -95850,6 +98319,10 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/emails";
+      typedPath: `/user/emails`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -95867,6 +98340,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/followers";
+      typedPath: `/user/followers`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95879,6 +98355,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -95886,6 +98363,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/following";
+      typedPath: `/user/following`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95898,6 +98378,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -95905,11 +98386,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/following/${username}";
-      typedPath?: `/user/following/${string}`;
+      typedPath: `/user/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95917,11 +98401,14 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/following/${username}";
-      typedPath?: `/user/following/${string}`;
+      typedPath: `/user/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95929,11 +98416,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/following/${username}";
-      typedPath?: `/user/following/${string}`;
+      typedPath: `/user/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95941,6 +98431,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/gpg_keys";
+      typedPath: `/user/gpg_keys`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -95953,6 +98446,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: GpgKey[];
   };
@@ -95960,6 +98454,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/gpg_keys";
+      typedPath: `/user/gpg_keys`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /** A descriptive name for the new key. */
         name?: string;
@@ -95973,11 +98471,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/gpg_keys/${gpgKeyId}";
-      typedPath?: `/user/gpg_keys/${number}`;
+      typedPath: `/user/gpg_keys/${number}`;
       params: {
         /** The unique identifier of the GPG key. */
         gpgKeyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: GpgKey;
   };
@@ -95985,11 +98486,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/gpg_keys/${gpgKeyId}";
-      typedPath?: `/user/gpg_keys/${number}`;
+      typedPath: `/user/gpg_keys/${number}`;
       params: {
         /** The unique identifier of the GPG key. */
         gpgKeyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -95997,6 +98501,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/installations";
+      typedPath: `/user/installations`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96009,6 +98516,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -96019,11 +98527,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/installations/${installationId}/repositories";
-      typedPath?: `/user/installations/${number}/repositories`;
+      typedPath: `/user/installations/${number}/repositories`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96036,6 +98545,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: {
       total_count: number;
@@ -96047,13 +98557,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/installations/${installationId}/repositories/${repositoryId}";
-      typedPath?: `/user/installations/${number}/repositories/${number}`;
+      typedPath: `/user/installations/${number}/repositories/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
         /** The unique identifier of the repository. */
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96061,32 +98574,62 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/installations/${installationId}/repositories/${repositoryId}";
-      typedPath?: `/user/installations/${number}/repositories/${number}`;
+      typedPath: `/user/installations/${number}/repositories/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
         /** The unique identifier of the repository. */
         repositoryId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
   ["GET /user/interaction-limits"]: {
-    Request: { method?: "GET"; path?: "/user/interaction-limits" };
+    Request: {
+      method?: "GET";
+      path?: "/user/interaction-limits";
+      typedPath: `/user/interaction-limits`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
     Response: InteractionLimitResponse | object;
   };
   ["PUT /user/interaction-limits"]: {
-    Request: { method?: "PUT"; path?: "/user/interaction-limits"; body: InteractionLimit };
+    Request: {
+      method?: "PUT";
+      path?: "/user/interaction-limits";
+      typedPath: `/user/interaction-limits`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body: InteractionLimit;
+    };
     Response: InteractionLimitResponse;
   };
   ["DELETE /user/interaction-limits"]: {
-    Request: { method?: "DELETE"; path?: "/user/interaction-limits" };
+    Request: {
+      method?: "DELETE";
+      path?: "/user/interaction-limits";
+      typedPath: `/user/interaction-limits`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
     Response: void;
   };
   ["GET /user/issues"]: {
     Request: {
       method?: "GET";
       path?: "/user/issues";
+      typedPath: `/user/issues`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation.
@@ -96126,6 +98669,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Issue[];
   };
@@ -96133,6 +98677,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/keys";
+      typedPath: `/user/keys`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96145,6 +98692,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Key[];
   };
@@ -96152,6 +98700,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/keys";
+      typedPath: `/user/keys`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * A descriptive name for the new key.
@@ -96171,11 +98723,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/keys/${keyId}";
-      typedPath?: `/user/keys/${number}`;
+      typedPath: `/user/keys/${number}`;
       params: {
         /** The unique identifier of the key. */
         keyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Key;
   };
@@ -96183,11 +98738,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/keys/${keyId}";
-      typedPath?: `/user/keys/${number}`;
+      typedPath: `/user/keys/${number}`;
       params: {
         /** The unique identifier of the key. */
         keyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96195,6 +98753,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/marketplace_purchases";
+      typedPath: `/user/marketplace_purchases`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96207,6 +98768,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: UserMarketplacePurchase[];
   };
@@ -96214,6 +98776,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/marketplace_purchases/stubbed";
+      typedPath: `/user/marketplace_purchases/stubbed`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96226,6 +98791,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: UserMarketplacePurchase[];
   };
@@ -96233,6 +98799,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/memberships/orgs";
+      typedPath: `/user/memberships/orgs`;
+      params?: never;
+      headers?: never;
       query: {
         /** Indicates the state of the memberships to return. If not specified, the API returns both active and pending memberships. */
         state?: "active" | "pending";
@@ -96247,6 +98816,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrgMembership[];
   };
@@ -96254,11 +98824,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/memberships/orgs/${org}";
-      typedPath?: `/user/memberships/orgs/${string}`;
+      typedPath: `/user/memberships/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: OrgMembership;
   };
@@ -96266,11 +98839,13 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/user/memberships/orgs/${org}";
-      typedPath?: `/user/memberships/orgs/${string}`;
+      typedPath: `/user/memberships/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
+      query?: never;
       body: {
         /** The state that the membership should be in. Only `"active"` will be accepted. */
         state: "active";
@@ -96282,6 +98857,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/migrations";
+      typedPath: `/user/migrations`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96294,6 +98872,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Migration[];
   };
@@ -96301,6 +98880,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/migrations";
+      typedPath: `/user/migrations`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Lock the repositories being migrated at the start of the migration
@@ -96352,14 +98935,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/migrations/${migrationId}";
-      typedPath?: `/user/migrations/${number}`;
+      typedPath: `/user/migrations/${number}`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
       query: {
         exclude?: string[];
       };
+      body?: never;
     };
     Response: Migration;
   };
@@ -96367,11 +98952,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/migrations/${migrationId}/archive";
-      typedPath?: `/user/migrations/${number}/archive`;
+      typedPath: `/user/migrations/${number}/archive`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: any;
   };
@@ -96379,11 +98967,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/migrations/${migrationId}/archive";
-      typedPath?: `/user/migrations/${number}/archive`;
+      typedPath: `/user/migrations/${number}/archive`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96391,13 +98982,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/migrations/${migrationId}/repos/${repoName}/lock";
-      typedPath?: `/user/migrations/${number}/repos/${string}/lock`;
+      typedPath: `/user/migrations/${number}/repos/${string}/lock`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
         /** repo_name parameter */
         repoName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96405,11 +98999,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/migrations/${migrationId}/repositories";
-      typedPath?: `/user/migrations/${number}/repositories`;
+      typedPath: `/user/migrations/${number}/repositories`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96422,6 +99017,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -96429,6 +99025,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/orgs";
+      typedPath: `/user/orgs`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96441,6 +99040,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrganizationSimple[];
   };
@@ -96448,6 +99048,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/packages";
+      typedPath: `/user/packages`;
+      params?: never;
+      headers?: never;
       query: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         package_type: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -96469,6 +99072,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: Package[];
   };
@@ -96476,13 +99080,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/packages/${packageType}/${packageName}";
-      typedPath?: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}`;
+      typedPath: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
         /** The name of the package. */
         packageName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Package;
   };
@@ -96490,13 +99097,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/packages/${packageType}/${packageName}";
-      typedPath?: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}`;
+      typedPath: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
         /** The name of the package. */
         packageName: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96504,17 +99114,19 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/packages/${packageType}/${packageName}/restore";
-      typedPath?: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}/restore`;
+      typedPath: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
         /** The name of the package. */
         packageName: string;
       };
+      headers?: never;
       query: {
         /** package token */
         token?: string;
       };
+      body?: never;
     };
     Response: void;
   };
@@ -96522,19 +99134,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/packages/${packageType}/${packageName}/versions";
-      typedPath?: `/user/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions`;
+      typedPath: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}/versions`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
         /** The name of the package. */
         packageName: string;
       };
+      headers?: never;
       query: {
         /**
          * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96552,6 +99159,7 @@ type Routes = {
          */
         state?: "active" | "deleted";
       };
+      body?: never;
     };
     Response: PackageVersion[];
   };
@@ -96559,7 +99167,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/user/packages/${
+      typedPath: `/user/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -96574,6 +99182,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PackageVersion;
   };
@@ -96581,7 +99192,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/user/packages/${
+      typedPath: `/user/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -96596,6 +99207,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96603,7 +99217,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore";
-      typedPath?: `/user/packages/${
+      typedPath: `/user/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -96618,6 +99232,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96625,6 +99242,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/projects";
+      typedPath: `/user/projects`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Name of the project
@@ -96644,6 +99265,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/public_emails";
+      typedPath: `/user/public_emails`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96656,6 +99280,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Email[];
   };
@@ -96663,6 +99288,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/repos";
+      typedPath: `/user/repos`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * Limit results to repositories with the specified visibility.
@@ -96710,6 +99338,7 @@ type Routes = {
          */
         before?: string;
       };
+      body?: never;
     };
     Response: Repository[];
   };
@@ -96717,6 +99346,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/repos";
+      typedPath: `/user/repos`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * The name of the repository.
@@ -96857,6 +99490,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/repository_invitations";
+      typedPath: `/user/repository_invitations`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96869,6 +99505,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: RepositoryInvitation[];
   };
@@ -96876,11 +99513,14 @@ type Routes = {
     Request: {
       method?: "PATCH";
       path?: "/user/repository_invitations/${invitationId}";
-      typedPath?: `/user/repository_invitations/${number}`;
+      typedPath: `/user/repository_invitations/${number}`;
       params: {
         /** The unique identifier of the invitation. */
         invitationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96888,11 +99528,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/repository_invitations/${invitationId}";
-      typedPath?: `/user/repository_invitations/${number}`;
+      typedPath: `/user/repository_invitations/${number}`;
       params: {
         /** The unique identifier of the invitation. */
         invitationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -96900,6 +99543,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/social_accounts";
+      typedPath: `/user/social_accounts`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96912,6 +99558,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SocialAccount[];
   };
@@ -96919,6 +99566,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/social_accounts";
+      typedPath: `/user/social_accounts`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Full URLs for the social media profiles to add.
@@ -96933,6 +99584,10 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/social_accounts";
+      typedPath: `/user/social_accounts`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * Full URLs for the social media profiles to delete.
@@ -96947,6 +99602,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/ssh_signing_keys";
+      typedPath: `/user/ssh_signing_keys`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -96959,6 +99617,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SshSigningKey[];
   };
@@ -96966,6 +99625,10 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/user/ssh_signing_keys";
+      typedPath: `/user/ssh_signing_keys`;
+      params?: never;
+      headers?: never;
+      query?: never;
       body: {
         /**
          * A descriptive name for the new key.
@@ -96985,11 +99648,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/ssh_signing_keys/${sshSigningKeyId}";
-      typedPath?: `/user/ssh_signing_keys/${number}`;
+      typedPath: `/user/ssh_signing_keys/${number}`;
       params: {
         /** The unique identifier of the SSH signing key. */
         sshSigningKeyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: SshSigningKey;
   };
@@ -96997,11 +99663,14 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/ssh_signing_keys/${sshSigningKeyId}";
-      typedPath?: `/user/ssh_signing_keys/${number}`;
+      typedPath: `/user/ssh_signing_keys/${number}`;
       params: {
         /** The unique identifier of the SSH signing key. */
         sshSigningKeyId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97009,6 +99678,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/starred";
+      typedPath: `/user/starred`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.
@@ -97031,6 +99703,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Repository[];
   };
@@ -97038,13 +99711,16 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/starred/${owner}/${repo}";
-      typedPath?: `/user/starred/${string}/${string}`;
+      typedPath: `/user/starred/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97052,13 +99728,16 @@ type Routes = {
     Request: {
       method?: "PUT";
       path?: "/user/starred/${owner}/${repo}";
-      typedPath?: `/user/starred/${string}/${string}`;
+      typedPath: `/user/starred/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97066,13 +99745,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/user/starred/${owner}/${repo}";
-      typedPath?: `/user/starred/${string}/${string}`;
+      typedPath: `/user/starred/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
         /** The name of the repository without the `.git` extension. The name is not case sensitive. */
         repo: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97080,6 +99762,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/subscriptions";
+      typedPath: `/user/subscriptions`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97092,6 +99777,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -97099,6 +99785,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/teams";
+      typedPath: `/user/teams`;
+      params?: never;
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97111,6 +99800,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: TeamFull[];
   };
@@ -97118,11 +99808,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/user/${accountId}";
-      typedPath?: `/user/${number}`;
+      typedPath: `/user/${number}`;
       params: {
         /** account_id parameter */
         accountId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response:
       | ({
@@ -97136,6 +99829,9 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users";
+      typedPath: `/users`;
+      params?: never;
+      headers?: never;
       query: {
         /** A user ID. Only return users with an ID greater than this ID. */
         since?: number;
@@ -97145,6 +99841,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -97152,11 +99849,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}";
-      typedPath?: `/users/${string}`;
+      typedPath: `/users/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response:
       | ({
@@ -97170,11 +99870,12 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/users/${username}/attestations/bulk-list";
-      typedPath?: `/users/${string}/attestations/bulk-list`;
+      typedPath: `/users/${string}/attestations/bulk-list`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97233,11 +99934,13 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/users/${username}/attestations/delete-request";
-      typedPath?: `/users/${string}/attestations/delete-request`;
+      typedPath: `/users/${string}/attestations/delete-request`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
       body:
         | {
             /**
@@ -97262,13 +99965,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/users/${username}/attestations/digest/${subjectDigest}";
-      typedPath?: `/users/${string}/attestations/digest/${string}`;
+      typedPath: `/users/${string}/attestations/digest/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
         /** Subject Digest */
         subjectDigest: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97276,13 +99982,16 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/users/${username}/attestations/${attestationId}";
-      typedPath?: `/users/${string}/attestations/${number}`;
+      typedPath: `/users/${string}/attestations/${number}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
         /** Attestation ID */
         attestationId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97290,13 +99999,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/attestations/${subjectDigest}";
-      typedPath?: `/users/${string}/attestations/${string}`;
+      typedPath: `/users/${string}/attestations/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
         /** Subject Digest */
         subjectDigest: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97313,6 +100023,7 @@ type Routes = {
          */
         predicate_type?: string;
       };
+      body?: never;
     };
     Response: {
       attestations?: {
@@ -97334,11 +100045,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/docker/conflicts";
-      typedPath?: `/users/${string}/docker/conflicts`;
+      typedPath: `/users/${string}/docker/conflicts`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Package[];
   };
@@ -97346,11 +100060,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/events";
-      typedPath?: `/users/${string}/events`;
+      typedPath: `/users/${string}/events`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97363,6 +100078,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -97370,13 +100086,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/events/orgs/${org}";
-      typedPath?: `/users/${string}/events/orgs/${string}`;
+      typedPath: `/users/${string}/events/orgs/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
         /** The organization name. The name is not case sensitive. */
         org: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97389,6 +100106,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -97396,11 +100114,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/events/public";
-      typedPath?: `/users/${string}/events/public`;
+      typedPath: `/users/${string}/events/public`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97413,6 +100132,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -97420,11 +100140,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/followers";
-      typedPath?: `/users/${string}/followers`;
+      typedPath: `/users/${string}/followers`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97437,6 +100158,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -97444,11 +100166,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/following";
-      typedPath?: `/users/${string}/following`;
+      typedPath: `/users/${string}/following`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97461,6 +100184,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SimpleUser[];
   };
@@ -97468,12 +100192,15 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/following/${targetUser}";
-      typedPath?: `/users/${string}/following/${string}`;
+      typedPath: `/users/${string}/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
         targetUser: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97481,11 +100208,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/gists";
-      typedPath?: `/users/${string}/gists`;
+      typedPath: `/users/${string}/gists`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -97503,6 +100231,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: BaseGist[];
   };
@@ -97510,11 +100239,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/gpg_keys";
-      typedPath?: `/users/${string}/gpg_keys`;
+      typedPath: `/users/${string}/gpg_keys`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97527,6 +100257,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: GpgKey[];
   };
@@ -97534,17 +100265,19 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/hovercard";
-      typedPath?: `/users/${string}/hovercard`;
+      typedPath: `/users/${string}/hovercard`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /** Identifies which additional information you'd like to receive about the person's hovercard. Can be `organization`, `repository`, `issue`, `pull_request`. **Required** when using `subject_id`. */
         subject_type?: "organization" | "repository" | "issue" | "pull_request";
         /** Uses the ID for the `subject_type` you specified. **Required** when using `subject_type`. */
         subject_id?: string;
       };
+      body?: never;
     };
     Response: Hovercard;
   };
@@ -97552,11 +100285,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/installation";
-      typedPath?: `/users/${string}/installation`;
+      typedPath: `/users/${string}/installation`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Installation;
   };
@@ -97564,11 +100300,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/keys";
-      typedPath?: `/users/${string}/keys`;
+      typedPath: `/users/${string}/keys`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97581,6 +100318,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: KeySimple[];
   };
@@ -97588,11 +100326,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/orgs";
-      typedPath?: `/users/${string}/orgs`;
+      typedPath: `/users/${string}/orgs`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97605,6 +100344,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: OrganizationSimple[];
   };
@@ -97612,11 +100352,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/packages";
-      typedPath?: `/users/${string}/packages`;
+      typedPath: `/users/${string}/packages`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         package_type: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -97638,6 +100379,7 @@ type Routes = {
          */
         per_page?: number;
       };
+      body?: never;
     };
     Response: Package[];
   };
@@ -97645,7 +100387,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/packages/${packageType}/${packageName}";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97660,6 +100402,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: Package;
   };
@@ -97667,7 +100412,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/users/${username}/packages/${packageType}/${packageName}";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97682,6 +100427,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97689,7 +100437,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/users/${username}/packages/${packageType}/${packageName}/restore";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97704,10 +100452,12 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /** package token */
         token?: string;
       };
+      body?: never;
     };
     Response: void;
   };
@@ -97715,7 +100465,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/packages/${packageType}/${packageName}/versions";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97730,6 +100480,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PackageVersion[];
   };
@@ -97737,7 +100490,7 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97754,6 +100507,9 @@ type Routes = {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PackageVersion;
   };
@@ -97761,7 +100517,7 @@ type Routes = {
     Request: {
       method?: "DELETE";
       path?: "/users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97778,6 +100534,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97785,7 +100544,7 @@ type Routes = {
     Request: {
       method?: "POST";
       path?: "/users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore";
-      typedPath?: `/users/${string}/packages/${
+      typedPath: `/users/${string}/packages/${
         | "npm"
         | "maven"
         | "rubygems"
@@ -97802,6 +100561,9 @@ type Routes = {
         /** Unique identifier of the package version. */
         packageVersionId: number;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: void;
   };
@@ -97809,11 +100571,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/projects";
-      typedPath?: `/users/${string}/projects`;
+      typedPath: `/users/${string}/projects`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * Indicates the state of the projects to return.
@@ -97831,6 +100594,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Project[];
   };
@@ -97838,11 +100602,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/received_events";
-      typedPath?: `/users/${string}/received_events`;
+      typedPath: `/users/${string}/received_events`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97855,6 +100620,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -97862,11 +100628,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/received_events/public";
-      typedPath?: `/users/${string}/received_events/public`;
+      typedPath: `/users/${string}/received_events/public`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97879,6 +100646,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: Event[];
   };
@@ -97886,11 +100654,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/repos";
-      typedPath?: `/users/${string}/repos`;
+      typedPath: `/users/${string}/repos`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * Limit results to repositories of the specified type.
@@ -97915,6 +100684,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
@@ -97922,11 +100692,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/settings/billing/actions";
-      typedPath?: `/users/${string}/settings/billing/actions`;
+      typedPath: `/users/${string}/settings/billing/actions`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: ActionsBillingUsage;
   };
@@ -97934,11 +100707,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/settings/billing/packages";
-      typedPath?: `/users/${string}/settings/billing/packages`;
+      typedPath: `/users/${string}/settings/billing/packages`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: PackagesBillingUsage;
   };
@@ -97946,11 +100722,14 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/settings/billing/shared-storage";
-      typedPath?: `/users/${string}/settings/billing/shared-storage`;
+      typedPath: `/users/${string}/settings/billing/shared-storage`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
+      query?: never;
+      body?: never;
     };
     Response: CombinedBillingUsage;
   };
@@ -97958,11 +100737,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/settings/billing/usage";
-      typedPath?: `/users/${string}/settings/billing/usage`;
+      typedPath: `/users/${string}/settings/billing/usage`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /** If specified, only return results for a single year. The value of `year` is an integer with four digits representing a year. For example, `2025`. Default value is the current year. */
         year?: number;
@@ -97973,6 +100753,7 @@ type Routes = {
         /** If specified, only return results for a single hour. The value of `hour` is an integer between `0` and `23`. If no `year`, `month`, or `day` is specified, the default `year`, `month`, and `day` are used. */
         hour?: number;
       };
+      body?: never;
     };
     Response: BillingUsageReportUser;
   };
@@ -97980,11 +100761,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/social_accounts";
-      typedPath?: `/users/${string}/social_accounts`;
+      typedPath: `/users/${string}/social_accounts`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -97997,6 +100779,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SocialAccount[];
   };
@@ -98004,11 +100787,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/ssh_signing_keys";
-      typedPath?: `/users/${string}/ssh_signing_keys`;
+      typedPath: `/users/${string}/ssh_signing_keys`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -98021,6 +100805,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: SshSigningKey[];
   };
@@ -98028,11 +100813,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/starred";
-      typedPath?: `/users/${string}/starred`;
+      typedPath: `/users/${string}/starred`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.
@@ -98055,6 +100841,7 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: StarredRepository[] | Repository[];
   };
@@ -98062,11 +100849,12 @@ type Routes = {
     Request: {
       method?: "GET";
       path?: "/users/${username}/subscriptions";
-      typedPath?: `/users/${string}/subscriptions`;
+      typedPath: `/users/${string}/subscriptions`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
       };
+      headers?: never;
       query: {
         /**
          * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
@@ -98079,11 +100867,34 @@ type Routes = {
          */
         page?: number;
       };
+      body?: never;
     };
     Response: MinimalRepository[];
   };
-  ["GET /versions"]: { Request: { method?: "GET"; path?: "/versions" }; Response: string[] };
-  ["GET /zen"]: { Request: { method?: "GET"; path?: "/zen" }; Response: WebhookConfigUrl };
+  ["GET /versions"]: {
+    Request: {
+      method?: "GET";
+      path?: "/versions";
+      typedPath: `/versions`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: string[];
+  };
+  ["GET /zen"]: {
+    Request: {
+      method?: "GET";
+      path?: "/zen";
+      typedPath: `/zen`;
+      params?: never;
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: WebhookConfigUrl;
+  };
 };
 
 export type { Routes };

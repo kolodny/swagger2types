@@ -6,8 +6,8 @@ type Params = Parameters<typeof generateApi>[0];
 const zeroWidthSpace = '\u200B';
 
 // @ts-ignore
-const importDirname = () => import('./dirname.mjs').then((m) => m.default);
-const dirname = typeof __dirname === 'string' ? __dirname : importDirname();
+const esmDirname = () => import('./dirname.mjs').then((m): string => m.default);
+const dirname = typeof __dirname === 'string' ? __dirname : esmDirname();
 
 export const generate = async (spec: Spec, params?: Params) => {
   const dir = await dirname;
