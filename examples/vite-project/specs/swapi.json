@@ -1,0 +1,1268 @@
+{
+  "components": {
+    "responses": {},
+    "schemas": {
+      "Film": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "properties": {
+              "characters": {
+                "description": "An array of people resource URLs that are in this film.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "director": {
+                "description": "The name of the director of this film.",
+                "type": "string"
+              },
+              "episode_id": {
+                "description": "The episode number of this film.",
+                "type": "integer"
+              },
+              "opening_crawl": {
+                "description": "The opening paragraphs at the beginning of this film.",
+                "type": "string"
+              },
+              "planets": {
+                "description": "An array of planet resource URLs that are in this film.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "producer": {
+                "description": "The name(s) of the producer(s) of this film. Comma separated.",
+                "type": "string"
+              },
+              "release_date": {
+                "description": "The ISO 8601 date format of film release at original creator country.",
+                "type": "string"
+              },
+              "species": {
+                "description": "An array of species resource URLs that are in this film.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "starships": {
+                "description": "An array of starship resource URLs that are in this film.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "title": {
+                "description": "The title of this film.",
+                "type": "string"
+              },
+              "vehicles": {
+                "description": "An array of vehicle resource URLs that are in this film.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "A Film resource is a single film.",
+        "title": "Film",
+        "type": "object"
+      },
+      "FilmList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/List"
+          },
+          {
+            "properties": {
+              "results": {
+                "description": "The list of films",
+                "items": {
+                  "$ref": "#/components/schemas/Film"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "title": "FilmList",
+        "type": "object"
+      },
+      "Item": {
+        "properties": {
+          "created": {
+            "description": "The ISO 8601 date format of the time that this resource was created.",
+            "type": "string"
+          },
+          "edited": {
+            "description": "The ISO 8601 date format of the time that this resource was edited.",
+            "type": "string"
+          },
+          "url": {
+            "description": "The hypermedia URL of this resource.",
+            "type": "string"
+          }
+        },
+        "title": "Item",
+        "type": "object"
+      },
+      "List": {
+        "properties": {
+          "count": {
+            "description": "Total count of records in this list. Note that the IDs are not sequential, you should not make any assumptions about the range of valid IDs based on this value.",
+            "type": "integer"
+          },
+          "next": {
+            "description": "The URL to the next page, or `null` if there is no next page.",
+            "type": "string"
+          },
+          "previous": {
+            "description": "The URL to the previous page, or `null` if there is no previous page.",
+            "type": "string"
+          }
+        },
+        "title": "List",
+        "type": "object"
+      },
+      "Person": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "properties": {
+              "birth_year": {
+                "description": "The birth year of the person, using the in-universe standard of **BBY** or **ABY** - Before the Battle of Yavin or After the Battle of Yavin. The Battle of Yavin is a battle that occurs at the end of Star Wars episode IV: A New Hope.",
+                "type": "string"
+              },
+              "eye_color": {
+                "description": "The eye color of this person. Will be \"unknown\" if not known or \"n/a\" if the person does not have an eye.",
+                "type": "string"
+              },
+              "films": {
+                "description": "An array of film resource URLs that this person has been in.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "gender": {
+                "description": "The gender of this person. Either \"Male\", \"Female\" or \"unknown\", \"n/a\" if the person does not have a gender.",
+                "type": "string"
+              },
+              "hair_color": {
+                "description": "The hair color of this person. Will be \"unknown\" if not known or \"n/a\" if the person does not have hair.",
+                "type": "string"
+              },
+              "height": {
+                "description": "The height of the person in centimeters.",
+                "type": "string"
+              },
+              "homeworld": {
+                "description": "The URL of a planet resource, a planet that this person was born on or inhabits.",
+                "type": "string"
+              },
+              "mass": {
+                "description": "The mass of the person in kilograms.",
+                "type": "string"
+              },
+              "name": {
+                "description": "The name of this person.",
+                "type": "string"
+              },
+              "skin_color": {
+                "description": "The skin color of this person.",
+                "type": "string"
+              },
+              "species": {
+                "description": "An array of species resource URLs that this person belongs to.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "starships": {
+                "description": "An array of vehicle resource URLs that this person has piloted.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "vehicles": {
+                "description": "An array of starship resource URLs that this person has piloted.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "A People resource is an individual person or character within the Star Wars universe.",
+        "title": "Person",
+        "type": "object"
+      },
+      "PersonList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/List"
+          },
+          {
+            "properties": {
+              "results": {
+                "description": "The list of people",
+                "items": {
+                  "$ref": "#/components/schemas/Person"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "title": "PersonList",
+        "type": "object"
+      },
+      "Planet": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "properties": {
+              "climate": {
+                "description": "The climate of this planet. Comma separated if diverse.",
+                "type": "string"
+              },
+              "diameter": {
+                "description": "The diameter of this planet in kilometers.",
+                "type": "string"
+              },
+              "films": {
+                "description": "An array of Film URL Resources that this planet has appeared in.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "gravity": {
+                "description": "A number denoting the gravity of this planet, where \"1\" is normal or 1 standard G. \"2\" is twice or 2 standard Gs. \"0.5\" is half or 0.5 standard Gs.",
+                "type": "string"
+              },
+              "name": {
+                "description": "The name of this planet.",
+                "type": "string"
+              },
+              "orbital_period": {
+                "description": "The number of standard days it takes for this planet to complete a single orbit of its local star.",
+                "type": "string"
+              },
+              "population": {
+                "description": "The average population of sentient beings inhabiting this planet.",
+                "type": "string"
+              },
+              "residents": {
+                "description": "An array of People URL Resources that live on this planet.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "rotation_period": {
+                "description": "The number of standard hours it takes for this planet to complete a single rotation on its axis.",
+                "type": "string"
+              },
+              "surface_water": {
+                "description": "The percentage of the planet surface that is naturally occurring water or bodies of water.",
+                "type": "string"
+              },
+              "terrain": {
+                "description": "The terrain of this planet. Comma separated if diverse.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "A Planet resource is a large mass, planet or planetoid in the Star Wars Universe, at the time of 0 ABY.",
+        "title": "Planet",
+        "type": "object"
+      },
+      "PlanetList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/List"
+          },
+          {
+            "properties": {
+              "results": {
+                "description": "The list of planets",
+                "items": {
+                  "$ref": "#/components/schemas/Planet"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "title": "PlanetList",
+        "type": "object"
+      },
+      "Root": {
+        "description": "The Root resource provides information on all available resources within the API.",
+        "properties": {
+          "films": {
+            "description": "The URL root for Film resources",
+            "type": "string"
+          },
+          "people": {
+            "description": "The URL root for People resources",
+            "type": "string"
+          },
+          "planets": {
+            "description": "The URL root for Planet resources",
+            "type": "string"
+          },
+          "species": {
+            "description": "The URL root for Species resources",
+            "type": "string"
+          },
+          "starships": {
+            "description": "The URL root for Starships resources",
+            "type": "string"
+          },
+          "vehicles": {
+            "description": "The URL root for Vehicles resources",
+            "type": "string"
+          }
+        },
+        "title": "Root",
+        "type": "object"
+      },
+      "Species": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "properties": {
+              "average_height": {
+                "description": "The average height of this species in centimeters.",
+                "type": "string"
+              },
+              "average_lifespan": {
+                "description": "The average lifespan of this species in years.",
+                "type": "string"
+              },
+              "classification": {
+                "description": "The classification of this species, such as \"mammal\" or \"reptile\".",
+                "type": "string"
+              },
+              "designation": {
+                "description": "The designation of this species, such as \"sentient\".",
+                "type": "string"
+              },
+              "eye_colors": {
+                "description": "A comma-separated string of common eye colors for this species, \"none\" if this species does not typically have eyes.",
+                "type": "string"
+              },
+              "films": {
+                "description": "An array of Film URL Resources that this species has appeared in.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "hair_colors": {
+                "description": "A comma-separated string of common hair colors for this species, \"none\" if this species does not typically have hair.",
+                "type": "string"
+              },
+              "homeworld": {
+                "description": "The URL of a planet resource, a planet that this species originates from.",
+                "type": "string"
+              },
+              "language": {
+                "description": "The language commonly spoken by this species.",
+                "type": "string"
+              },
+              "name": {
+                "description": "The name of this species.",
+                "type": "string"
+              },
+              "people": {
+                "description": "An array of People URL Resources that are a part of this species.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "skin_colors": {
+                "description": "A comma-separated string of common skin colors for this species, \"none\" if this species does not typically have skin.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "A Species resource is a type of person or character within the Star Wars Universe.",
+        "title": "Species",
+        "type": "object"
+      },
+      "SpeciesList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/List"
+          },
+          {
+            "properties": {
+              "results": {
+                "description": "The list of species",
+                "items": {
+                  "$ref": "#/components/schemas/Species"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "title": "SpeciesList",
+        "type": "object"
+      },
+      "Starship": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "properties": {
+              "MGLT": {
+                "description": "The Maximum number of Megalights this starship can travel in a standard hour. A \"Megalight\" is a standard unit of distance and has never been defined before within the Star Wars universe. This figure is only really useful for measuring the difference in speed of starships. We can assume it is similar to AU, the distance between our Sun (Sol) and Earth.",
+                "type": "string"
+              },
+              "cargo_capacity": {
+                "description": "The maximum number of kilograms that this starship can transport.",
+                "type": "string"
+              },
+              "consumables": {
+                "description": "The maximum length of time that this starship can provide consumables for its entire crew without having to resupply.",
+                "type": "string"
+              },
+              "cost_in_credits": {
+                "description": "The cost of this starship new, in galactic credits.",
+                "type": "string"
+              },
+              "crew": {
+                "description": "The number of personnel needed to run or pilot this starship.",
+                "type": "string"
+              },
+              "films": {
+                "description": "An array of Film URL Resources that this starship has appeared in.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "hyperdrive_rating": {
+                "description": "The class of this starships hyperdrive.",
+                "type": "string"
+              },
+              "length": {
+                "description": "The length of this starship in meters.",
+                "type": "string"
+              },
+              "manufacturer": {
+                "description": "The manufacturer of this starship. Comma separated if more than one.",
+                "type": "string"
+              },
+              "max_atmosphering_speed": {
+                "description": "The maximum speed of this starship in the atmosphere. \"N/A\" if this starship is incapable of atmospheric flight.",
+                "type": "string"
+              },
+              "model": {
+                "description": "The model or official name of this starship. Such as \"T-65 X-wing\" or \"DS-1 Orbital Battle Station\".",
+                "type": "string"
+              },
+              "name": {
+                "description": "The name of this starship. The common name, such as \"Death Star\".",
+                "type": "string"
+              },
+              "passengers": {
+                "description": "The number of non-essential people this starship can transport.",
+                "type": "string"
+              },
+              "pilots": {
+                "description": "An array of People URL Resources that this starship has been piloted by.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "starship_class": {
+                "description": "The class of this starship, such as \"Starfighter\" or \"Deep Space Mobile Battlestation\"",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "A Starship resource is a single transport craft that has hyperdrive capability.",
+        "title": "Starship",
+        "type": "object"
+      },
+      "StarshipList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/List"
+          },
+          {
+            "properties": {
+              "results": {
+                "description": "The list of starships",
+                "items": {
+                  "$ref": "#/components/schemas/Starship"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "title": "StarshipList",
+        "type": "object"
+      },
+      "Vehicle": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "properties": {
+              "cargo_capacity": {
+                "description": "The maximum number of kilograms that this vehicle can transport.",
+                "type": "string"
+              },
+              "consumables": {
+                "description": "The maximum length of time that this vehicle can provide consumables for its entire crew without having to resupply.",
+                "type": "string"
+              },
+              "cost_in_credits": {
+                "description": "The cost of this vehicle new, in Galactic Credits.",
+                "type": "string"
+              },
+              "crew": {
+                "description": "The number of personnel needed to run or pilot this vehicle.",
+                "type": "string"
+              },
+              "films": {
+                "description": "An array of Film URL Resources that this vehicle has appeared in.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "length": {
+                "description": "The length of this vehicle in meters.",
+                "type": "string"
+              },
+              "manufacturer": {
+                "description": "The manufacturer of this vehicle. Comma separated if more than one.",
+                "type": "string"
+              },
+              "max_atmosphering_speed": {
+                "description": "The maximum speed of this vehicle in the atmosphere.",
+                "type": "string"
+              },
+              "model": {
+                "description": "The model or official name of this vehicle. Such as \"All-Terrain Attack Transport\".",
+                "type": "string"
+              },
+              "name": {
+                "description": "The name of this vehicle. The common name, such as \"Sand Crawler\" or \"Speeder bike\".",
+                "type": "string"
+              },
+              "passengers": {
+                "description": "The number of non-essential people this vehicle can transport.",
+                "type": "string"
+              },
+              "pilots": {
+                "description": "An array of People URL Resources that this vehicle has been piloted by.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "vehicle_class": {
+                "description": "The class of this vehicle, such as \"Wheeled\" or \"Repulsorcraft\".",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "description": "A Vehicle resource is a single transport craft that does not have hyperdrive capability.",
+        "title": "Vehicle",
+        "type": "object"
+      },
+      "VehicleList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/List"
+          },
+          {
+            "properties": {
+              "results": {
+                "description": "The list of vehicles",
+                "items": {
+                  "$ref": "#/components/schemas/Vehicle"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ],
+        "title": "VehicleList",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "The Star Wars API, reimplemented in Elixir",
+    "title": "Elixir SWAPI",
+    "version": "0.1.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.RootController.index",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Root"
+                }
+              }
+            },
+            "description": "List of endpoints"
+          }
+        },
+        "summary": "Get URL roots for all available resources",
+        "tags": [
+          "root"
+        ]
+      }
+    },
+    "/api/films": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.FilmController.index",
+        "parameters": [
+          {
+            "description": "One or more search terms, which should be whitespace and/or comma separated. If multiple search terms are used then objects will be returned in the list only if all the provided terms are matched. Searches may contain quoted phrases with spaces, each phrase is considered as a single search term.",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number. Cannot be used together with `offset`.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Offset of the first item. Cannot be used together with `page`.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of items to return in the response.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilmList"
+                }
+              }
+            },
+            "description": "List of films"
+          }
+        },
+        "summary": "Get all the film resources",
+        "tags": [
+          "films"
+        ]
+      }
+    },
+    "/api/films/{id}": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.FilmController.show",
+        "parameters": [
+          {
+            "description": "Film ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Film"
+                }
+              }
+            },
+            "description": "A film"
+          }
+        },
+        "summary": "Get a specific film resource",
+        "tags": [
+          "films"
+        ]
+      }
+    },
+    "/api/people": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.PersonController.index",
+        "parameters": [
+          {
+            "description": "One or more search terms, which should be whitespace and/or comma separated. If multiple search terms are used then objects will be returned in the list only if all the provided terms are matched. Searches may contain quoted phrases with spaces, each phrase is considered as a single search term.",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number. Cannot be used together with `offset`.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Offset of the first item. Cannot be used together with `page`.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of items to return in the response.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonList"
+                }
+              }
+            },
+            "description": "List of people"
+          }
+        },
+        "summary": "Get all people resources",
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/api/people/{id}": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.PersonController.show",
+        "parameters": [
+          {
+            "description": "Person ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            },
+            "description": "A person"
+          }
+        },
+        "summary": "Get a specific people resource",
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/api/planets": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.PlanetController.index",
+        "parameters": [
+          {
+            "description": "One or more search terms, which should be whitespace and/or comma separated. If multiple search terms are used then objects will be returned in the list only if all the provided terms are matched. Searches may contain quoted phrases with spaces, each phrase is considered as a single search term.",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number. Cannot be used together with `offset`.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Offset of the first item. Cannot be used together with `page`.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of items to return in the response.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanetList"
+                }
+              }
+            },
+            "description": "List of planets"
+          }
+        },
+        "summary": "Get all planet resources",
+        "tags": [
+          "planets"
+        ]
+      }
+    },
+    "/api/planets/{id}": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.PlanetController.show",
+        "parameters": [
+          {
+            "description": "Planet ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Planet"
+                }
+              }
+            },
+            "description": "A planet"
+          }
+        },
+        "summary": "Get a specific planet resource",
+        "tags": [
+          "planets"
+        ]
+      }
+    },
+    "/api/species": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.SpeciesController.index",
+        "parameters": [
+          {
+            "description": "One or more search terms, which should be whitespace and/or comma separated. If multiple search terms are used then objects will be returned in the list only if all the provided terms are matched. Searches may contain quoted phrases with spaces, each phrase is considered as a single search term.",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number. Cannot be used together with `offset`.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Offset of the first item. Cannot be used together with `page`.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of items to return in the response.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeciesList"
+                }
+              }
+            },
+            "description": "List of species"
+          }
+        },
+        "summary": "Get all species resources",
+        "tags": [
+          "species"
+        ]
+      }
+    },
+    "/api/species/{id}": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.SpeciesController.show",
+        "parameters": [
+          {
+            "description": "Species ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Species"
+                }
+              }
+            },
+            "description": "A species"
+          }
+        },
+        "summary": "Get a specific species resource",
+        "tags": [
+          "species"
+        ]
+      }
+    },
+    "/api/starships": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.StarshipController.index",
+        "parameters": [
+          {
+            "description": "One or more search terms, which should be whitespace and/or comma separated. If multiple search terms are used then objects will be returned in the list only if all the provided terms are matched. Searches may contain quoted phrases with spaces, each phrase is considered as a single search term.",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number. Cannot be used together with `offset`.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Offset of the first item. Cannot be used together with `page`.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of items to return in the response.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StarshipList"
+                }
+              }
+            },
+            "description": "List of starships"
+          }
+        },
+        "summary": "Get all starship resources",
+        "tags": [
+          "starships"
+        ]
+      }
+    },
+    "/api/starships/{id}": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.StarshipController.show",
+        "parameters": [
+          {
+            "description": "Starship ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Starship"
+                }
+              }
+            },
+            "description": "A starship"
+          }
+        },
+        "summary": "Get a specific starship resource",
+        "tags": [
+          "starships"
+        ]
+      }
+    },
+    "/api/vehicles": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.VehicleController.index",
+        "parameters": [
+          {
+            "description": "One or more search terms, which should be whitespace and/or comma separated. If multiple search terms are used then objects will be returned in the list only if all the provided terms are matched. Searches may contain quoted phrases with spaces, each phrase is considered as a single search term.",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number. Cannot be used together with `offset`.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Offset of the first item. Cannot be used together with `page`.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of items to return in the response.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleList"
+                }
+              }
+            },
+            "description": "List of vehicles"
+          }
+        },
+        "summary": "Get all vehicle resources",
+        "tags": [
+          "vehicles"
+        ]
+      }
+    },
+    "/api/vehicles/{id}": {
+      "get": {
+        "callbacks": {},
+        "operationId": "SWAPIWeb.VehicleController.show",
+        "parameters": [
+          {
+            "description": "Vehicle ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            },
+            "description": "A vehicle"
+          }
+        },
+        "summary": "Get a specific vehicle resource",
+        "tags": [
+          "vehicles"
+        ]
+      }
+    }
+  },
+  "security": [],
+  "servers": [
+    {
+      "url": "https://swapi.profiq.com",
+      "variables": {}
+    }
+  ],
+  "tags": []
+}

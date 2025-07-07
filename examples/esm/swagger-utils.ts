@@ -90,7 +90,7 @@ export const clientFromFetch = <Routes extends BaseRoutes>({
     type Response = ResponseForConfig<Routes, typeof config>;
 
     const prepared = usedPrepare(config);
-    const headers = prepared.headers ?? {};
+    const headers: Record<string, string> = prepared.headers ?? {};
     const requestInit: RequestInit = { method: prepared.method, headers };
 
     if (prepared.body) headers['Content-Type'] ??= 'application/json';
@@ -126,7 +126,7 @@ export const clientFromAxios = <Routes extends BaseRoutes>({
     type Response = ResponseForConfig<Routes, typeof config>;
 
     const prepared = usedPrepare(config);
-    const headers = prepared.headers ?? {};
+    const headers: Record<string, string> = prepared.headers ?? {};
     const requestConfig: AxiosRequestConfig = {
       method: prepared.method.toLowerCase(),
       url: prepared.url,
@@ -166,7 +166,7 @@ export const clientFromGot = <Routes extends BaseRoutes>({
     type Response = ResponseForConfig<Routes, typeof config>;
 
     const prepared = usedPrepare(config);
-    const headers = prepared.headers ?? {};
+    const headers: Record<string, string> = prepared.headers ?? {};
     const options: StrictOptions = {
       method: prepared.method as Method,
       url: prepared.url,
@@ -202,7 +202,7 @@ export const clientFromRequest = <Routes extends BaseRoutes>({
     type Response = ResponseForConfig<Routes, typeof config>;
 
     const prepared = usedPrepare(config);
-    const headers = prepared.headers ?? {};
+    const headers: Record<string, string> = prepared.headers ?? {};
     const options: RequestOptions = { method: prepared.method, headers };
 
     if (prepared.body) headers['Content-Type'] ??= 'application/json';

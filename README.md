@@ -99,6 +99,28 @@ Other libraries generate runtime JavaScript code for each endpoint, which adds u
 
 **This library only generates types and no runtime code. You will need to implement your own API calling logic using fetch, axios, or any HTTP client of your choice. [Examples of how to do that are provided in this repo](./examples/esm/swagger-utils.ts).**
 
+#### Comparison of Bundle Sizes
+
+The examples folder has a [vite-project](./examples/vite-project/) that has a [swagger2types](./examples/vite-project/src/swagger2types.tsx) lazy loaded React component as well as a version that uses [swagger-typescript-api](./examples/vite-project/src/swagger-typescript-api.tsx). The bundle size difference is stark:
+
+```
+$ npm run build
+
+vite-project@0.0.0 build
+> vite build
+
+vite v7.0.2 building for production...
+✓ 38 modules transformed.
+dist/index.html                                   0.39 kB │ gzip:  0.27 kB
+dist/assets/none-BLjBY5yk.js                      0.11 kB │ gzip:  0.12 kB
+dist/assets/swagger2types-BmqOIo0x.js             1.71 kB │ gzip:  0.92 kB
+dist/assets/swagger-typescript-api-CbVO0puf.js  183.85 kB │ gzip: 19.89 kB
+dist/assets/index-Dzc2eD_T.js                   188.93 kB │ gzip: 59.62 kB
+✓ built in 715ms
+```
+
+In this example, the `swagger2types` version adds only 1.71 kB (0.92 kB gzipped) to the bundle size, while the `swagger-typescript-api` version adds a whopping 183.85 kB (19.89 kB gzipped). This demonstrates the significant difference in bundle size impact between a types-only approach and a full client library.
+
 ### Flexibility
 
 Other libraries make many choices for you - which HTTP client to use, how to handle errors, how to wrap responses, etc. This library leaves those choices up to you. You can use any HTTP client you want and handle errors and responses in whatever way makes sense for your application.
