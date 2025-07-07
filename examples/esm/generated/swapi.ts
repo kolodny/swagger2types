@@ -275,23 +275,9 @@ type VehicleList = List & {
 };
 
 type Routes = {
-  ["GET /api"]: {
-    Request: {
-      method?: "GET";
-      path?: "/api";
-      typedPath?: `/api`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: Root;
-  };
+  ["GET /api"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Root };
   ["GET /api/films"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/films";
-      typedPath?: `/api/films`;
       params?: never;
       headers?: never;
       query: {
@@ -321,9 +307,6 @@ type Routes = {
   };
   ["GET /api/films/${id}"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/films/${id}";
-      typedPath?: `/api/films/${number}`;
       params: {
         /** Film ID */
         id: number;
@@ -336,9 +319,6 @@ type Routes = {
   };
   ["GET /api/people"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/people";
-      typedPath?: `/api/people`;
       params?: never;
       headers?: never;
       query: {
@@ -368,9 +348,6 @@ type Routes = {
   };
   ["GET /api/people/${id}"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/people/${id}";
-      typedPath?: `/api/people/${number}`;
       params: {
         /** Person ID */
         id: number;
@@ -383,9 +360,6 @@ type Routes = {
   };
   ["GET /api/planets"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/planets";
-      typedPath?: `/api/planets`;
       params?: never;
       headers?: never;
       query: {
@@ -415,9 +389,6 @@ type Routes = {
   };
   ["GET /api/planets/${id}"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/planets/${id}";
-      typedPath?: `/api/planets/${number}`;
       params: {
         /** Planet ID */
         id: number;
@@ -430,9 +401,6 @@ type Routes = {
   };
   ["GET /api/species"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/species";
-      typedPath?: `/api/species`;
       params?: never;
       headers?: never;
       query: {
@@ -462,9 +430,6 @@ type Routes = {
   };
   ["GET /api/species/${id}"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/species/${id}";
-      typedPath?: `/api/species/${number}`;
       params: {
         /** Species ID */
         id: number;
@@ -477,9 +442,6 @@ type Routes = {
   };
   ["GET /api/starships"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/starships";
-      typedPath?: `/api/starships`;
       params?: never;
       headers?: never;
       query: {
@@ -509,9 +471,6 @@ type Routes = {
   };
   ["GET /api/starships/${id}"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/starships/${id}";
-      typedPath?: `/api/starships/${number}`;
       params: {
         /** Starship ID */
         id: number;
@@ -524,9 +483,6 @@ type Routes = {
   };
   ["GET /api/vehicles"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/vehicles";
-      typedPath?: `/api/vehicles`;
       params?: never;
       headers?: never;
       query: {
@@ -556,9 +512,6 @@ type Routes = {
   };
   ["GET /api/vehicles/${id}"]: {
     Request: {
-      method?: "GET";
-      path?: "/api/vehicles/${id}";
-      typedPath?: `/api/vehicles/${number}`;
       params: {
         /** Vehicle ID */
         id: number;

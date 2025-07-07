@@ -71,9 +71,6 @@ interface User {
 type Routes = {
   ["POST /pet/${petId}/uploadImage"]: {
     Request: {
-      method?: "POST";
-      path?: "/pet/${petId}/uploadImage";
-      typedPath?: `/pet/${number}/uploadImage`;
       params: {
         /**
          * ID of pet to update
@@ -92,35 +89,10 @@ type Routes = {
     };
     Response: ApiResponse;
   };
-  ["POST /pet"]: {
-    Request: {
-      method?: "POST";
-      path?: "/pet";
-      typedPath?: `/pet`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: Pet;
-    };
-    Response: any;
-  };
-  ["PUT /pet"]: {
-    Request: {
-      method?: "PUT";
-      path?: "/pet";
-      typedPath?: `/pet`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: Pet;
-    };
-    Response: any;
-  };
+  ["POST /pet"]: { Request: { params?: never; headers?: never; query?: never; body: Pet }; Response: any };
+  ["PUT /pet"]: { Request: { params?: never; headers?: never; query?: never; body: Pet }; Response: any };
   ["GET /pet/findByStatus"]: {
     Request: {
-      method?: "GET";
-      path?: "/pet/findByStatus";
-      typedPath?: `/pet/findByStatus`;
       params?: never;
       headers?: never;
       query: {
@@ -133,9 +105,6 @@ type Routes = {
   };
   ["GET /pet/findByTags"]: {
     Request: {
-      method?: "GET";
-      path?: "/pet/findByTags";
-      typedPath?: `/pet/findByTags`;
       params?: never;
       headers?: never;
       query: {
@@ -148,9 +117,6 @@ type Routes = {
   };
   ["GET /pet/${petId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/pet/${petId}";
-      typedPath?: `/pet/${number}`;
       params: {
         /**
          * ID of pet to return
@@ -166,9 +132,6 @@ type Routes = {
   };
   ["POST /pet/${petId}"]: {
     Request: {
-      method?: "POST";
-      path?: "/pet/${petId}";
-      typedPath?: `/pet/${number}`;
       params: {
         /**
          * ID of pet that needs to be updated
@@ -189,9 +152,6 @@ type Routes = {
   };
   ["DELETE /pet/${petId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/pet/${petId}";
-      typedPath?: `/pet/${number}`;
       params: {
         /**
          * Pet id to delete
@@ -208,34 +168,12 @@ type Routes = {
     Response: any;
   };
   ["GET /store/inventory"]: {
-    Request: {
-      method?: "GET";
-      path?: "/store/inventory";
-      typedPath?: `/store/inventory`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: Record<string, number>;
   };
-  ["POST /store/order"]: {
-    Request: {
-      method?: "POST";
-      path?: "/store/order";
-      typedPath?: `/store/order`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: Order;
-    };
-    Response: Order;
-  };
+  ["POST /store/order"]: { Request: { params?: never; headers?: never; query?: never; body: Order }; Response: Order };
   ["GET /store/order/${orderId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/store/order/${orderId}";
-      typedPath?: `/store/order/${number}`;
       params: {
         /**
          * ID of pet that needs to be fetched
@@ -253,9 +191,6 @@ type Routes = {
   };
   ["DELETE /store/order/${orderId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/store/order/${orderId}";
-      typedPath?: `/store/order/${number}`;
       params: {
         /**
          * ID of the order that needs to be deleted
@@ -271,22 +206,11 @@ type Routes = {
     Response: any;
   };
   ["POST /user/createWithList"]: {
-    Request: {
-      method?: "POST";
-      path?: "/user/createWithList";
-      typedPath?: `/user/createWithList`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: User[];
-    };
+    Request: { params?: never; headers?: never; query?: never; body: User[] };
     Response: void;
   };
   ["GET /user/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/${username}";
-      typedPath?: `/user/${string}`;
       params: {
         /** The name that needs to be fetched. Use user1 for testing.  */
         username: string;
@@ -299,9 +223,6 @@ type Routes = {
   };
   ["PUT /user/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/${username}";
-      typedPath?: `/user/${string}`;
       params: {
         /** name that need to be updated */
         username: string;
@@ -314,9 +235,6 @@ type Routes = {
   };
   ["DELETE /user/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/${username}";
-      typedPath?: `/user/${string}`;
       params: {
         /** The name that needs to be deleted */
         username: string;
@@ -329,9 +247,6 @@ type Routes = {
   };
   ["GET /user/login"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/login";
-      typedPath?: `/user/login`;
       params?: never;
       headers?: never;
       query: {
@@ -344,42 +259,12 @@ type Routes = {
     };
     Response: string;
   };
-  ["GET /user/logout"]: {
-    Request: {
-      method?: "GET";
-      path?: "/user/logout";
-      typedPath?: `/user/logout`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: void;
-  };
+  ["GET /user/logout"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: void };
   ["POST /user/createWithArray"]: {
-    Request: {
-      method?: "POST";
-      path?: "/user/createWithArray";
-      typedPath?: `/user/createWithArray`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: User[];
-    };
+    Request: { params?: never; headers?: never; query?: never; body: User[] };
     Response: void;
   };
-  ["POST /user"]: {
-    Request: {
-      method?: "POST";
-      path?: "/user";
-      typedPath?: `/user`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: User;
-    };
-    Response: void;
-  };
+  ["POST /user"]: { Request: { params?: never; headers?: never; query?: never; body: User }; Response: void };
 };
 
 export type { Routes };

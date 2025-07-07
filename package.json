@@ -1,6 +1,6 @@
 {
   "name": "swagger2types",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",
   "types": "./lib/index.d.ts",
@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "test:esm": "cd examples/esm && npm install && node index.js",
+    "test:esm": "cd examples/esm && npm install && node index.js && node --experimental-strip-types --test test.ts",
     "test:cjs": "cd examples/cjs && npm install && node index.js",
     "test": "npm run test:esm && npm run test:cjs"
   },
@@ -33,6 +33,9 @@
   "description": "Convert Swagger Spec to Typescript Types",
   "devDependencies": {
     "@types/node": "^24.0.7",
+    "axios": "^1.10.0",
+    "esbuild": "^0.25.5",
+    "got": "^14.4.7",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },

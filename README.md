@@ -5,15 +5,14 @@
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
 
-A TypeScript utility that converts Swagger/OpenAPI specifications into pure TypeScript types for type-safe API route handling. The generated types are completely erasable at runtime, adding zero overhead to your JavaScript bundle.
+A TypeScript utility that converts Swagger/OpenAPI specifications into pure TypeScript types for type-safe API route handling. The generated types are completely erased at runtime, adding zero overhead to your JavaScript bundle.
 
 ## Overview
 
 `swagger2types` transforms your Swagger/OpenAPI specs into a structured TypeScript interface that provides:
 
-- **Type-safe route definitions** with method, path, and parameter types
 - **Request/Response type mapping** for each endpoint
-- **Template literal types** for parameterized paths
+- **Type-safe route definitions** with body, query, header, and parameter types
 - **Zero runtime cost** - all types are erased during compilation
 
 ## Installation
@@ -53,6 +52,14 @@ const generated = await generate(spec);
 writeFileSync('./generated/my-api.ts', generated);
 ```
 
+## Types only
+
+This library only generates TypeScript types that are meant to get fully erased at runtime. You will need to implement your own API calling logic using fetch, axios, or any HTTP client of your choice. [Examples of how to do that are provided in this repo](./examples/esm/swagger-utils.ts).
+
+### Why not bundle a small client?
+
+The goal of this library is to provide the minimal amount of type declarations needed to express your API surface in TypeScript. How that's used is up to you. This simplifies what the responsibilities of this library are. Going from types to making a request is an opinionated path and can change as you level of comfort with Type Level Programming changes, this library doesn't need to change. The only real changes to this library will be to improve the fidelity of the types generated from the OpenAPI spec, for example if we're not handling an edge case of a [Swagger discriminator](https://swagger.io/docs/specification/v3_0/data-models/inheritance-and-polymorphism/#discriminator).
+
 ## Generated Type Structure
 
 The tool generates a `Routes` type that maps each API endpoint to its request and response types:
@@ -61,17 +68,12 @@ The tool generates a `Routes` type that maps each API endpoint to its request an
 export type Routes = {
   ['GET /users']: {
     Request: {
-      method?: 'GET';
-      path?: '/users';
       query?: { page?: number; limit?: number };
     };
     Response: User[];
   };
   ['POST /users/${userId}/posts']: {
     Request: {
-      method?: 'POST';
-      path?: '/users/${userId}/posts';
-      typedPath?: `/users/${string}/posts`;
       params: { userId: string };
       body: CreatePostRequest;
     };
@@ -83,24 +85,46 @@ export type Routes = {
 
 ## But Why?
 
-The goal of this project is to provide the Swagger/OpenAPI spec as a simple TypeScript type that can be used to create type-safe API requests without any runtime overhead. This allows developers to leverage the power of the TypeScript type system while working with APIs defined by Swagger/OpenAPI specifications.
+### Optimized for API Structure
 
-Most other libraries generate the client as well but that adds unnecessary complexity and choice for example using fetch, axios, or other HTTP clients. How the response is wrapped, how errors are handled, how the request is made, etc. This library focuses solely on generating the type definitions needed to make type-safe API requests. No runtime code is generated, it's up to you to use the generated types to create your own API clients.
+Other generators try to provide a client library that exposes idiomatic TypeScript methods for each API endpoint. While this feels like the right approach, it obscures the underlying API structure. Most of the time, you already know the endpoints you want to call and you're forced to hunt down which api method maps to some endpoint (eg `GET /api/users/{userId}` maps to `client.getUser(userId)`).
 
-Another pain point is that other generators make it difficult to get a simple list of methods and paths, the service will have something like `client.getAllUsers()` and `client.getUser(id)` but doesn't expose what endpoint map to which functions. Most users coming from the backend side don't know how this translates and instead would just like to have an API along the lines of `makeRequest('GET /users')` or `makeRequest('POST /users/${userId}/posts', { body: { title: 'Hello' } })`. This library provides a simple way to do that.
+`swagger2types` keeps things simple by preserving the actual API structure in the type system. You work with routes directly as they appear in your API documentation.
 
-Take a look at the [this utils file](./examples/esm/swagger-utils.ts) which provides some TypeScript magic to convert the generated `Routes` type into a type-safe request `prepare` function (this file does some TypeScript voodoo you don't need to understand but is required for creating type aware clients). Once you have the request parts, it's easy to use any HTTP client to make the request. For example there's a [fetch client examples](./examples//esm/clientTypes/fetch.ts), you can play around with to see how this works.
+### Zero Runtime Cost
 
-There are so many various use cases for consuming/wrapping some spec, that could be in a BFF, in an MCP, or just as some api provider in the browser. This library aims to provide a simple, type-safe way to extract the minimal necessary types from a Swagger/OpenAPI for any use case.
+Other libraries generate runtime JavaScript code for each endpoint, which adds up quickly. For example, using `swagger-typescript-api` to generate the Github API client produces over 1MB of compiled JavaScript code (over 200KB minified). This is actual runtime code that ships to your users, not just TypeScript interfaces (the full TypeScript code is actually close to 4MB).
+
+`swagger2types` generates only TypeScript types with zero runtime footprint. If you opt to use the helpers from [the example](./examples/esm/swagger-utils.ts) with the [instantiated clients](./examples/esm/clientTypes/fetch.ts), the entire library's impact on your bundle is under 1KB, regardless of how large your API spec is. Whether your API has 10 endpoints or 1,000, the compiled JavaScript bundle size remains unchanged since types are erased during compilation.
+
+**This library only generates types and no runtime code. You will need to implement your own API calling logic using fetch, axios, or any HTTP client of your choice. [Examples of how to do that are provided in this repo](./examples/esm/swagger-utils.ts).**
+
+### Flexibility
+
+Other libraries make many choices for you - which HTTP client to use, how to handle errors, how to wrap responses, etc. This library leaves those choices up to you. You can use any HTTP client you want and handle errors and responses in whatever way makes sense for your application.
+
+The [examples](./examples/esm/clientTypes/) folder contains some example clients you can use as a starting point.
+
+### Framework Agnostic
+
+Since `swagger2types` only generates types, it works seamlessly with any JavaScript framework or library. Use it with React, Vue, Angular, Express, Next.js, ESM, CJS, Bun, or any other technology without compatibility concerns.
+
+### Easy Integration with Existing Code
+
+Adding type safety to existing API calls is straightforward - no need to refactor your codebase to use a specific client library. You can gradually adopt these types in your existing fetch/axios calls with minimal changes to your code structure.
 
 ## How to use this library
 
 In practice, you would typically:
 
 1. Generate whatever types from your Swagger/OpenAPI spec using the `generate` function or via the cli.
-2. Copy something like [this helper](./examples/esm/swagger-utils.ts) to your project to help you prepare requests. Treat this file as a TypeScript magic black box.
+2. Copy the base types and the specific flavor client generator from [this helper](./examples/esm/swagger-utils.ts). Treat this file as a TypeScript magic black box.
 3. Create a `clients.ts` file that imports the generated types and uses the helper to create type-safe clients for your APIs. You'll essentially be copying [this file](./examples/esm/clientTypes/fetch.ts) and modifying it to suit your needs.
-4. You'll import the `client.ts` file in your application code to use the type-safe API clients.
+4. You'll import your copy of that `client.ts` file in your application code to use the type-safe API clients.
+
+Here's a quick demo of what this gives you:
+
+![Demo](./assets/demo.gif)
 
 ## How It Works
 
@@ -111,30 +135,14 @@ In practice, you would typically:
 
 ## Features
 
-### Template Literal Path Types
-
-For parameterized routes, the tool generates template literal types that preserve parameter information:
-
-```typescript
-// Original path: /users/{userId}/posts/{postId}
-// Generated typedPath: `/users/${string}/posts/${string}`
-```
-
 ### Request Type Composition
 
 Each route's request type includes relevant properties:
 
-- `method` - HTTP method (GET, POST, etc.)
-- `path` - Original path string
-- `typedPath` - Template literal version (for parameterized paths)
 - `params` - Path parameters
 - `query` - Query parameters
 - `headers` - Required headers
 - `body` - Request body
-
-### Zero Runtime Cost
-
-All generated types are pure TypeScript interfaces and type aliases. They provide compile-time safety without adding any JavaScript code to your bundle.
 
 ## Development
 
@@ -170,14 +178,14 @@ The generated `Routes` type for the Github spec contains over 1,000 API endpoint
 The [fetcher clients](./examples/esm/clientTypes/fetch.ts) allow making type safe API to various APIs like GitHub, Petstore, and Star Wars API. Here's a quick example of how to use the generated types with a fetch client:
 
 ```typescript
-const petstoreFetcher: TypeHelper<Petstore>['Request'] = genericFetcher(
-  'https://petstore.swagger.io/v2/'
-);
-const starWarsFetcher: TypeHelper<StarWars>['Request'] = genericFetcher(
-  'https://swapi.profiq.com'
-);
+export const petFetcher = clientFromFetch<Petstore>({
+  baseUrl: 'https://petstore.swagger.io/v2/',
+});
+export const starWarsFetcher = clientFromFetch<StarWars>({
+  baseUrl: 'https://swapi.profiq.com',
+});
 
-petstoreFetcher({
+petFetcher({
   route: 'GET /pet/${petId}',
   request: {
     params: { petId: 1 },

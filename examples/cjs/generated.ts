@@ -74369,23 +74369,9 @@ interface WebhookWorkflowRunRequested {
 }
 
 type Routes = {
-  ["GET /"]: {
-    Request: {
-      method?: "GET";
-      path?: "/";
-      typedPath?: `/`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: Root;
-  };
+  ["GET /"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Root };
   ["GET /advisories"]: {
     Request: {
-      method?: "GET";
-      path?: "/advisories";
-      typedPath?: `/advisories`;
       params?: never;
       headers?: never;
       query: {
@@ -74473,9 +74459,6 @@ type Routes = {
   };
   ["GET /advisories/${ghsaId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/advisories/${ghsaId}";
-      typedPath?: `/advisories/${string}`;
       params: {
         /** The GHSA (GitHub Security Advisory) identifier of the advisory. */
         ghsaId: string;
@@ -74486,35 +74469,13 @@ type Routes = {
     };
     Response: GlobalAdvisory;
   };
-  ["GET /app"]: {
-    Request: {
-      method?: "GET";
-      path?: "/app";
-      typedPath?: `/app`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: Integration;
-  };
+  ["GET /app"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Integration };
   ["GET /app/hook/config"]: {
-    Request: {
-      method?: "GET";
-      path?: "/app/hook/config";
-      typedPath?: `/app/hook/config`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: WebhookConfig;
   };
   ["PATCH /app/hook/config"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/app/hook/config";
-      typedPath?: `/app/hook/config`;
       params?: never;
       headers?: never;
       query?: never;
@@ -74533,9 +74494,6 @@ type Routes = {
   };
   ["GET /app/hook/deliveries"]: {
     Request: {
-      method?: "GET";
-      path?: "/app/hook/deliveries";
-      typedPath?: `/app/hook/deliveries`;
       params?: never;
       headers?: never;
       query: {
@@ -74553,9 +74511,6 @@ type Routes = {
   };
   ["GET /app/hook/deliveries/${deliveryId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/app/hook/deliveries/${deliveryId}";
-      typedPath?: `/app/hook/deliveries/${number}`;
       params: {
         deliveryId: number;
       };
@@ -74567,9 +74522,6 @@ type Routes = {
   };
   ["POST /app/hook/deliveries/${deliveryId}/attempts"]: {
     Request: {
-      method?: "POST";
-      path?: "/app/hook/deliveries/${deliveryId}/attempts";
-      typedPath?: `/app/hook/deliveries/${number}/attempts`;
       params: {
         deliveryId: number;
       };
@@ -74581,9 +74533,6 @@ type Routes = {
   };
   ["GET /app/installation-requests"]: {
     Request: {
-      method?: "GET";
-      path?: "/app/installation-requests";
-      typedPath?: `/app/installation-requests`;
       params?: never;
       headers?: never;
       query: {
@@ -74604,9 +74553,6 @@ type Routes = {
   };
   ["GET /app/installations"]: {
     Request: {
-      method?: "GET";
-      path?: "/app/installations";
-      typedPath?: `/app/installations`;
       params?: never;
       headers?: never;
       query: {
@@ -74633,9 +74579,6 @@ type Routes = {
   };
   ["GET /app/installations/${installationId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/app/installations/${installationId}";
-      typedPath?: `/app/installations/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -74648,9 +74591,6 @@ type Routes = {
   };
   ["DELETE /app/installations/${installationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/app/installations/${installationId}";
-      typedPath?: `/app/installations/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -74663,9 +74603,6 @@ type Routes = {
   };
   ["POST /app/installations/${installationId}/access_tokens"]: {
     Request: {
-      method?: "POST";
-      path?: "/app/installations/${installationId}/access_tokens";
-      typedPath?: `/app/installations/${number}/access_tokens`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -74688,9 +74625,6 @@ type Routes = {
   };
   ["PUT /app/installations/${installationId}/suspended"]: {
     Request: {
-      method?: "PUT";
-      path?: "/app/installations/${installationId}/suspended";
-      typedPath?: `/app/installations/${number}/suspended`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -74703,9 +74637,6 @@ type Routes = {
   };
   ["DELETE /app/installations/${installationId}/suspended"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/app/installations/${installationId}/suspended";
-      typedPath?: `/app/installations/${number}/suspended`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -74718,9 +74649,6 @@ type Routes = {
   };
   ["POST /app-manifests/${code}/conversions"]: {
     Request: {
-      method?: "POST";
-      path?: "/app-manifests/${code}/conversions";
-      typedPath?: `/app-manifests/${string}/conversions`;
       params: {
         code: string;
       };
@@ -74738,9 +74666,6 @@ type Routes = {
   };
   ["DELETE /applications/${clientId}/grant"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/applications/${clientId}/grant";
-      typedPath?: `/applications/${string}/grant`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
@@ -74756,9 +74681,6 @@ type Routes = {
   };
   ["POST /applications/${clientId}/token"]: {
     Request: {
-      method?: "POST";
-      path?: "/applications/${clientId}/token";
-      typedPath?: `/applications/${string}/token`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
@@ -74774,9 +74696,6 @@ type Routes = {
   };
   ["PATCH /applications/${clientId}/token"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/applications/${clientId}/token";
-      typedPath?: `/applications/${string}/token`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
@@ -74792,9 +74711,6 @@ type Routes = {
   };
   ["DELETE /applications/${clientId}/token"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/applications/${clientId}/token";
-      typedPath?: `/applications/${string}/token`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
@@ -74810,9 +74726,6 @@ type Routes = {
   };
   ["POST /applications/${clientId}/token/scoped"]: {
     Request: {
-      method?: "POST";
-      path?: "/applications/${clientId}/token/scoped";
-      typedPath?: `/applications/${string}/token/scoped`;
       params: {
         /** The client ID of the GitHub app. */
         clientId: string;
@@ -74850,9 +74763,6 @@ type Routes = {
   };
   ["GET /apps/${appSlug}"]: {
     Request: {
-      method?: "GET";
-      path?: "/apps/${appSlug}";
-      typedPath?: `/apps/${string}`;
       params: {
         appSlug: string;
       };
@@ -74864,9 +74774,6 @@ type Routes = {
   };
   ["GET /assignments/${assignmentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/assignments/${assignmentId}";
-      typedPath?: `/assignments/${number}`;
       params: {
         /** The unique identifier of the classroom assignment. */
         assignmentId: number;
@@ -74879,9 +74786,6 @@ type Routes = {
   };
   ["GET /assignments/${assignmentId}/accepted_assignments"]: {
     Request: {
-      method?: "GET";
-      path?: "/assignments/${assignmentId}/accepted_assignments";
-      typedPath?: `/assignments/${number}/accepted_assignments`;
       params: {
         /** The unique identifier of the classroom assignment. */
         assignmentId: number;
@@ -74905,9 +74809,6 @@ type Routes = {
   };
   ["GET /assignments/${assignmentId}/grades"]: {
     Request: {
-      method?: "GET";
-      path?: "/assignments/${assignmentId}/grades";
-      typedPath?: `/assignments/${number}/grades`;
       params: {
         /** The unique identifier of the classroom assignment. */
         assignmentId: number;
@@ -74920,9 +74821,6 @@ type Routes = {
   };
   ["GET /classrooms"]: {
     Request: {
-      method?: "GET";
-      path?: "/classrooms";
-      typedPath?: `/classrooms`;
       params?: never;
       headers?: never;
       query: {
@@ -74943,9 +74841,6 @@ type Routes = {
   };
   ["GET /classrooms/${classroomId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/classrooms/${classroomId}";
-      typedPath?: `/classrooms/${number}`;
       params: {
         /** The unique identifier of the classroom. */
         classroomId: number;
@@ -74958,9 +74853,6 @@ type Routes = {
   };
   ["GET /classrooms/${classroomId}/assignments"]: {
     Request: {
-      method?: "GET";
-      path?: "/classrooms/${classroomId}/assignments";
-      typedPath?: `/classrooms/${number}/assignments`;
       params: {
         /** The unique identifier of the classroom. */
         classroomId: number;
@@ -74983,22 +74875,11 @@ type Routes = {
     Response: SimpleClassroomAssignment[];
   };
   ["GET /codes_of_conduct"]: {
-    Request: {
-      method?: "GET";
-      path?: "/codes_of_conduct";
-      typedPath?: `/codes_of_conduct`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: CodeOfConduct[];
   };
   ["GET /codes_of_conduct/${key}"]: {
     Request: {
-      method?: "GET";
-      path?: "/codes_of_conduct/${key}";
-      typedPath?: `/codes_of_conduct/${string}`;
       params: {
         key: string;
       };
@@ -75010,9 +74891,6 @@ type Routes = {
   };
   ["POST /credentials/revoke"]: {
     Request: {
-      method?: "POST";
-      path?: "/credentials/revoke";
-      typedPath?: `/credentials/revoke`;
       params?: never;
       headers?: never;
       query?: never;
@@ -75028,22 +74906,11 @@ type Routes = {
     Response: object;
   };
   ["GET /emojis"]: {
-    Request: {
-      method?: "GET";
-      path?: "/emojis";
-      typedPath?: `/emojis`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: Record<string, string>;
   };
   ["GET /enterprises/${enterprise}/code-security/configurations"]: {
     Request: {
-      method?: "GET";
-      path?: "/enterprises/${enterprise}/code-security/configurations";
-      typedPath?: `/enterprises/${string}/code-security/configurations`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75066,9 +74933,6 @@ type Routes = {
   };
   ["POST /enterprises/${enterprise}/code-security/configurations"]: {
     Request: {
-      method?: "POST";
-      path?: "/enterprises/${enterprise}/code-security/configurations";
-      typedPath?: `/enterprises/${string}/code-security/configurations`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75174,9 +75038,6 @@ type Routes = {
   };
   ["GET /enterprises/${enterprise}/code-security/configurations/defaults"]: {
     Request: {
-      method?: "GET";
-      path?: "/enterprises/${enterprise}/code-security/configurations/defaults";
-      typedPath?: `/enterprises/${string}/code-security/configurations/defaults`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75189,9 +75050,6 @@ type Routes = {
   };
   ["GET /enterprises/${enterprise}/code-security/configurations/${configurationId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75206,9 +75064,6 @@ type Routes = {
   };
   ["PATCH /enterprises/${enterprise}/code-security/configurations/${configurationId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75277,9 +75132,6 @@ type Routes = {
   };
   ["DELETE /enterprises/${enterprise}/code-security/configurations/${configurationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75294,9 +75146,6 @@ type Routes = {
   };
   ["POST /enterprises/${enterprise}/code-security/configurations/${configurationId}/attach"]: {
     Request: {
-      method?: "POST";
-      path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}/attach";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}/attach`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75314,9 +75163,6 @@ type Routes = {
   };
   ["PUT /enterprises/${enterprise}/code-security/configurations/${configurationId}/defaults"]: {
     Request: {
-      method?: "PUT";
-      path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}/defaults";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}/defaults`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75339,9 +75185,6 @@ type Routes = {
   };
   ["GET /enterprises/${enterprise}/code-security/configurations/${configurationId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/enterprises/${enterprise}/code-security/configurations/${configurationId}/repositories";
-      typedPath?: `/enterprises/${string}/code-security/configurations/${number}/repositories`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75373,9 +75216,6 @@ type Routes = {
   };
   ["GET /enterprises/${enterprise}/dependabot/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/enterprises/${enterprise}/dependabot/alerts";
-      typedPath?: `/enterprises/${string}/dependabot/alerts`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75464,9 +75304,6 @@ type Routes = {
   };
   ["GET /enterprises/${enterprise}/secret-scanning/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/enterprises/${enterprise}/secret-scanning/alerts";
-      typedPath?: `/enterprises/${string}/secret-scanning/alerts`;
       params: {
         /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
         enterprise: string;
@@ -75522,9 +75359,6 @@ type Routes = {
   };
   ["GET /events"]: {
     Request: {
-      method?: "GET";
-      path?: "/events";
-      typedPath?: `/events`;
       params?: never;
       headers?: never;
       query: {
@@ -75543,23 +75377,9 @@ type Routes = {
     };
     Response: Event[];
   };
-  ["GET /feeds"]: {
-    Request: {
-      method?: "GET";
-      path?: "/feeds";
-      typedPath?: `/feeds`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: Feed;
-  };
+  ["GET /feeds"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Feed };
   ["GET /gists"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists";
-      typedPath?: `/gists`;
       params?: never;
       headers?: never;
       query: {
@@ -75585,9 +75405,6 @@ type Routes = {
   };
   ["POST /gists"]: {
     Request: {
-      method?: "POST";
-      path?: "/gists";
-      typedPath?: `/gists`;
       params?: never;
       headers?: never;
       query?: never;
@@ -75616,9 +75433,6 @@ type Routes = {
   };
   ["GET /gists/public"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/public";
-      typedPath?: `/gists/public`;
       params?: never;
       headers?: never;
       query: {
@@ -75644,9 +75458,6 @@ type Routes = {
   };
   ["GET /gists/starred"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/starred";
-      typedPath?: `/gists/starred`;
       params?: never;
       headers?: never;
       query: {
@@ -75672,9 +75483,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}";
-      typedPath?: `/gists/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75687,9 +75495,6 @@ type Routes = {
   };
   ["PATCH /gists/${gistId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/gists/${gistId}";
-      typedPath?: `/gists/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75725,9 +75530,6 @@ type Routes = {
   };
   ["DELETE /gists/${gistId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/gists/${gistId}";
-      typedPath?: `/gists/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75740,9 +75542,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}/comments";
-      typedPath?: `/gists/${string}/comments`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75766,9 +75565,6 @@ type Routes = {
   };
   ["POST /gists/${gistId}/comments"]: {
     Request: {
-      method?: "POST";
-      path?: "/gists/${gistId}/comments";
-      typedPath?: `/gists/${string}/comments`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75788,9 +75584,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}/comments/${commentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}/comments/${commentId}";
-      typedPath?: `/gists/${string}/comments/${number}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75808,9 +75601,6 @@ type Routes = {
   };
   ["PATCH /gists/${gistId}/comments/${commentId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/gists/${gistId}/comments/${commentId}";
-      typedPath?: `/gists/${string}/comments/${number}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75835,9 +75625,6 @@ type Routes = {
   };
   ["DELETE /gists/${gistId}/comments/${commentId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/gists/${gistId}/comments/${commentId}";
-      typedPath?: `/gists/${string}/comments/${number}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75855,9 +75642,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}/commits"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}/commits";
-      typedPath?: `/gists/${string}/commits`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75881,9 +75665,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}/forks"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}/forks";
-      typedPath?: `/gists/${string}/forks`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75907,9 +75688,6 @@ type Routes = {
   };
   ["POST /gists/${gistId}/forks"]: {
     Request: {
-      method?: "POST";
-      path?: "/gists/${gistId}/forks";
-      typedPath?: `/gists/${string}/forks`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75922,9 +75700,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}/star"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}/star";
-      typedPath?: `/gists/${string}/star`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75937,9 +75712,6 @@ type Routes = {
   };
   ["PUT /gists/${gistId}/star"]: {
     Request: {
-      method?: "PUT";
-      path?: "/gists/${gistId}/star";
-      typedPath?: `/gists/${string}/star`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75952,9 +75724,6 @@ type Routes = {
   };
   ["DELETE /gists/${gistId}/star"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/gists/${gistId}/star";
-      typedPath?: `/gists/${string}/star`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75967,9 +75736,6 @@ type Routes = {
   };
   ["GET /gists/${gistId}/${sha}"]: {
     Request: {
-      method?: "GET";
-      path?: "/gists/${gistId}/${sha}";
-      typedPath?: `/gists/${string}/${string}`;
       params: {
         /** The unique identifier of the gist. */
         gistId: string;
@@ -75982,22 +75748,11 @@ type Routes = {
     Response: GistSimple;
   };
   ["GET /gitignore/templates"]: {
-    Request: {
-      method?: "GET";
-      path?: "/gitignore/templates";
-      typedPath?: `/gitignore/templates`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: string[];
   };
   ["GET /gitignore/templates/${name}"]: {
     Request: {
-      method?: "GET";
-      path?: "/gitignore/templates/${name}";
-      typedPath?: `/gitignore/templates/${string}`;
       params: {
         name: string;
       };
@@ -76009,9 +75764,6 @@ type Routes = {
   };
   ["GET /installation/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/installation/repositories";
-      typedPath?: `/installation/repositories`;
       params?: never;
       headers?: never;
       query: {
@@ -76036,22 +75788,11 @@ type Routes = {
     };
   };
   ["DELETE /installation/token"]: {
-    Request: {
-      method?: "DELETE";
-      path?: "/installation/token";
-      typedPath?: `/installation/token`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: void;
   };
   ["GET /issues"]: {
     Request: {
-      method?: "GET";
-      path?: "/issues";
-      typedPath?: `/issues`;
       params?: never;
       headers?: never;
       query: {
@@ -76103,9 +75844,6 @@ type Routes = {
   };
   ["GET /licenses"]: {
     Request: {
-      method?: "GET";
-      path?: "/licenses";
-      typedPath?: `/licenses`;
       params?: never;
       headers?: never;
       query: {
@@ -76127,9 +75865,6 @@ type Routes = {
   };
   ["GET /licenses/${license}"]: {
     Request: {
-      method?: "GET";
-      path?: "/licenses/${license}";
-      typedPath?: `/licenses/${string}`;
       params: {
         license: string;
       };
@@ -76141,9 +75876,6 @@ type Routes = {
   };
   ["POST /markdown"]: {
     Request: {
-      method?: "POST";
-      path?: "/markdown";
-      typedPath?: `/markdown`;
       params?: never;
       headers?: never;
       query?: never;
@@ -76163,22 +75895,11 @@ type Routes = {
     Response: WebhookConfigUrl;
   };
   ["POST /markdown/raw"]: {
-    Request: {
-      method?: "POST";
-      path?: "/markdown/raw";
-      typedPath?: `/markdown/raw`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: WebhookConfigUrl;
-    };
+    Request: { params?: never; headers?: never; query?: never; body: WebhookConfigUrl };
     Response: WebhookConfigUrl;
   };
   ["GET /marketplace_listing/accounts/${accountId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/marketplace_listing/accounts/${accountId}";
-      typedPath?: `/marketplace_listing/accounts/${number}`;
       params: {
         /** account_id parameter */
         accountId: number;
@@ -76191,9 +75912,6 @@ type Routes = {
   };
   ["GET /marketplace_listing/plans"]: {
     Request: {
-      method?: "GET";
-      path?: "/marketplace_listing/plans";
-      typedPath?: `/marketplace_listing/plans`;
       params?: never;
       headers?: never;
       query: {
@@ -76214,9 +75932,6 @@ type Routes = {
   };
   ["GET /marketplace_listing/plans/${planId}/accounts"]: {
     Request: {
-      method?: "GET";
-      path?: "/marketplace_listing/plans/${planId}/accounts";
-      typedPath?: `/marketplace_listing/plans/${number}/accounts`;
       params: {
         /** The unique identifier of the plan. */
         planId: number;
@@ -76247,9 +75962,6 @@ type Routes = {
   };
   ["GET /marketplace_listing/stubbed/accounts/${accountId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/marketplace_listing/stubbed/accounts/${accountId}";
-      typedPath?: `/marketplace_listing/stubbed/accounts/${number}`;
       params: {
         /** account_id parameter */
         accountId: number;
@@ -76262,9 +75974,6 @@ type Routes = {
   };
   ["GET /marketplace_listing/stubbed/plans"]: {
     Request: {
-      method?: "GET";
-      path?: "/marketplace_listing/stubbed/plans";
-      typedPath?: `/marketplace_listing/stubbed/plans`;
       params?: never;
       headers?: never;
       query: {
@@ -76285,9 +75994,6 @@ type Routes = {
   };
   ["GET /marketplace_listing/stubbed/plans/${planId}/accounts"]: {
     Request: {
-      method?: "GET";
-      path?: "/marketplace_listing/stubbed/plans/${planId}/accounts";
-      typedPath?: `/marketplace_listing/stubbed/plans/${number}/accounts`;
       params: {
         /** The unique identifier of the plan. */
         planId: number;
@@ -76316,23 +76022,9 @@ type Routes = {
     };
     Response: MarketplacePurchase[];
   };
-  ["GET /meta"]: {
-    Request: {
-      method?: "GET";
-      path?: "/meta";
-      typedPath?: `/meta`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: ApiOverview;
-  };
+  ["GET /meta"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: ApiOverview };
   ["GET /networks/${owner}/${repo}/events"]: {
     Request: {
-      method?: "GET";
-      path?: "/networks/${owner}/${repo}/events";
-      typedPath?: `/networks/${string}/${string}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -76358,9 +76050,6 @@ type Routes = {
   };
   ["GET /notifications"]: {
     Request: {
-      method?: "GET";
-      path?: "/notifications";
-      typedPath?: `/notifications`;
       params?: never;
       headers?: never;
       query: {
@@ -76401,9 +76090,6 @@ type Routes = {
   };
   ["PUT /notifications"]: {
     Request: {
-      method?: "PUT";
-      path?: "/notifications";
-      typedPath?: `/notifications`;
       params?: never;
       headers?: never;
       query?: never;
@@ -76423,9 +76109,6 @@ type Routes = {
   };
   ["GET /notifications/threads/${threadId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/notifications/threads/${threadId}";
-      typedPath?: `/notifications/threads/${number}`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
@@ -76438,9 +76121,6 @@ type Routes = {
   };
   ["PATCH /notifications/threads/${threadId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/notifications/threads/${threadId}";
-      typedPath?: `/notifications/threads/${number}`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
@@ -76453,9 +76133,6 @@ type Routes = {
   };
   ["DELETE /notifications/threads/${threadId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/notifications/threads/${threadId}";
-      typedPath?: `/notifications/threads/${number}`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
@@ -76468,9 +76145,6 @@ type Routes = {
   };
   ["GET /notifications/threads/${threadId}/subscription"]: {
     Request: {
-      method?: "GET";
-      path?: "/notifications/threads/${threadId}/subscription";
-      typedPath?: `/notifications/threads/${number}/subscription`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
@@ -76483,9 +76157,6 @@ type Routes = {
   };
   ["PUT /notifications/threads/${threadId}/subscription"]: {
     Request: {
-      method?: "PUT";
-      path?: "/notifications/threads/${threadId}/subscription";
-      typedPath?: `/notifications/threads/${number}/subscription`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
@@ -76504,9 +76175,6 @@ type Routes = {
   };
   ["DELETE /notifications/threads/${threadId}/subscription"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/notifications/threads/${threadId}/subscription";
-      typedPath?: `/notifications/threads/${number}/subscription`;
       params: {
         /** The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
         threadId: number;
@@ -76519,9 +76187,6 @@ type Routes = {
   };
   ["GET /octocat"]: {
     Request: {
-      method?: "GET";
-      path?: "/octocat";
-      typedPath?: `/octocat`;
       params?: never;
       headers?: never;
       query: {
@@ -76534,9 +76199,6 @@ type Routes = {
   };
   ["GET /organizations"]: {
     Request: {
-      method?: "GET";
-      path?: "/organizations";
-      typedPath?: `/organizations`;
       params?: never;
       headers?: never;
       query: {
@@ -76554,9 +76216,6 @@ type Routes = {
   };
   ["GET /organizations/${org}/dependabot/repository-access"]: {
     Request: {
-      method?: "GET";
-      path?: "/organizations/${org}/dependabot/repository-access";
-      typedPath?: `/organizations/${string}/dependabot/repository-access`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76583,9 +76242,6 @@ type Routes = {
   };
   ["PATCH /organizations/${org}/dependabot/repository-access"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/organizations/${org}/dependabot/repository-access";
-      typedPath?: `/organizations/${string}/dependabot/repository-access`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76603,9 +76259,6 @@ type Routes = {
   };
   ["PUT /organizations/${org}/dependabot/repository-access/default-level"]: {
     Request: {
-      method?: "PUT";
-      path?: "/organizations/${org}/dependabot/repository-access/default-level";
-      typedPath?: `/organizations/${string}/dependabot/repository-access/default-level`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76624,9 +76277,6 @@ type Routes = {
   };
   ["GET /organizations/${org}/settings/billing/usage"]: {
     Request: {
-      method?: "GET";
-      path?: "/organizations/${org}/settings/billing/usage";
-      typedPath?: `/organizations/${string}/settings/billing/usage`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76648,9 +76298,6 @@ type Routes = {
   };
   ["GET /orgs/${org}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}";
-      typedPath?: `/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76663,9 +76310,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}";
-      typedPath?: `/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76817,9 +76461,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}";
-      typedPath?: `/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76832,9 +76473,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/cache/usage"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/cache/usage";
-      typedPath?: `/orgs/${string}/actions/cache/usage`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76847,9 +76485,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/cache/usage-by-repository"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/cache/usage-by-repository";
-      typedPath?: `/orgs/${string}/actions/cache/usage-by-repository`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76876,9 +76511,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners";
-      typedPath?: `/orgs/${string}/actions/hosted-runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76905,9 +76537,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/hosted-runners"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/hosted-runners";
-      typedPath?: `/orgs/${string}/actions/hosted-runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76938,9 +76567,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners/images/github-owned"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners/images/github-owned";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/images/github-owned`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76956,9 +76582,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners/images/partner"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners/images/partner";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/images/partner`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76974,9 +76597,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners/limits"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners/limits";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -76989,9 +76609,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners/machine-sizes"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners/machine-sizes";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/machine-sizes`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77007,9 +76624,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners/platforms"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners/platforms";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/platforms`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77025,9 +76639,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/hosted-runners/${hostedRunnerId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/hosted-runners/${hostedRunnerId}";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77042,9 +76653,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/actions/hosted-runners/${hostedRunnerId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/actions/hosted-runners/${hostedRunnerId}";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77068,9 +76676,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/hosted-runners/${hostedRunnerId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/hosted-runners/${hostedRunnerId}";
-      typedPath?: `/orgs/${string}/actions/hosted-runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77085,9 +76690,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/oidc/customization/sub"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/oidc/customization/sub";
-      typedPath?: `/orgs/${string}/actions/oidc/customization/sub`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77100,9 +76702,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/oidc/customization/sub"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/oidc/customization/sub";
-      typedPath?: `/orgs/${string}/actions/oidc/customization/sub`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77115,9 +76714,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/permissions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/permissions";
-      typedPath?: `/orgs/${string}/actions/permissions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77130,9 +76726,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/permissions"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/permissions";
-      typedPath?: `/orgs/${string}/actions/permissions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77150,9 +76743,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/permissions/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/permissions/repositories";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77179,9 +76769,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/permissions/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/permissions/repositories";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77197,9 +76784,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/permissions/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/permissions/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77214,9 +76798,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/permissions/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/permissions/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/permissions/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77231,9 +76812,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/permissions/selected-actions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/permissions/selected-actions";
-      typedPath?: `/orgs/${string}/actions/permissions/selected-actions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77246,9 +76824,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/permissions/selected-actions"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/permissions/selected-actions";
-      typedPath?: `/orgs/${string}/actions/permissions/selected-actions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77261,9 +76836,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/permissions/workflow"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/permissions/workflow";
-      typedPath?: `/orgs/${string}/actions/permissions/workflow`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77276,9 +76848,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/permissions/workflow"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/permissions/workflow";
-      typedPath?: `/orgs/${string}/actions/permissions/workflow`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77291,9 +76860,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runner-groups"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runner-groups";
-      typedPath?: `/orgs/${string}/actions/runner-groups`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77322,9 +76888,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/runner-groups"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/runner-groups";
-      typedPath?: `/orgs/${string}/actions/runner-groups`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77363,9 +76926,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77380,9 +76940,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/actions/runner-groups/${runnerGroupId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77416,9 +76973,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/runner-groups/${runnerGroupId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77433,9 +76987,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}/hosted-runners"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/hosted-runners";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/hosted-runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77464,9 +77015,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77495,9 +77043,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77515,9 +77060,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77534,9 +77076,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77553,9 +77092,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77584,9 +77120,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77604,9 +77137,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77623,9 +77153,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runner-groups/${number}/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77642,9 +77169,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runners"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runners";
-      typedPath?: `/orgs/${string}/actions/runners`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77673,9 +77197,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runners/downloads"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runners/downloads";
-      typedPath?: `/orgs/${string}/actions/runners/downloads`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77688,9 +77209,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/runners/generate-jitconfig"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/runners/generate-jitconfig";
-      typedPath?: `/orgs/${string}/actions/runners/generate-jitconfig`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77724,9 +77242,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/runners/registration-token"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/runners/registration-token";
-      typedPath?: `/orgs/${string}/actions/runners/registration-token`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77739,9 +77254,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/runners/remove-token"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/runners/remove-token";
-      typedPath?: `/orgs/${string}/actions/runners/remove-token`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77754,9 +77266,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runners/${runnerId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77771,9 +77280,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/runners/${runnerId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/runners/${runnerId}";
-      typedPath?: `/orgs/${string}/actions/runners/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77788,9 +77294,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77808,9 +77311,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77835,9 +77335,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77862,9 +77359,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/runners/${runnerId}/labels";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77882,9 +77376,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/runners/${runnerId}/labels/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/runners/${runnerId}/labels/${name}";
-      typedPath?: `/orgs/${string}/actions/runners/${number}/labels/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77904,9 +77395,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/secrets";
-      typedPath?: `/orgs/${string}/actions/secrets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77933,9 +77421,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/secrets/public-key";
-      typedPath?: `/orgs/${string}/actions/secrets/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77948,9 +77433,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77965,9 +77447,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -77994,9 +77473,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78011,9 +77487,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78042,9 +77515,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78062,9 +77532,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78080,9 +77547,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78098,9 +77562,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/variables"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/variables";
-      typedPath?: `/orgs/${string}/actions/variables`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78127,9 +77588,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/actions/variables"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/actions/variables";
-      typedPath?: `/orgs/${string}/actions/variables`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78151,9 +77609,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/variables/${name}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/variables/${name}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78168,9 +77623,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/actions/variables/${name}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/actions/variables/${name}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78194,9 +77646,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/variables/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/variables/${name}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78211,9 +77660,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/actions/variables/${name}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/actions/variables/${name}/repositories";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78242,9 +77688,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/variables/${name}/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/variables/${name}/repositories";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78262,9 +77705,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/actions/variables/${name}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/actions/variables/${name}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78280,9 +77720,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/actions/variables/${name}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/actions/variables/${name}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/actions/variables/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78298,9 +77735,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/attestations/bulk-list"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/attestations/bulk-list";
-      typedPath?: `/orgs/${string}/attestations/bulk-list`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78362,9 +77796,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/attestations/delete-request"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/attestations/delete-request";
-      typedPath?: `/orgs/${string}/attestations/delete-request`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78393,9 +77824,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/attestations/digest/${subjectDigest}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/attestations/digest/${subjectDigest}";
-      typedPath?: `/orgs/${string}/attestations/digest/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78410,9 +77838,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/attestations/${attestationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/attestations/${attestationId}";
-      typedPath?: `/orgs/${string}/attestations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78427,9 +77852,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/attestations/${subjectDigest}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/attestations/${subjectDigest}";
-      typedPath?: `/orgs/${string}/attestations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78473,9 +77895,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/blocks"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/blocks";
-      typedPath?: `/orgs/${string}/blocks`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78499,9 +77918,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/blocks/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/blocks/${username}";
-      typedPath?: `/orgs/${string}/blocks/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78516,9 +77932,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/blocks/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/blocks/${username}";
-      typedPath?: `/orgs/${string}/blocks/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78533,9 +77946,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/blocks/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/blocks/${username}";
-      typedPath?: `/orgs/${string}/blocks/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78550,9 +77960,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/campaigns"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/campaigns";
-      typedPath?: `/orgs/${string}/campaigns`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78588,9 +77995,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/campaigns"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/campaigns";
-      typedPath?: `/orgs/${string}/campaigns`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78654,9 +78058,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/campaigns/${campaignNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/campaigns/${campaignNumber}";
-      typedPath?: `/orgs/${string}/campaigns/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78671,9 +78072,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/campaigns/${campaignNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/campaigns/${campaignNumber}";
-      typedPath?: `/orgs/${string}/campaigns/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78723,9 +78121,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/campaigns/${campaignNumber}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/campaigns/${campaignNumber}";
-      typedPath?: `/orgs/${string}/campaigns/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78740,9 +78135,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/code-scanning/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/code-scanning/alerts";
-      typedPath?: `/orgs/${string}/code-scanning/alerts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78788,9 +78180,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/code-security/configurations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/code-security/configurations";
-      typedPath?: `/orgs/${string}/code-security/configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78818,9 +78207,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/code-security/configurations"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/code-security/configurations";
-      typedPath?: `/orgs/${string}/code-security/configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78938,9 +78324,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/code-security/configurations/defaults"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/code-security/configurations/defaults";
-      typedPath?: `/orgs/${string}/code-security/configurations/defaults`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78953,9 +78336,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/code-security/configurations/detach"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/code-security/configurations/detach";
-      typedPath?: `/orgs/${string}/code-security/configurations/detach`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78975,9 +78355,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/code-security/configurations/${configurationId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/code-security/configurations/${configurationId}";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -78992,9 +78369,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/code-security/configurations/${configurationId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/code-security/configurations/${configurationId}";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79069,9 +78443,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/code-security/configurations/${configurationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/code-security/configurations/${configurationId}";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79086,9 +78457,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/code-security/configurations/${configurationId}/attach"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/code-security/configurations/${configurationId}/attach";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}/attach`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79108,9 +78476,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/code-security/configurations/${configurationId}/defaults"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/code-security/configurations/${configurationId}/defaults";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}/defaults`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79133,9 +78498,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/code-security/configurations/${configurationId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/code-security/configurations/${configurationId}/repositories";
-      typedPath?: `/orgs/${string}/code-security/configurations/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79167,9 +78529,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/codespaces"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/codespaces";
-      typedPath?: `/orgs/${string}/codespaces`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79196,9 +78555,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/codespaces/access"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/codespaces/access";
-      typedPath?: `/orgs/${string}/codespaces/access`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79219,9 +78575,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/codespaces/access/selected_users"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/codespaces/access/selected_users";
-      typedPath?: `/orgs/${string}/codespaces/access/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79240,9 +78593,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/codespaces/access/selected_users"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/codespaces/access/selected_users";
-      typedPath?: `/orgs/${string}/codespaces/access/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79261,9 +78611,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/codespaces/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/codespaces/secrets";
-      typedPath?: `/orgs/${string}/codespaces/secrets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79290,9 +78637,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/codespaces/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/codespaces/secrets/public-key";
-      typedPath?: `/orgs/${string}/codespaces/secrets/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79305,9 +78649,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79322,9 +78663,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79351,9 +78689,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79368,9 +78703,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79399,9 +78731,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79419,9 +78748,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79437,9 +78763,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79455,9 +78778,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/copilot/billing"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/copilot/billing";
-      typedPath?: `/orgs/${string}/copilot/billing`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79470,9 +78790,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/copilot/billing/seats"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/copilot/billing/seats";
-      typedPath?: `/orgs/${string}/copilot/billing/seats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79500,9 +78817,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/copilot/billing/selected_teams"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/copilot/billing/selected_teams";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79523,9 +78837,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/copilot/billing/selected_teams"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/copilot/billing/selected_teams";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79546,9 +78857,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/copilot/billing/selected_users"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/copilot/billing/selected_users";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79569,9 +78877,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/copilot/billing/selected_users"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/copilot/billing/selected_users";
-      typedPath?: `/orgs/${string}/copilot/billing/selected_users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79592,9 +78897,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/copilot/metrics"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/copilot/metrics";
-      typedPath?: `/orgs/${string}/copilot/metrics`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79622,9 +78924,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/dependabot/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/dependabot/alerts";
-      typedPath?: `/orgs/${string}/dependabot/alerts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79713,9 +79012,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/dependabot/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/dependabot/secrets";
-      typedPath?: `/orgs/${string}/dependabot/secrets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79742,9 +79038,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/dependabot/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/dependabot/secrets/public-key";
-      typedPath?: `/orgs/${string}/dependabot/secrets/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79757,9 +79050,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/dependabot/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79774,9 +79064,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/dependabot/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79803,9 +79090,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/dependabot/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79820,9 +79104,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/dependabot/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79851,9 +79132,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/dependabot/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79871,9 +79149,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79889,9 +79164,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/orgs/${string}/dependabot/secrets/${string}/repositories/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79907,9 +79179,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/docker/conflicts"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/docker/conflicts";
-      typedPath?: `/orgs/${string}/docker/conflicts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79922,9 +79191,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/events"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/events";
-      typedPath?: `/orgs/${string}/events`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79948,9 +79214,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/failed_invitations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/failed_invitations";
-      typedPath?: `/orgs/${string}/failed_invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -79974,9 +79237,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/hooks"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/hooks";
-      typedPath?: `/orgs/${string}/hooks`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80000,9 +79260,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/hooks"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/hooks";
-      typedPath?: `/orgs/${string}/hooks`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80043,9 +79300,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/hooks/${hookId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/hooks/${hookId}";
-      typedPath?: `/orgs/${string}/hooks/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80060,9 +79314,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/hooks/${hookId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/hooks/${hookId}";
-      typedPath?: `/orgs/${string}/hooks/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80101,9 +79352,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/hooks/${hookId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/hooks/${hookId}";
-      typedPath?: `/orgs/${string}/hooks/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80118,9 +79366,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/hooks/${hookId}/config"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/hooks/${hookId}/config";
-      typedPath?: `/orgs/${string}/hooks/${number}/config`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80135,9 +79380,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/hooks/${hookId}/config"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/hooks/${hookId}/config";
-      typedPath?: `/orgs/${string}/hooks/${number}/config`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80161,9 +79403,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/hooks/${hookId}/deliveries"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/hooks/${hookId}/deliveries";
-      typedPath?: `/orgs/${string}/hooks/${number}/deliveries`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80186,9 +79425,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}";
-      typedPath?: `/orgs/${string}/hooks/${number}/deliveries/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80204,9 +79440,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}/attempts"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}/attempts";
-      typedPath?: `/orgs/${string}/hooks/${number}/deliveries/${number}/attempts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80222,9 +79455,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/hooks/${hookId}/pings"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/hooks/${hookId}/pings";
-      typedPath?: `/orgs/${string}/hooks/${number}/pings`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80239,14 +79469,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/route-stats/${actorType}/${actorId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/route-stats/${actorType}/${actorId}";
-      typedPath?: `/orgs/${string}/insights/api/route-stats/${
-        | "installation"
-        | "classic_pat"
-        | "fine_grained_pat"
-        | "oauth_app"
-        | "github_app_user_to_server"}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80294,9 +79516,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/subject-stats"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/subject-stats";
-      typedPath?: `/orgs/${string}/insights/api/subject-stats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80339,9 +79558,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/summary-stats"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/summary-stats";
-      typedPath?: `/orgs/${string}/insights/api/summary-stats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80359,9 +79575,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/summary-stats/users/${userId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/summary-stats/users/${userId}";
-      typedPath?: `/orgs/${string}/insights/api/summary-stats/users/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80381,14 +79594,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/summary-stats/${actorType}/${actorId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/summary-stats/${actorType}/${actorId}";
-      typedPath?: `/orgs/${string}/insights/api/summary-stats/${
-        | "installation"
-        | "classic_pat"
-        | "fine_grained_pat"
-        | "oauth_app"
-        | "github_app_user_to_server"}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80410,9 +79615,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/time-stats"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/time-stats";
-      typedPath?: `/orgs/${string}/insights/api/time-stats`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80432,9 +79634,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/time-stats/users/${userId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/time-stats/users/${userId}";
-      typedPath?: `/orgs/${string}/insights/api/time-stats/users/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80456,14 +79655,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/time-stats/${actorType}/${actorId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/time-stats/${actorType}/${actorId}";
-      typedPath?: `/orgs/${string}/insights/api/time-stats/${
-        | "installation"
-        | "classic_pat"
-        | "fine_grained_pat"
-        | "oauth_app"
-        | "github_app_user_to_server"}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80487,9 +79678,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/insights/api/user-stats/${userId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/insights/api/user-stats/${userId}";
-      typedPath?: `/orgs/${string}/insights/api/user-stats/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80534,9 +79722,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/installation"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/installation";
-      typedPath?: `/orgs/${string}/installation`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80549,9 +79734,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/installations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/installations";
-      typedPath?: `/orgs/${string}/installations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80578,9 +79760,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/interaction-limits"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/interaction-limits";
-      typedPath?: `/orgs/${string}/interaction-limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80593,9 +79772,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/interaction-limits"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/interaction-limits";
-      typedPath?: `/orgs/${string}/interaction-limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80608,9 +79784,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/interaction-limits"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/interaction-limits";
-      typedPath?: `/orgs/${string}/interaction-limits`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80623,9 +79796,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/invitations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/invitations";
-      typedPath?: `/orgs/${string}/invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80659,9 +79829,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/invitations"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/invitations";
-      typedPath?: `/orgs/${string}/invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80690,9 +79857,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/invitations/${invitationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/invitations/${invitationId}";
-      typedPath?: `/orgs/${string}/invitations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80707,9 +79871,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/invitations/${invitationId}/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/invitations/${invitationId}/teams";
-      typedPath?: `/orgs/${string}/invitations/${number}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80735,9 +79896,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/issue-types"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/issue-types";
-      typedPath?: `/orgs/${string}/issue-types`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80750,9 +79908,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/issue-types"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/issue-types";
-      typedPath?: `/orgs/${string}/issue-types`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80765,9 +79920,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/issue-types/${issueTypeId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/issue-types/${issueTypeId}";
-      typedPath?: `/orgs/${string}/issue-types/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80782,9 +79934,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/issue-types/${issueTypeId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/issue-types/${issueTypeId}";
-      typedPath?: `/orgs/${string}/issue-types/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80799,9 +79948,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/issues"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/issues";
-      typedPath?: `/orgs/${string}/issues`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80854,9 +80000,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/members"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/members";
-      typedPath?: `/orgs/${string}/members`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80890,9 +80033,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/members/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/members/${username}";
-      typedPath?: `/orgs/${string}/members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80907,9 +80047,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/members/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/members/${username}";
-      typedPath?: `/orgs/${string}/members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80924,9 +80061,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/members/${username}/codespaces"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/members/${username}/codespaces";
-      typedPath?: `/orgs/${string}/members/${string}/codespaces`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80955,9 +80089,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/members/${username}/codespaces/${codespaceName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/members/${username}/codespaces/${codespaceName}";
-      typedPath?: `/orgs/${string}/members/${string}/codespaces/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80974,9 +80105,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/members/${username}/codespaces/${codespaceName}/stop"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/members/${username}/codespaces/${codespaceName}/stop";
-      typedPath?: `/orgs/${string}/members/${string}/codespaces/${string}/stop`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -80993,9 +80121,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/members/${username}/copilot"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/members/${username}/copilot";
-      typedPath?: `/orgs/${string}/members/${string}/copilot`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81010,9 +80135,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/memberships/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/memberships/${username}";
-      typedPath?: `/orgs/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81027,9 +80149,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/memberships/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/memberships/${username}";
-      typedPath?: `/orgs/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81052,9 +80171,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/memberships/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/memberships/${username}";
-      typedPath?: `/orgs/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81069,9 +80185,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/migrations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/migrations";
-      typedPath?: `/orgs/${string}/migrations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81097,9 +80210,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/migrations"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/migrations";
-      typedPath?: `/orgs/${string}/migrations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81157,9 +80267,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/migrations/${migrationId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/migrations/${migrationId}";
-      typedPath?: `/orgs/${string}/migrations/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81177,9 +80284,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/migrations/${migrationId}/archive"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/migrations/${migrationId}/archive";
-      typedPath?: `/orgs/${string}/migrations/${number}/archive`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81194,9 +80298,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/migrations/${migrationId}/archive"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/migrations/${migrationId}/archive";
-      typedPath?: `/orgs/${string}/migrations/${number}/archive`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81211,9 +80312,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/migrations/${migrationId}/repos/${repoName}/lock"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/migrations/${migrationId}/repos/${repoName}/lock";
-      typedPath?: `/orgs/${string}/migrations/${number}/repos/${string}/lock`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81230,9 +80328,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/migrations/${migrationId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/migrations/${migrationId}/repositories";
-      typedPath?: `/orgs/${string}/migrations/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81258,9 +80353,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/organization-roles"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/organization-roles";
-      typedPath?: `/orgs/${string}/organization-roles`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81278,9 +80370,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/organization-roles/teams/${teamSlug}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/organization-roles/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/organization-roles/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81295,9 +80384,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/teams/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81314,9 +80400,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/teams/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81333,9 +80416,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/organization-roles/users/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/organization-roles/users/${username}";
-      typedPath?: `/orgs/${string}/organization-roles/users/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81350,9 +80430,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/organization-roles/users/${username}/${roleId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/organization-roles/users/${username}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/users/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81369,9 +80446,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/organization-roles/users/${username}/${roleId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/organization-roles/users/${username}/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/users/${string}/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81388,9 +80462,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/organization-roles/${roleId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/organization-roles/${roleId}";
-      typedPath?: `/orgs/${string}/organization-roles/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81405,9 +80476,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/organization-roles/${roleId}/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/organization-roles/${roleId}/teams";
-      typedPath?: `/orgs/${string}/organization-roles/${number}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81433,9 +80501,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/organization-roles/${roleId}/users"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/organization-roles/${roleId}/users";
-      typedPath?: `/orgs/${string}/organization-roles/${number}/users`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81461,9 +80526,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/outside_collaborators"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/outside_collaborators";
-      typedPath?: `/orgs/${string}/outside_collaborators`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81492,9 +80554,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/outside_collaborators/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/outside_collaborators/${username}";
-      typedPath?: `/orgs/${string}/outside_collaborators/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81515,9 +80574,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/outside_collaborators/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/outside_collaborators/${username}";
-      typedPath?: `/orgs/${string}/outside_collaborators/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81532,9 +80588,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/packages"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/packages";
-      typedPath?: `/orgs/${string}/packages`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81567,15 +80620,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/packages/${packageType}/${packageName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81592,15 +80636,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/packages/${packageType}/${packageName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81617,15 +80652,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/packages/${packageType}/${packageName}/restore"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}/restore";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81645,15 +80671,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/packages/${packageType}/${packageName}/versions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81686,15 +80703,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81713,15 +80721,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81740,15 +80739,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore";
-      typedPath?: `/orgs/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -81767,9 +80757,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/personal-access-token-requests"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/personal-access-token-requests";
-      typedPath?: `/orgs/${string}/personal-access-token-requests`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81835,9 +80822,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/personal-access-token-requests"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/personal-access-token-requests";
-      typedPath?: `/orgs/${string}/personal-access-token-requests`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81864,9 +80848,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/personal-access-token-requests/${patRequestId}"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/personal-access-token-requests/${patRequestId}";
-      typedPath?: `/orgs/${string}/personal-access-token-requests/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81889,9 +80870,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/personal-access-token-requests/${patRequestId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/personal-access-token-requests/${patRequestId}/repositories";
-      typedPath?: `/orgs/${string}/personal-access-token-requests/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81917,9 +80895,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/personal-access-tokens"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/personal-access-tokens";
-      typedPath?: `/orgs/${string}/personal-access-tokens`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -81985,9 +80960,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/personal-access-tokens"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/personal-access-tokens";
-      typedPath?: `/orgs/${string}/personal-access-tokens`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82009,9 +80981,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/personal-access-tokens/${patId}"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/personal-access-tokens/${patId}";
-      typedPath?: `/orgs/${string}/personal-access-tokens/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82029,9 +80998,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/personal-access-tokens/${patId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/personal-access-tokens/${patId}/repositories";
-      typedPath?: `/orgs/${string}/personal-access-tokens/${number}/repositories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82057,9 +81023,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/private-registries"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/private-registries";
-      typedPath?: `/orgs/${string}/private-registries`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82086,9 +81049,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/private-registries"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/private-registries";
-      typedPath?: `/orgs/${string}/private-registries`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82122,9 +81082,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/private-registries/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/private-registries/public-key";
-      typedPath?: `/orgs/${string}/private-registries/public-key`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82148,9 +81105,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/private-registries/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/private-registries/${secretName}";
-      typedPath?: `/orgs/${string}/private-registries/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82165,9 +81119,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/private-registries/${secretName}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/private-registries/${secretName}";
-      typedPath?: `/orgs/${string}/private-registries/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82203,9 +81154,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/private-registries/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/private-registries/${secretName}";
-      typedPath?: `/orgs/${string}/private-registries/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82220,9 +81168,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/projects"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/projects";
-      typedPath?: `/orgs/${string}/projects`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82251,9 +81196,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/projects"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/projects";
-      typedPath?: `/orgs/${string}/projects`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82271,9 +81213,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/properties/schema"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/properties/schema";
-      typedPath?: `/orgs/${string}/properties/schema`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82286,9 +81225,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/properties/schema"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/properties/schema";
-      typedPath?: `/orgs/${string}/properties/schema`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82308,9 +81244,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/properties/schema/${customPropertyName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/properties/schema/${customPropertyName}";
-      typedPath?: `/orgs/${string}/properties/schema/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82325,9 +81258,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/properties/schema/${customPropertyName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/properties/schema/${customPropertyName}";
-      typedPath?: `/orgs/${string}/properties/schema/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82342,9 +81272,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/properties/schema/${customPropertyName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/properties/schema/${customPropertyName}";
-      typedPath?: `/orgs/${string}/properties/schema/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82359,9 +81286,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/properties/values"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/properties/values";
-      typedPath?: `/orgs/${string}/properties/values`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82387,9 +81311,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/properties/values"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/properties/values";
-      typedPath?: `/orgs/${string}/properties/values`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82411,9 +81332,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/public_members"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/public_members";
-      typedPath?: `/orgs/${string}/public_members`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82437,9 +81355,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/public_members/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/public_members/${username}";
-      typedPath?: `/orgs/${string}/public_members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82454,9 +81369,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/public_members/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/public_members/${username}";
-      typedPath?: `/orgs/${string}/public_members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82471,9 +81383,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/public_members/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/public_members/${username}";
-      typedPath?: `/orgs/${string}/public_members/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82488,9 +81397,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/repos"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/repos";
-      typedPath?: `/orgs/${string}/repos`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82526,9 +81432,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/repos"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/repos";
-      typedPath?: `/orgs/${string}/repos`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82659,9 +81562,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/rulesets"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/rulesets";
-      typedPath?: `/orgs/${string}/rulesets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82692,9 +81592,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/rulesets"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/rulesets";
-      typedPath?: `/orgs/${string}/rulesets`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82728,9 +81625,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/rulesets/rule-suites"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/rulesets/rule-suites";
-      typedPath?: `/orgs/${string}/rulesets/rule-suites`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82772,9 +81666,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/rulesets/rule-suites/${ruleSuiteId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/rulesets/rule-suites/${ruleSuiteId}";
-      typedPath?: `/orgs/${string}/rulesets/rule-suites/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82794,9 +81685,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/rulesets/${rulesetId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/rulesets/${rulesetId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82811,9 +81699,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/rulesets/${rulesetId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/rulesets/${rulesetId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82846,9 +81731,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/rulesets/${rulesetId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/rulesets/${rulesetId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82863,9 +81745,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/rulesets/${rulesetId}/history"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/rulesets/${rulesetId}/history";
-      typedPath?: `/orgs/${string}/rulesets/${number}/history`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82891,9 +81770,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/rulesets/${rulesetId}/history/${versionId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/rulesets/${rulesetId}/history/${versionId}";
-      typedPath?: `/orgs/${string}/rulesets/${number}/history/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82910,9 +81786,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/secret-scanning/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/secret-scanning/alerts";
-      typedPath?: `/orgs/${string}/secret-scanning/alerts`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -82973,9 +81846,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/security-advisories"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/security-advisories";
-      typedPath?: `/orgs/${string}/security-advisories`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83012,9 +81882,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/security-managers"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/security-managers";
-      typedPath?: `/orgs/${string}/security-managers`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83027,9 +81894,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/security-managers/teams/${teamSlug}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/security-managers/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/security-managers/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83044,9 +81908,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/security-managers/teams/${teamSlug}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/security-managers/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/security-managers/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83061,9 +81922,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/settings/billing/actions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/settings/billing/actions";
-      typedPath?: `/orgs/${string}/settings/billing/actions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83076,9 +81934,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/settings/billing/packages"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/settings/billing/packages";
-      typedPath?: `/orgs/${string}/settings/billing/packages`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83091,9 +81946,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/settings/billing/shared-storage"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/settings/billing/shared-storage";
-      typedPath?: `/orgs/${string}/settings/billing/shared-storage`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83106,9 +81958,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/settings/network-configurations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/settings/network-configurations";
-      typedPath?: `/orgs/${string}/settings/network-configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83135,9 +81984,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/settings/network-configurations"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/settings/network-configurations";
-      typedPath?: `/orgs/${string}/settings/network-configurations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83161,9 +82007,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/settings/network-configurations/${networkConfigurationId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/settings/network-configurations/${networkConfigurationId}";
-      typedPath?: `/orgs/${string}/settings/network-configurations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83178,9 +82021,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/settings/network-configurations/${networkConfigurationId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/settings/network-configurations/${networkConfigurationId}";
-      typedPath?: `/orgs/${string}/settings/network-configurations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83206,9 +82046,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/settings/network-configurations/${networkConfigurationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/settings/network-configurations/${networkConfigurationId}";
-      typedPath?: `/orgs/${string}/settings/network-configurations/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83223,9 +82060,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/settings/network-settings/${networkSettingsId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/settings/network-settings/${networkSettingsId}";
-      typedPath?: `/orgs/${string}/settings/network-settings/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83240,9 +82074,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/team/${teamSlug}/copilot/metrics"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/team/${teamSlug}/copilot/metrics";
-      typedPath?: `/orgs/${string}/team/${string}/copilot/metrics`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83272,9 +82103,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams";
-      typedPath?: `/orgs/${string}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83298,9 +82126,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/teams"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/teams";
-      typedPath?: `/orgs/${string}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83347,9 +82172,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83364,9 +82186,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/teams/${teamSlug}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83408,9 +82227,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}";
-      typedPath?: `/orgs/${string}/teams/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83425,9 +82241,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/discussions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83460,9 +82273,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/teams/${teamSlug}/discussions"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83487,9 +82297,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83506,9 +82313,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83530,9 +82334,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83549,9 +82350,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83584,9 +82382,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83606,9 +82401,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83627,9 +82419,6 @@ type Routes = {
   };
   ["PATCH /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83651,9 +82440,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83672,9 +82458,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83706,9 +82489,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83730,9 +82510,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions/${reactionId}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/comments/${number}/reactions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83753,9 +82530,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83785,9 +82559,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/reactions`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83807,9 +82578,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions/${reactionId}";
-      typedPath?: `/orgs/${string}/teams/${string}/discussions/${number}/reactions/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83828,9 +82596,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/invitations"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/invitations";
-      typedPath?: `/orgs/${string}/teams/${string}/invitations`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83856,9 +82621,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/members"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/members";
-      typedPath?: `/orgs/${string}/teams/${string}/members`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83889,9 +82651,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/memberships/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/memberships/${username}";
-      typedPath?: `/orgs/${string}/teams/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83908,9 +82667,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/teams/${teamSlug}/memberships/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/teams/${teamSlug}/memberships/${username}";
-      typedPath?: `/orgs/${string}/teams/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83933,9 +82689,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/memberships/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/memberships/${username}";
-      typedPath?: `/orgs/${string}/teams/${string}/memberships/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83952,9 +82705,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/projects"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/projects";
-      typedPath?: `/orgs/${string}/teams/${string}/projects`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83980,9 +82730,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/projects/${projectId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/projects/${projectId}";
-      typedPath?: `/orgs/${string}/teams/${string}/projects/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -83999,9 +82746,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/teams/${teamSlug}/projects/${projectId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/teams/${teamSlug}/projects/${projectId}";
-      typedPath?: `/orgs/${string}/teams/${string}/projects/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84021,9 +82765,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/projects/${projectId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/projects/${projectId}";
-      typedPath?: `/orgs/${string}/teams/${string}/projects/${number}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84040,9 +82781,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/repos"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/repos";
-      typedPath?: `/orgs/${string}/teams/${string}/repos`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84068,9 +82806,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}";
-      typedPath?: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84089,9 +82824,6 @@ type Routes = {
   };
   ["PUT /orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}";
-      typedPath?: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84113,9 +82845,6 @@ type Routes = {
   };
   ["DELETE /orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}";
-      typedPath?: `/orgs/${string}/teams/${string}/repos/${string}/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84134,9 +82863,6 @@ type Routes = {
   };
   ["GET /orgs/${org}/teams/${teamSlug}/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/orgs/${org}/teams/${teamSlug}/teams";
-      typedPath?: `/orgs/${string}/teams/${string}/teams`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84162,16 +82888,6 @@ type Routes = {
   };
   ["POST /orgs/${org}/${securityProduct}/${enablement}"]: {
     Request: {
-      method?: "POST";
-      path?: "/orgs/${org}/${securityProduct}/${enablement}";
-      typedPath?: `/orgs/${string}/${
-        | "dependency_graph"
-        | "dependabot_alerts"
-        | "dependabot_security_updates"
-        | "advanced_security"
-        | "code_scanning_default_setup"
-        | "secret_scanning"
-        | "secret_scanning_push_protection"}/${"enable_all" | "disable_all"}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -84206,9 +82922,6 @@ type Routes = {
   };
   ["GET /projects/columns/cards/${cardId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/columns/cards/${cardId}";
-      typedPath?: `/projects/columns/cards/${number}`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
@@ -84221,9 +82934,6 @@ type Routes = {
   };
   ["PATCH /projects/columns/cards/${cardId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/projects/columns/cards/${cardId}";
-      typedPath?: `/projects/columns/cards/${number}`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
@@ -84247,9 +82957,6 @@ type Routes = {
   };
   ["DELETE /projects/columns/cards/${cardId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/projects/columns/cards/${cardId}";
-      typedPath?: `/projects/columns/cards/${number}`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
@@ -84262,9 +82969,6 @@ type Routes = {
   };
   ["POST /projects/columns/cards/${cardId}/moves"]: {
     Request: {
-      method?: "POST";
-      path?: "/projects/columns/cards/${cardId}/moves";
-      typedPath?: `/projects/columns/cards/${number}/moves`;
       params: {
         /** The unique identifier of the card. */
         cardId: number;
@@ -84289,9 +82993,6 @@ type Routes = {
   };
   ["GET /projects/columns/${columnId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/columns/${columnId}";
-      typedPath?: `/projects/columns/${number}`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
@@ -84304,9 +83005,6 @@ type Routes = {
   };
   ["PATCH /projects/columns/${columnId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/projects/columns/${columnId}";
-      typedPath?: `/projects/columns/${number}`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
@@ -84325,9 +83023,6 @@ type Routes = {
   };
   ["DELETE /projects/columns/${columnId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/projects/columns/${columnId}";
-      typedPath?: `/projects/columns/${number}`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
@@ -84340,9 +83035,6 @@ type Routes = {
   };
   ["GET /projects/columns/${columnId}/cards"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/columns/${columnId}/cards";
-      typedPath?: `/projects/columns/${number}/cards`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
@@ -84371,9 +83063,6 @@ type Routes = {
   };
   ["POST /projects/columns/${columnId}/cards"]: {
     Request: {
-      method?: "POST";
-      path?: "/projects/columns/${columnId}/cards";
-      typedPath?: `/projects/columns/${number}/cards`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
@@ -84405,9 +83094,6 @@ type Routes = {
   };
   ["POST /projects/columns/${columnId}/moves"]: {
     Request: {
-      method?: "POST";
-      path?: "/projects/columns/${columnId}/moves";
-      typedPath?: `/projects/columns/${number}/moves`;
       params: {
         /** The unique identifier of the column. */
         columnId: number;
@@ -84427,9 +83113,6 @@ type Routes = {
   };
   ["GET /projects/${projectId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/${projectId}";
-      typedPath?: `/projects/${number}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84442,9 +83125,6 @@ type Routes = {
   };
   ["PATCH /projects/${projectId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/projects/${projectId}";
-      typedPath?: `/projects/${number}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84477,9 +83157,6 @@ type Routes = {
   };
   ["DELETE /projects/${projectId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/projects/${projectId}";
-      typedPath?: `/projects/${number}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84492,9 +83169,6 @@ type Routes = {
   };
   ["GET /projects/${projectId}/collaborators"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/${projectId}/collaborators";
-      typedPath?: `/projects/${number}/collaborators`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84523,9 +83197,6 @@ type Routes = {
   };
   ["PUT /projects/${projectId}/collaborators/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/projects/${projectId}/collaborators/${username}";
-      typedPath?: `/projects/${number}/collaborators/${string}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84547,9 +83218,6 @@ type Routes = {
   };
   ["DELETE /projects/${projectId}/collaborators/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/projects/${projectId}/collaborators/${username}";
-      typedPath?: `/projects/${number}/collaborators/${string}`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84564,9 +83232,6 @@ type Routes = {
   };
   ["GET /projects/${projectId}/collaborators/${username}/permission"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/${projectId}/collaborators/${username}/permission";
-      typedPath?: `/projects/${number}/collaborators/${string}/permission`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84581,9 +83246,6 @@ type Routes = {
   };
   ["GET /projects/${projectId}/columns"]: {
     Request: {
-      method?: "GET";
-      path?: "/projects/${projectId}/columns";
-      typedPath?: `/projects/${number}/columns`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84607,9 +83269,6 @@ type Routes = {
   };
   ["POST /projects/${projectId}/columns"]: {
     Request: {
-      method?: "POST";
-      path?: "/projects/${projectId}/columns";
-      typedPath?: `/projects/${number}/columns`;
       params: {
         /** The unique identifier of the project. */
         projectId: number;
@@ -84627,22 +83286,11 @@ type Routes = {
     Response: ProjectColumn;
   };
   ["GET /rate_limit"]: {
-    Request: {
-      method?: "GET";
-      path?: "/rate_limit";
-      typedPath?: `/rate_limit`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: RateLimitOverview;
   };
   ["GET /repos/${owner}/${repo}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}";
-      typedPath?: `/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84657,9 +83305,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}";
-      typedPath?: `/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84838,9 +83483,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}";
-      typedPath?: `/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84855,9 +83497,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/artifacts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/artifacts";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84888,9 +83527,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/artifacts/${artifactId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/artifacts/${artifactId}";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84907,9 +83543,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/artifacts/${artifactId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/artifacts/${artifactId}";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84926,9 +83559,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/artifacts/${artifactId}/${archiveFormat}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/artifacts/${artifactId}/${archiveFormat}";
-      typedPath?: `/repos/${string}/${string}/actions/artifacts/${number}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84946,9 +83576,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/cache/usage"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/cache/usage";
-      typedPath?: `/repos/${string}/${string}/actions/cache/usage`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -84963,9 +83590,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/caches"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/caches";
-      typedPath?: `/repos/${string}/${string}/actions/caches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85005,9 +83629,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/caches"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/caches";
-      typedPath?: `/repos/${string}/${string}/actions/caches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85027,9 +83648,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/caches/${cacheId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/caches/${cacheId}";
-      typedPath?: `/repos/${string}/${string}/actions/caches/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85046,9 +83664,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/jobs/${jobId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/jobs/${jobId}";
-      typedPath?: `/repos/${string}/${string}/actions/jobs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85065,9 +83680,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/jobs/${jobId}/logs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/jobs/${jobId}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/jobs/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85084,9 +83696,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/jobs/${jobId}/rerun"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/jobs/${jobId}/rerun";
-      typedPath?: `/repos/${string}/${string}/actions/jobs/${number}/rerun`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85109,9 +83718,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/oidc/customization/sub"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/oidc/customization/sub";
-      typedPath?: `/repos/${string}/${string}/actions/oidc/customization/sub`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85126,9 +83732,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/oidc/customization/sub"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/oidc/customization/sub";
-      typedPath?: `/repos/${string}/${string}/actions/oidc/customization/sub`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85148,9 +83751,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/organization-secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/organization-secrets";
-      typedPath?: `/repos/${string}/${string}/actions/organization-secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85179,9 +83779,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/organization-variables"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/organization-variables";
-      typedPath?: `/repos/${string}/${string}/actions/organization-variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85210,9 +83807,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/permissions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/permissions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85227,9 +83821,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/permissions"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/permissions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85249,9 +83840,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/permissions/access"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/permissions/access";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/access`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85266,9 +83854,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/permissions/access"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/permissions/access";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/access`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85283,9 +83868,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/permissions/selected-actions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/permissions/selected-actions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/selected-actions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85300,9 +83882,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/permissions/selected-actions"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/permissions/selected-actions";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/selected-actions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85317,9 +83896,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/permissions/workflow"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/permissions/workflow";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/workflow`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85334,9 +83910,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/permissions/workflow"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/permissions/workflow";
-      typedPath?: `/repos/${string}/${string}/actions/permissions/workflow`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85351,9 +83924,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runners"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runners";
-      typedPath?: `/repos/${string}/${string}/actions/runners`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85384,9 +83954,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runners/downloads"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runners/downloads";
-      typedPath?: `/repos/${string}/${string}/actions/runners/downloads`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85401,9 +83968,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runners/generate-jitconfig"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runners/generate-jitconfig";
-      typedPath?: `/repos/${string}/${string}/actions/runners/generate-jitconfig`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85439,9 +84003,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runners/registration-token"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runners/registration-token";
-      typedPath?: `/repos/${string}/${string}/actions/runners/registration-token`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85456,9 +84017,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runners/remove-token"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runners/remove-token";
-      typedPath?: `/repos/${string}/${string}/actions/runners/remove-token`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85473,9 +84031,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runners/${runnerId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85492,9 +84047,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/runners/${runnerId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85511,9 +84063,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85533,9 +84082,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85562,9 +84108,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85591,9 +84134,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85613,9 +84153,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/runners/${runnerId}/labels/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/runners/${runnerId}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/runners/${number}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85637,9 +84174,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs";
-      typedPath?: `/repos/${string}/${string}/actions/runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85704,9 +84238,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85729,9 +84260,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/runs/${runId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85748,9 +84276,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/approvals"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/approvals";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/approvals`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85767,9 +84292,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/approve"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/approve";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/approve`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85786,9 +84308,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/artifacts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/artifacts";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/artifacts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85821,9 +84340,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85848,9 +84364,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/jobs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/jobs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}/jobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85883,9 +84396,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/logs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/attempts/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85904,9 +84414,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/cancel"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/cancel";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/cancel`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85923,9 +84430,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/deployment_protection_rule"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/deployment_protection_rule";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/deployment_protection_rule`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85942,9 +84446,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/force-cancel"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/force-cancel";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/force-cancel`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85961,9 +84462,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/jobs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/jobs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/jobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -85999,9 +84497,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/logs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86018,9 +84513,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/runs/${runId}/logs"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/logs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/logs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86037,9 +84529,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/pending_deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86056,9 +84545,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/pending_deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86091,9 +84577,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/rerun"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/rerun";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/rerun`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86116,9 +84599,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/rerun-failed-jobs"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/rerun-failed-jobs";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/rerun-failed-jobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86141,9 +84621,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/timing"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/runs/${runId}/timing";
-      typedPath?: `/repos/${string}/${string}/actions/runs/${number}/timing`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86160,9 +84637,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/secrets";
-      typedPath?: `/repos/${string}/${string}/actions/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86191,9 +84665,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86208,9 +84679,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86227,9 +84695,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86254,9 +84719,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/actions/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86273,9 +84735,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/variables"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/variables";
-      typedPath?: `/repos/${string}/${string}/actions/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86304,9 +84763,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/variables"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/variables";
-      typedPath?: `/repos/${string}/${string}/actions/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86326,9 +84782,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/variables/${name}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86345,9 +84798,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/actions/variables/${name}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/actions/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86369,9 +84819,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/actions/variables/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/actions/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/actions/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86388,9 +84835,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/workflows"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/workflows";
-      typedPath?: `/repos/${string}/${string}/actions/workflows`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86419,9 +84863,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/workflows/${workflowId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86438,9 +84879,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/workflows/${workflowId}/disable"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/disable";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/disable`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86457,9 +84895,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/dispatches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86481,9 +84916,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/actions/workflows/${workflowId}/enable"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/enable";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/enable`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86500,9 +84932,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/workflows/${workflowId}/runs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/runs";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86569,9 +84998,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/actions/workflows/${workflowId}/timing"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/actions/workflows/${workflowId}/timing";
-      typedPath?: `/repos/${string}/${string}/actions/workflows/${number | string}/timing`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86588,9 +85014,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/activity"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/activity";
-      typedPath?: `/repos/${string}/${string}/activity`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86646,9 +85069,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/assignees"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/assignees";
-      typedPath?: `/repos/${string}/${string}/assignees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86674,9 +85094,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/assignees/${assignee}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/assignees/${assignee}";
-      typedPath?: `/repos/${string}/${string}/assignees/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86692,9 +85109,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/attestations"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/attestations";
-      typedPath?: `/repos/${string}/${string}/attestations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86722,9 +85136,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/attestations/${subjectDigest}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/attestations/${subjectDigest}";
-      typedPath?: `/repos/${string}/${string}/attestations/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86770,9 +85181,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/autolinks"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/autolinks";
-      typedPath?: `/repos/${string}/${string}/autolinks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86787,9 +85195,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/autolinks"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/autolinks";
-      typedPath?: `/repos/${string}/${string}/autolinks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86814,9 +85219,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/autolinks/${autolinkId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/autolinks/${autolinkId}";
-      typedPath?: `/repos/${string}/${string}/autolinks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86833,9 +85235,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/autolinks/${autolinkId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/autolinks/${autolinkId}";
-      typedPath?: `/repos/${string}/${string}/autolinks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86852,9 +85251,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/automated-security-fixes"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/automated-security-fixes";
-      typedPath?: `/repos/${string}/${string}/automated-security-fixes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86869,9 +85265,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/automated-security-fixes"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/automated-security-fixes";
-      typedPath?: `/repos/${string}/${string}/automated-security-fixes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86886,9 +85279,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/automated-security-fixes"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/automated-security-fixes";
-      typedPath?: `/repos/${string}/${string}/automated-security-fixes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86903,9 +85293,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches";
-      typedPath?: `/repos/${string}/${string}/branches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86933,9 +85320,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}";
-      typedPath?: `/repos/${string}/${string}/branches/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86952,9 +85336,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -86971,9 +85352,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87071,9 +85449,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87090,9 +85465,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87109,9 +85481,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87128,9 +85497,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/enforce_admins`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87147,9 +85513,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87166,9 +85529,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87215,9 +85575,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_pull_request_reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87234,9 +85591,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_signatures"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_signatures";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87253,9 +85607,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/required_signatures"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_signatures";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87272,9 +85623,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_signatures"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_signatures";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_signatures`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87291,9 +85639,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87310,9 +85655,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87344,9 +85686,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87363,9 +85702,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87382,9 +85718,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87406,9 +85739,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87430,9 +85760,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/required_status_checks/contexts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87454,9 +85781,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87473,9 +85797,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87492,9 +85813,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87511,9 +85829,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87533,9 +85848,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87555,9 +85867,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/apps`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87577,9 +85886,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87596,9 +85902,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87620,9 +85923,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87644,9 +85944,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87668,9 +85965,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87687,9 +85981,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87709,9 +86000,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87731,9 +86019,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/protection/restrictions/users`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87753,9 +86038,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/branches/${branch}/rename"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/branches/${branch}/rename";
-      typedPath?: `/repos/${string}/${string}/branches/${string}/rename`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87775,9 +86057,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/check-runs"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/check-runs";
-      typedPath?: `/repos/${string}/${string}/check-runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87907,9 +86186,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/check-runs/${checkRunId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -87926,9 +86202,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/check-runs/${checkRunId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88055,9 +86328,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/check-runs/${checkRunId}/annotations"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}/annotations";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}/annotations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88085,9 +86355,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/check-runs/${checkRunId}/rerequest"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/check-runs/${checkRunId}/rerequest";
-      typedPath?: `/repos/${string}/${string}/check-runs/${number}/rerequest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88104,9 +86371,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/check-suites"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/check-suites";
-      typedPath?: `/repos/${string}/${string}/check-suites`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88124,9 +86388,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/check-suites/preferences"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/check-suites/preferences";
-      typedPath?: `/repos/${string}/${string}/check-suites/preferences`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88152,9 +86413,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/check-suites/${checkSuiteId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/check-suites/${checkSuiteId}";
-      typedPath?: `/repos/${string}/${string}/check-suites/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88171,9 +86429,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/check-suites/${checkSuiteId}/check-runs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/check-suites/${checkSuiteId}/check-runs";
-      typedPath?: `/repos/${string}/${string}/check-suites/${number}/check-runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88213,9 +86468,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/check-suites/${checkSuiteId}/rerequest"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/check-suites/${checkSuiteId}/rerequest";
-      typedPath?: `/repos/${string}/${string}/check-suites/${number}/rerequest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88232,9 +86484,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88286,9 +86535,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88305,9 +86551,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88333,9 +86576,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88352,9 +86592,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88371,9 +86608,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix/commits"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix/commits";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/autofix/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88390,9 +86624,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/instances"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/instances";
-      typedPath?: `/repos/${string}/${string}/code-scanning/alerts/${AlertNumber}/instances`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88424,9 +86655,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/analyses"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/analyses";
-      typedPath?: `/repos/${string}/${string}/code-scanning/analyses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88472,9 +86700,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/analyses/${analysisId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/analyses/${analysisId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/analyses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88491,9 +86716,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/code-scanning/analyses/${analysisId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/code-scanning/analyses/${analysisId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/analyses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88513,9 +86735,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/databases"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/codeql/databases";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/databases`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88530,9 +86749,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/databases/${language}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/codeql/databases/${language}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/databases/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88549,9 +86765,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/code-scanning/codeql/databases/${language}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/code-scanning/codeql/databases/${language}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/databases/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88568,9 +86781,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/code-scanning/codeql/variant-analyses"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/code-scanning/codeql/variant-analyses";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88602,9 +86812,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88621,9 +86828,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}/repos/${repoOwner}/${repoName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}/repos/${repoOwner}/${repoName}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/codeql/variant-analyses/${number}/repos/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88644,9 +86848,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/default-setup"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/default-setup";
-      typedPath?: `/repos/${string}/${string}/code-scanning/default-setup`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88661,9 +86862,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/code-scanning/default-setup"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/code-scanning/default-setup";
-      typedPath?: `/repos/${string}/${string}/code-scanning/default-setup`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88678,9 +86876,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/code-scanning/sarifs"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/code-scanning/sarifs";
-      typedPath?: `/repos/${string}/${string}/code-scanning/sarifs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88724,9 +86919,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-scanning/sarifs/${sarifId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-scanning/sarifs/${sarifId}";
-      typedPath?: `/repos/${string}/${string}/code-scanning/sarifs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88743,9 +86935,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/code-security-configuration"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/code-security-configuration";
-      typedPath?: `/repos/${string}/${string}/code-security-configuration`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88760,9 +86949,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codeowners/errors"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codeowners/errors";
-      typedPath?: `/repos/${string}/${string}/codeowners/errors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88780,9 +86966,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces";
-      typedPath?: `/repos/${string}/${string}/codespaces`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88811,9 +86994,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/codespaces"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/codespaces";
-      typedPath?: `/repos/${string}/${string}/codespaces`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88851,9 +87031,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/devcontainers"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/devcontainers";
-      typedPath?: `/repos/${string}/${string}/codespaces/devcontainers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88886,9 +87063,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/machines"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/machines";
-      typedPath?: `/repos/${string}/${string}/codespaces/machines`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88919,9 +87093,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/new"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/new";
-      typedPath?: `/repos/${string}/${string}/codespaces/new`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88954,9 +87125,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/permissions_check"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/permissions_check";
-      typedPath?: `/repos/${string}/${string}/codespaces/permissions_check`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -88982,9 +87150,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/secrets";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89013,9 +87178,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89030,9 +87192,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/codespaces/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89049,9 +87208,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/codespaces/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89076,9 +87232,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/codespaces/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/codespaces/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89095,9 +87248,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/collaborators"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/collaborators";
-      typedPath?: `/repos/${string}/${string}/collaborators`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89130,9 +87280,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/collaborators/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/collaborators/${username}";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89149,9 +87296,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/collaborators/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/collaborators/${username}";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89174,9 +87318,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/collaborators/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/collaborators/${username}";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89193,9 +87334,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/collaborators/${username}/permission"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/collaborators/${username}/permission";
-      typedPath?: `/repos/${string}/${string}/collaborators/${string}/permission`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89212,9 +87350,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/comments";
-      typedPath?: `/repos/${string}/${string}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89240,9 +87375,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/comments/${commentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89262,9 +87394,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/comments/${commentId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89287,9 +87416,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/comments/${commentId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89309,9 +87435,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/comments/${commentId}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89344,9 +87467,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/comments/${commentId}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89369,9 +87489,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/comments/${commentId}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/comments/${commentId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/comments/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89393,9 +87510,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits";
-      typedPath?: `/repos/${string}/${string}/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89439,9 +87553,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${commitSha}/branches-where-head"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${commitSha}/branches-where-head";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/branches-where-head`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89458,9 +87569,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${commitSha}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${commitSha}/comments";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89488,9 +87596,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/commits/${commitSha}/comments"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/commits/${commitSha}/comments";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89516,9 +87621,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${commitSha}/pulls"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${commitSha}/pulls";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/pulls`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89546,9 +87648,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${ref}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${ref}";
-      typedPath?: `/repos/${string}/${string}/commits/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89576,9 +87675,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${ref}/check-runs"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${ref}/check-runs";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/check-runs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89619,9 +87715,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${ref}/check-suites"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${ref}/check-suites";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/check-suites`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89659,9 +87752,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${ref}/status"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${ref}/status";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/status`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89689,9 +87779,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/commits/${ref}/statuses"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/commits/${ref}/statuses";
-      typedPath?: `/repos/${string}/${string}/commits/${string}/statuses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89719,9 +87806,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/community/profile"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/community/profile";
-      typedPath?: `/repos/${string}/${string}/community/profile`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89736,9 +87820,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/compare/${basehead}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/compare/${basehead}";
-      typedPath?: `/repos/${string}/${string}/compare/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89766,9 +87847,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/contents/${path}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/contents/${path}";
-      typedPath?: `/repos/${string}/${string}/contents/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89788,9 +87866,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/contents/${path}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/contents/${path}";
-      typedPath?: `/repos/${string}/${string}/contents/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89834,9 +87909,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/contents/${path}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/contents/${path}";
-      typedPath?: `/repos/${string}/${string}/contents/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89874,9 +87946,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/contributors"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/contributors";
-      typedPath?: `/repos/${string}/${string}/contributors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -89904,9 +87973,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependabot/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependabot/alerts";
-      typedPath?: `/repos/${string}/${string}/dependabot/alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90006,9 +88072,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependabot/alerts/${alertNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependabot/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/dependabot/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90030,9 +88093,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/dependabot/alerts/${alertNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/dependabot/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/dependabot/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90067,9 +88127,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependabot/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependabot/secrets";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90098,9 +88155,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependabot/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependabot/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90115,9 +88169,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependabot/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependabot/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90134,9 +88185,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/dependabot/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/dependabot/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90161,9 +88209,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/dependabot/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/dependabot/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/dependabot/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90180,9 +88225,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependency-graph/compare/${basehead}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependency-graph/compare/${basehead}";
-      typedPath?: `/repos/${string}/${string}/dependency-graph/compare/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90202,9 +88244,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/dependency-graph/sbom"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/dependency-graph/sbom";
-      typedPath?: `/repos/${string}/${string}/dependency-graph/sbom`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90219,9 +88258,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/dependency-graph/snapshots"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/dependency-graph/snapshots";
-      typedPath?: `/repos/${string}/${string}/dependency-graph/snapshots`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90245,9 +88281,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/deployments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/deployments";
-      typedPath?: `/repos/${string}/${string}/deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90293,9 +88326,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/deployments"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/deployments";
-      typedPath?: `/repos/${string}/${string}/deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90344,9 +88374,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/deployments/${deploymentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/deployments/${deploymentId}";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90363,9 +88390,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/deployments/${deploymentId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/deployments/${deploymentId}";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90382,9 +88406,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/deployments/${deploymentId}/statuses"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/deployments/${deploymentId}/statuses";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}/statuses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90412,9 +88433,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/deployments/${deploymentId}/statuses"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/deployments/${deploymentId}/statuses";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}/statuses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90461,9 +88479,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/deployments/${deploymentId}/statuses/${statusId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/deployments/${deploymentId}/statuses/${statusId}";
-      typedPath?: `/repos/${string}/${string}/deployments/${number}/statuses/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90481,9 +88496,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/dispatches"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/dispatches";
-      typedPath?: `/repos/${string}/${string}/dispatches`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90507,9 +88519,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments";
-      typedPath?: `/repos/${string}/${string}/environments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90542,9 +88551,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90561,9 +88567,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/environments/${environmentName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90599,9 +88602,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90618,9 +88618,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90655,9 +88652,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90674,9 +88668,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90695,9 +88686,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90716,9 +88704,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment-branch-policies/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90737,9 +88722,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -90763,9 +88745,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -90785,9 +88764,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/apps"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/apps";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/apps`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -90822,9 +88798,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90843,9 +88816,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/deployment_protection_rules/${number}`;
       params: {
         /** The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
         environmentName: string;
@@ -90864,9 +88834,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90897,9 +88864,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/secrets/public-key"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/public-key";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/public-key`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90916,9 +88880,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90937,9 +88898,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90966,9 +88924,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/secrets/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -90987,9 +88942,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/variables"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91020,9 +88972,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/environments/${environmentName}/variables"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91044,9 +88993,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/variables/${name}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91065,9 +89011,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/environments/${environmentName}/variables/${name}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91091,9 +89034,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/variables/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/environments/${environmentName}/variables/${name}";
-      typedPath?: `/repos/${string}/${string}/environments/${string}/variables/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91112,9 +89052,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/events"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/events";
-      typedPath?: `/repos/${string}/${string}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91140,9 +89077,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/forks"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/forks";
-      typedPath?: `/repos/${string}/${string}/forks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91173,9 +89107,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/forks"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/forks";
-      typedPath?: `/repos/${string}/${string}/forks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91197,9 +89128,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/git/blobs"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/git/blobs";
-      typedPath?: `/repos/${string}/${string}/git/blobs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91222,9 +89150,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/git/blobs/${fileSha}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/git/blobs/${fileSha}";
-      typedPath?: `/repos/${string}/${string}/git/blobs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91240,9 +89165,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/git/commits"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/git/commits";
-      typedPath?: `/repos/${string}/${string}/git/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91290,9 +89212,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/git/commits/${commitSha}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/git/commits/${commitSha}";
-      typedPath?: `/repos/${string}/${string}/git/commits/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91309,9 +89228,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/git/matching-refs/${ref}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/git/matching-refs/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/matching-refs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91331,9 +89247,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/git/ref/${ref}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/git/ref/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/ref/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91353,9 +89266,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/git/refs"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/git/refs";
-      typedPath?: `/repos/${string}/${string}/git/refs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91375,9 +89285,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/git/refs/${ref}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/git/refs/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/refs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91405,9 +89312,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/git/refs/${ref}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/git/refs/${ref}";
-      typedPath?: `/repos/${string}/${string}/git/refs/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91427,9 +89331,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/git/tags"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/git/tags";
-      typedPath?: `/repos/${string}/${string}/git/tags`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91465,9 +89366,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/git/tags/${tagSha}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/git/tags/${tagSha}";
-      typedPath?: `/repos/${string}/${string}/git/tags/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91483,9 +89381,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/git/trees"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/git/trees";
-      typedPath?: `/repos/${string}/${string}/git/trees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91527,9 +89422,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/git/trees/${treeSha}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/git/trees/${treeSha}";
-      typedPath?: `/repos/${string}/${string}/git/trees/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91549,9 +89441,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/hooks"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/hooks";
-      typedPath?: `/repos/${string}/${string}/hooks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91577,9 +89466,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/hooks"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/hooks";
-      typedPath?: `/repos/${string}/${string}/hooks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91618,9 +89504,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/hooks/${hookId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91637,9 +89520,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/hooks/${hookId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91673,9 +89553,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/hooks/${hookId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91692,9 +89569,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/hooks/${hookId}/config"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/config";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/config`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91711,9 +89585,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/hooks/${hookId}/config"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/config";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/config`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91739,9 +89610,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/hooks/${hookId}/deliveries"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/deliveries";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/deliveries`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91766,9 +89634,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/deliveries/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91786,9 +89651,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}/attempts"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}/attempts";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/deliveries/${number}/attempts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91806,9 +89668,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/hooks/${hookId}/pings"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/pings";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/pings`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91825,9 +89684,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/hooks/${hookId}/tests"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/hooks/${hookId}/tests";
-      typedPath?: `/repos/${string}/${string}/hooks/${number}/tests`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91844,9 +89700,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/import"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91861,9 +89714,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/import"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91889,9 +89739,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/import"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91921,9 +89768,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/import"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/import";
-      typedPath?: `/repos/${string}/${string}/import`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91938,9 +89782,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/import/authors"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/import/authors";
-      typedPath?: `/repos/${string}/${string}/import/authors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91958,9 +89799,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/import/authors/${authorId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/import/authors/${authorId}";
-      typedPath?: `/repos/${string}/${string}/import/authors/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91981,9 +89819,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/import/large_files"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/import/large_files";
-      typedPath?: `/repos/${string}/${string}/import/large_files`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -91998,9 +89833,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/import/lfs"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/import/lfs";
-      typedPath?: `/repos/${string}/${string}/import/lfs`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92018,9 +89850,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/installation"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/installation";
-      typedPath?: `/repos/${string}/${string}/installation`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92035,9 +89864,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/interaction-limits"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/interaction-limits";
-      typedPath?: `/repos/${string}/${string}/interaction-limits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92052,9 +89878,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/interaction-limits"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/interaction-limits";
-      typedPath?: `/repos/${string}/${string}/interaction-limits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92069,9 +89892,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/interaction-limits"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/interaction-limits";
-      typedPath?: `/repos/${string}/${string}/interaction-limits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92086,9 +89906,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/invitations"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/invitations";
-      typedPath?: `/repos/${string}/${string}/invitations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92114,9 +89931,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/invitations/${invitationId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/invitations/${invitationId}";
-      typedPath?: `/repos/${string}/${string}/invitations/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92136,9 +89950,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/invitations/${invitationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/invitations/${invitationId}";
-      typedPath?: `/repos/${string}/${string}/invitations/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92155,9 +89966,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues";
-      typedPath?: `/repos/${string}/${string}/issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92215,9 +90023,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues";
-      typedPath?: `/repos/${string}/${string}/issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92258,9 +90063,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/comments";
-      typedPath?: `/repos/${string}/${string}/issues/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92298,9 +90100,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/comments/${commentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92320,9 +90119,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/issues/comments/${commentId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/issues/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92345,9 +90141,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/comments/${commentId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92367,9 +90160,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/comments/${commentId}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92402,9 +90192,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues/comments/${commentId}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92427,9 +90214,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/comments/${commentId}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/comments/${commentId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/issues/comments/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92451,9 +90235,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/events"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/events";
-      typedPath?: `/repos/${string}/${string}/issues/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92479,9 +90260,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/events/${eventId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/events/${eventId}";
-      typedPath?: `/repos/${string}/${string}/issues/events/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92497,9 +90275,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92516,9 +90291,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/issues/${issueNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92568,9 +90340,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/assignees"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/assignees";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/assignees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92590,9 +90359,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/assignees"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/assignees";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/assignees`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92612,9 +90378,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/assignees/${assignee}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/assignees/${assignee}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/assignees/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92632,9 +90395,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92667,9 +90427,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/comments"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92689,9 +90446,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/events"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/events";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92719,9 +90473,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92749,9 +90500,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92786,9 +90534,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92823,9 +90568,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92842,9 +90584,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92862,9 +90601,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/issues/${issueNumber}/lock"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/lock";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/lock`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92890,9 +90626,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/lock"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/lock";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/lock`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92909,9 +90642,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92941,9 +90671,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/reactions";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92963,9 +90690,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -92984,9 +90708,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/sub_issue"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issue";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issue`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93006,9 +90727,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issues";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93036,9 +90754,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issues";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issues`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93060,9 +90775,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues/priority"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/sub_issues/priority";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/sub_issues/priority`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93086,9 +90798,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/timeline"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/issues/${issueNumber}/timeline";
-      typedPath?: `/repos/${string}/${string}/issues/${number}/timeline`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93116,9 +90825,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/keys";
-      typedPath?: `/repos/${string}/${string}/keys`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93144,9 +90850,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/keys"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/keys";
-      typedPath?: `/repos/${string}/${string}/keys`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93172,9 +90875,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/keys/${keyId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/keys/${keyId}";
-      typedPath?: `/repos/${string}/${string}/keys/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93191,9 +90891,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/keys/${keyId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/keys/${keyId}";
-      typedPath?: `/repos/${string}/${string}/keys/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93210,9 +90907,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/labels"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/labels";
-      typedPath?: `/repos/${string}/${string}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93238,9 +90932,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/labels"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/labels";
-      typedPath?: `/repos/${string}/${string}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93262,9 +90953,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/labels/${name}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93280,9 +90968,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/labels/${name}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93305,9 +90990,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/labels/${name}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/labels/${name}";
-      typedPath?: `/repos/${string}/${string}/labels/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93323,9 +91005,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/languages"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/languages";
-      typedPath?: `/repos/${string}/${string}/languages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93340,9 +91019,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/license"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/license";
-      typedPath?: `/repos/${string}/${string}/license`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93360,9 +91036,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/merge-upstream"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/merge-upstream";
-      typedPath?: `/repos/${string}/${string}/merge-upstream`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93380,9 +91053,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/merges"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/merges";
-      typedPath?: `/repos/${string}/${string}/merges`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93404,9 +91074,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/milestones"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/milestones";
-      typedPath?: `/repos/${string}/${string}/milestones`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93447,9 +91114,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/milestones"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/milestones";
-      typedPath?: `/repos/${string}/${string}/milestones`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93479,9 +91143,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/milestones/${milestoneNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93498,9 +91159,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/milestones/${milestoneNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93532,9 +91190,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/milestones/${milestoneNumber}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93551,9 +91206,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/milestones/${milestoneNumber}/labels"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/milestones/${milestoneNumber}/labels";
-      typedPath?: `/repos/${string}/${string}/milestones/${number}/labels`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93581,9 +91233,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/notifications"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/notifications";
-      typedPath?: `/repos/${string}/${string}/notifications`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93629,9 +91278,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/notifications"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/notifications";
-      typedPath?: `/repos/${string}/${string}/notifications`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93655,9 +91301,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pages"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93672,9 +91315,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pages"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93703,9 +91343,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/pages"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93738,9 +91375,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/pages"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/pages";
-      typedPath?: `/repos/${string}/${string}/pages`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93755,9 +91389,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pages/builds"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pages/builds";
-      typedPath?: `/repos/${string}/${string}/pages/builds`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93783,9 +91414,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pages/builds"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pages/builds";
-      typedPath?: `/repos/${string}/${string}/pages/builds`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93800,9 +91428,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pages/builds/latest"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pages/builds/latest";
-      typedPath?: `/repos/${string}/${string}/pages/builds/latest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93817,9 +91442,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pages/builds/${buildId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pages/builds/${buildId}";
-      typedPath?: `/repos/${string}/${string}/pages/builds/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93835,9 +91457,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pages/deployments"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pages/deployments";
-      typedPath?: `/repos/${string}/${string}/pages/deployments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93869,9 +91488,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}";
-      typedPath?: `/repos/${string}/${string}/pages/deployments/${number | string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93888,9 +91504,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}/cancel"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}/cancel";
-      typedPath?: `/repos/${string}/${string}/pages/deployments/${number | string}/cancel`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93907,9 +91520,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pages/health"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pages/health";
-      typedPath?: `/repos/${string}/${string}/pages/health`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93924,9 +91534,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/private-vulnerability-reporting"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/private-vulnerability-reporting";
-      typedPath?: `/repos/${string}/${string}/private-vulnerability-reporting`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93944,9 +91551,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/private-vulnerability-reporting"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/private-vulnerability-reporting";
-      typedPath?: `/repos/${string}/${string}/private-vulnerability-reporting`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93961,9 +91565,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/private-vulnerability-reporting"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/private-vulnerability-reporting";
-      typedPath?: `/repos/${string}/${string}/private-vulnerability-reporting`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -93978,9 +91579,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/projects"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/projects";
-      typedPath?: `/repos/${string}/${string}/projects`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94011,9 +91609,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/projects"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/projects";
-      typedPath?: `/repos/${string}/${string}/projects`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94033,9 +91628,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/properties/values"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/properties/values";
-      typedPath?: `/repos/${string}/${string}/properties/values`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94050,9 +91642,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/properties/values"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/properties/values";
-      typedPath?: `/repos/${string}/${string}/properties/values`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94070,9 +91659,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls";
-      typedPath?: `/repos/${string}/${string}/pulls`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94114,9 +91700,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls";
-      typedPath?: `/repos/${string}/${string}/pulls`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94156,9 +91739,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94192,9 +91772,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/comments/${commentId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94214,9 +91791,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/pulls/comments/${commentId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94239,9 +91813,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/pulls/comments/${commentId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94261,9 +91832,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94296,9 +91864,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}/reactions";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94321,9 +91886,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/pulls/comments/${commentId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/pulls/comments/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94345,9 +91907,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94364,9 +91923,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/pulls/${pullNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94394,9 +91950,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/codespaces"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/codespaces";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/codespaces`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94434,9 +91987,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94476,9 +92026,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/comments"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94522,9 +92069,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/comments/${commentId}/replies"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/comments/${commentId}/replies";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/comments/${number}/replies`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94549,9 +92093,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/commits"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/commits";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/commits`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94579,9 +92120,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/files"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/files";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/files`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94609,9 +92147,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/merge"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/merge";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/merge`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94628,9 +92163,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/merge"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/merge";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/merge`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94656,9 +92188,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94675,9 +92204,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94699,9 +92225,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/requested_reviewers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94723,9 +92246,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/reviews"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94753,9 +92273,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/reviews"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94796,9 +92313,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94817,9 +92331,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94841,9 +92352,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94862,9 +92370,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/comments";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/comments`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94894,9 +92399,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/dismissals"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/dismissals";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/dismissals`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94920,9 +92422,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/events"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/events";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/reviews/${number}/events`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94946,9 +92445,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/update-branch"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/pulls/${pullNumber}/update-branch";
-      typedPath?: `/repos/${string}/${string}/pulls/${number}/update-branch`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94971,9 +92467,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/readme"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/readme";
-      typedPath?: `/repos/${string}/${string}/readme`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -94991,9 +92484,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/readme/${dir}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/readme/${dir}";
-      typedPath?: `/repos/${string}/${string}/readme/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95013,9 +92503,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases";
-      typedPath?: `/repos/${string}/${string}/releases`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95041,9 +92528,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/releases"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/releases";
-      typedPath?: `/repos/${string}/${string}/releases`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95089,9 +92573,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases/assets/${assetId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases/assets/${assetId}";
-      typedPath?: `/repos/${string}/${string}/releases/assets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95108,9 +92589,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/releases/assets/${assetId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/releases/assets/${assetId}";
-      typedPath?: `/repos/${string}/${string}/releases/assets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95134,9 +92612,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/releases/assets/${assetId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/releases/assets/${assetId}";
-      typedPath?: `/repos/${string}/${string}/releases/assets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95153,9 +92628,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/releases/generate-notes"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/releases/generate-notes";
-      typedPath?: `/repos/${string}/${string}/releases/generate-notes`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95179,9 +92651,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases/latest"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases/latest";
-      typedPath?: `/repos/${string}/${string}/releases/latest`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95196,9 +92665,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases/tags/${tag}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases/tags/${tag}";
-      typedPath?: `/repos/${string}/${string}/releases/tags/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95215,9 +92681,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases/${releaseId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95234,9 +92697,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/releases/${releaseId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95273,9 +92733,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/releases/${releaseId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95292,9 +92749,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases/${releaseId}/assets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}/assets";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/assets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95322,9 +92776,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/releases/${releaseId}/assets"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}/assets";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/assets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95344,9 +92795,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/releases/${releaseId}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}/reactions";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95376,9 +92824,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/releases/${releaseId}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}/reactions";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/reactions`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95398,9 +92843,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/releases/${releaseId}/reactions/${reactionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/releases/${releaseId}/reactions/${reactionId}";
-      typedPath?: `/repos/${string}/${string}/releases/${number}/reactions/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95419,9 +92861,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rules/branches/${branch}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rules/branches/${branch}";
-      typedPath?: `/repos/${string}/${string}/rules/branches/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95449,9 +92888,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rulesets"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rulesets";
-      typedPath?: `/repos/${string}/${string}/rulesets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95489,9 +92925,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/rulesets"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/rulesets";
-      typedPath?: `/repos/${string}/${string}/rulesets`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95522,9 +92955,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rulesets/rule-suites"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rulesets/rule-suites";
-      typedPath?: `/repos/${string}/${string}/rulesets/rule-suites`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95566,9 +92996,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rulesets/rule-suites/${ruleSuiteId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rulesets/rule-suites/${ruleSuiteId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/rule-suites/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95590,9 +93017,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rulesets/${rulesetId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95615,9 +93039,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/rulesets/${rulesetId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95647,9 +93068,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/rulesets/${rulesetId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95666,9 +93084,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rulesets/${rulesetId}/history"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}/history";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}/history`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95696,9 +93111,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/rulesets/${rulesetId}/history/${versionId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/rulesets/${rulesetId}/history/${versionId}";
-      typedPath?: `/repos/${string}/${string}/rulesets/${number}/history/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95717,9 +93129,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/secret-scanning/alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/secret-scanning/alerts";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95782,9 +93191,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95807,9 +93213,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95833,9 +93236,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}/locations"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}/locations";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/alerts/${AlertNumber}/locations`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95863,9 +93263,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/secret-scanning/push-protection-bypasses"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/secret-scanning/push-protection-bypasses";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/push-protection-bypasses`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95885,9 +93282,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/secret-scanning/scan-history"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/secret-scanning/scan-history";
-      typedPath?: `/repos/${string}/${string}/secret-scanning/scan-history`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95902,9 +93296,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/security-advisories"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/security-advisories";
-      typedPath?: `/repos/${string}/${string}/security-advisories`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95943,9 +93334,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/security-advisories"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/security-advisories";
-      typedPath?: `/repos/${string}/${string}/security-advisories`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95960,9 +93348,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/security-advisories/reports"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/security-advisories/reports";
-      typedPath?: `/repos/${string}/${string}/security-advisories/reports`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95977,9 +93362,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/security-advisories/${ghsaId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -95996,9 +93378,6 @@ type Routes = {
   };
   ["PATCH /repos/${owner}/${repo}/security-advisories/${ghsaId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96015,9 +93394,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/security-advisories/${ghsaId}/cve"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}/cve";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}/cve`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96034,9 +93410,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/security-advisories/${ghsaId}/forks"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/security-advisories/${ghsaId}/forks";
-      typedPath?: `/repos/${string}/${string}/security-advisories/${string}/forks`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96053,9 +93426,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/stargazers"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/stargazers";
-      typedPath?: `/repos/${string}/${string}/stargazers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96081,9 +93451,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/stats/code_frequency"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/stats/code_frequency";
-      typedPath?: `/repos/${string}/${string}/stats/code_frequency`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96098,9 +93465,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/stats/commit_activity"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/stats/commit_activity";
-      typedPath?: `/repos/${string}/${string}/stats/commit_activity`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96115,9 +93479,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/stats/contributors"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/stats/contributors";
-      typedPath?: `/repos/${string}/${string}/stats/contributors`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96132,9 +93493,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/stats/participation"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/stats/participation";
-      typedPath?: `/repos/${string}/${string}/stats/participation`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96149,9 +93507,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/stats/punch_card"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/stats/punch_card";
-      typedPath?: `/repos/${string}/${string}/stats/punch_card`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96166,9 +93521,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/statuses/${sha}"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/statuses/${sha}";
-      typedPath?: `/repos/${string}/${string}/statuses/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96200,9 +93552,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/subscribers"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/subscribers";
-      typedPath?: `/repos/${string}/${string}/subscribers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96228,9 +93577,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/subscription"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/subscription";
-      typedPath?: `/repos/${string}/${string}/subscription`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96245,9 +93591,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/subscription"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/subscription";
-      typedPath?: `/repos/${string}/${string}/subscription`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96267,9 +93610,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/subscription"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/subscription";
-      typedPath?: `/repos/${string}/${string}/subscription`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96284,9 +93624,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/tags"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/tags";
-      typedPath?: `/repos/${string}/${string}/tags`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96312,9 +93649,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/tags/protection"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/tags/protection";
-      typedPath?: `/repos/${string}/${string}/tags/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96329,9 +93663,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/tags/protection"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/tags/protection";
-      typedPath?: `/repos/${string}/${string}/tags/protection`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96349,9 +93680,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/tags/protection/${tagProtectionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/tags/protection/${tagProtectionId}";
-      typedPath?: `/repos/${string}/${string}/tags/protection/${number}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96368,9 +93696,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/tarball/${ref}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/tarball/${ref}";
-      typedPath?: `/repos/${string}/${string}/tarball/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96386,9 +93711,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/teams";
-      typedPath?: `/repos/${string}/${string}/teams`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96414,9 +93736,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/topics"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/topics";
-      typedPath?: `/repos/${string}/${string}/topics`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96442,9 +93761,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/topics"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/topics";
-      typedPath?: `/repos/${string}/${string}/topics`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96462,9 +93778,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/traffic/clones"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/traffic/clones";
-      typedPath?: `/repos/${string}/${string}/traffic/clones`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96485,9 +93798,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/traffic/popular/paths"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/traffic/popular/paths";
-      typedPath?: `/repos/${string}/${string}/traffic/popular/paths`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96502,9 +93812,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/traffic/popular/referrers"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/traffic/popular/referrers";
-      typedPath?: `/repos/${string}/${string}/traffic/popular/referrers`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96519,9 +93826,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/traffic/views"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/traffic/views";
-      typedPath?: `/repos/${string}/${string}/traffic/views`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96542,9 +93846,6 @@ type Routes = {
   };
   ["POST /repos/${owner}/${repo}/transfer"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${owner}/${repo}/transfer";
-      typedPath?: `/repos/${string}/${string}/transfer`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96566,9 +93867,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/vulnerability-alerts"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/vulnerability-alerts";
-      typedPath?: `/repos/${string}/${string}/vulnerability-alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96583,9 +93881,6 @@ type Routes = {
   };
   ["PUT /repos/${owner}/${repo}/vulnerability-alerts"]: {
     Request: {
-      method?: "PUT";
-      path?: "/repos/${owner}/${repo}/vulnerability-alerts";
-      typedPath?: `/repos/${string}/${string}/vulnerability-alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96600,9 +93895,6 @@ type Routes = {
   };
   ["DELETE /repos/${owner}/${repo}/vulnerability-alerts"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/repos/${owner}/${repo}/vulnerability-alerts";
-      typedPath?: `/repos/${string}/${string}/vulnerability-alerts`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96617,9 +93909,6 @@ type Routes = {
   };
   ["GET /repos/${owner}/${repo}/zipball/${ref}"]: {
     Request: {
-      method?: "GET";
-      path?: "/repos/${owner}/${repo}/zipball/${ref}";
-      typedPath?: `/repos/${string}/${string}/zipball/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -96635,9 +93924,6 @@ type Routes = {
   };
   ["POST /repos/${templateOwner}/${templateRepo}/generate"]: {
     Request: {
-      method?: "POST";
-      path?: "/repos/${templateOwner}/${templateRepo}/generate";
-      typedPath?: `/repos/${string}/${string}/generate`;
       params: {
         /** The account owner of the template repository. The name is not case sensitive. */
         templateOwner: string;
@@ -96669,9 +93955,6 @@ type Routes = {
   };
   ["GET /repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/repositories";
-      typedPath?: `/repositories`;
       params?: never;
       headers?: never;
       query: {
@@ -96684,9 +93967,6 @@ type Routes = {
   };
   ["GET /search/code"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/code";
-      typedPath?: `/search/code`;
       params?: never;
       headers?: never;
       query: {
@@ -96724,9 +94004,6 @@ type Routes = {
   };
   ["GET /search/commits"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/commits";
-      typedPath?: `/search/commits`;
       params?: never;
       headers?: never;
       query: {
@@ -96760,9 +94037,6 @@ type Routes = {
   };
   ["GET /search/issues"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/issues";
-      typedPath?: `/search/issues`;
       params?: never;
       headers?: never;
       query: {
@@ -96812,9 +94086,6 @@ type Routes = {
   };
   ["GET /search/labels"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/labels";
-      typedPath?: `/search/labels`;
       params?: never;
       headers?: never;
       query: {
@@ -96850,9 +94121,6 @@ type Routes = {
   };
   ["GET /search/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/repositories";
-      typedPath?: `/search/repositories`;
       params?: never;
       headers?: never;
       query: {
@@ -96886,9 +94154,6 @@ type Routes = {
   };
   ["GET /search/topics"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/topics";
-      typedPath?: `/search/topics`;
       params?: never;
       headers?: never;
       query: {
@@ -96915,9 +94180,6 @@ type Routes = {
   };
   ["GET /search/users"]: {
     Request: {
-      method?: "GET";
-      path?: "/search/users";
-      typedPath?: `/search/users`;
       params?: never;
       headers?: never;
       query: {
@@ -96951,9 +94213,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}";
-      typedPath?: `/teams/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -96966,9 +94225,6 @@ type Routes = {
   };
   ["PATCH /teams/${teamId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/teams/${teamId}";
-      typedPath?: `/teams/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97008,9 +94264,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}";
-      typedPath?: `/teams/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97023,9 +94276,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/discussions"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/discussions";
-      typedPath?: `/teams/${number}/discussions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97054,9 +94304,6 @@ type Routes = {
   };
   ["POST /teams/${teamId}/discussions"]: {
     Request: {
-      method?: "POST";
-      path?: "/teams/${teamId}/discussions";
-      typedPath?: `/teams/${number}/discussions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97079,9 +94326,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/discussions/${discussionNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97096,9 +94340,6 @@ type Routes = {
   };
   ["PATCH /teams/${teamId}/discussions/${discussionNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97118,9 +94359,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}/discussions/${discussionNumber}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97135,9 +94373,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/discussions/${discussionNumber}/comments"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments";
-      typedPath?: `/teams/${number}/discussions/${number}/comments`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97168,9 +94403,6 @@ type Routes = {
   };
   ["POST /teams/${teamId}/discussions/${discussionNumber}/comments"]: {
     Request: {
-      method?: "POST";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments";
-      typedPath?: `/teams/${number}/discussions/${number}/comments`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97188,9 +94420,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97207,9 +94436,6 @@ type Routes = {
   };
   ["PATCH /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97229,9 +94455,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97248,9 +94471,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97280,9 +94500,6 @@ type Routes = {
   };
   ["POST /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/comments/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97302,9 +94519,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/discussions/${discussionNumber}/reactions"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97332,9 +94546,6 @@ type Routes = {
   };
   ["POST /teams/${teamId}/discussions/${discussionNumber}/reactions"]: {
     Request: {
-      method?: "POST";
-      path?: "/teams/${teamId}/discussions/${discussionNumber}/reactions";
-      typedPath?: `/teams/${number}/discussions/${number}/reactions`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97352,9 +94563,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/invitations"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/invitations";
-      typedPath?: `/teams/${number}/invitations`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97378,9 +94586,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/members"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/members";
-      typedPath?: `/teams/${number}/members`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97409,9 +94614,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/members/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/members/${username}";
-      typedPath?: `/teams/${number}/members/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97426,9 +94628,6 @@ type Routes = {
   };
   ["PUT /teams/${teamId}/members/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/teams/${teamId}/members/${username}";
-      typedPath?: `/teams/${number}/members/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97443,9 +94642,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}/members/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}/members/${username}";
-      typedPath?: `/teams/${number}/members/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97460,9 +94656,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/memberships/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/memberships/${username}";
-      typedPath?: `/teams/${number}/memberships/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97477,9 +94670,6 @@ type Routes = {
   };
   ["PUT /teams/${teamId}/memberships/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/teams/${teamId}/memberships/${username}";
-      typedPath?: `/teams/${number}/memberships/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97500,9 +94690,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}/memberships/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}/memberships/${username}";
-      typedPath?: `/teams/${number}/memberships/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97517,9 +94704,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/projects"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/projects";
-      typedPath?: `/teams/${number}/projects`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97543,9 +94727,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/projects/${projectId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/projects/${projectId}";
-      typedPath?: `/teams/${number}/projects/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97560,9 +94741,6 @@ type Routes = {
   };
   ["PUT /teams/${teamId}/projects/${projectId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/teams/${teamId}/projects/${projectId}";
-      typedPath?: `/teams/${number}/projects/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97580,9 +94758,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}/projects/${projectId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}/projects/${projectId}";
-      typedPath?: `/teams/${number}/projects/${number}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97597,9 +94772,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/repos"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/repos";
-      typedPath?: `/teams/${number}/repos`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97623,9 +94795,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/repos/${owner}/${repo}"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/repos/${owner}/${repo}";
-      typedPath?: `/teams/${number}/repos/${string}/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97642,9 +94811,6 @@ type Routes = {
   };
   ["PUT /teams/${teamId}/repos/${owner}/${repo}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/teams/${teamId}/repos/${owner}/${repo}";
-      typedPath?: `/teams/${number}/repos/${string}/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97664,9 +94830,6 @@ type Routes = {
   };
   ["DELETE /teams/${teamId}/repos/${owner}/${repo}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/teams/${teamId}/repos/${owner}/${repo}";
-      typedPath?: `/teams/${number}/repos/${string}/${string}`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97683,9 +94846,6 @@ type Routes = {
   };
   ["GET /teams/${teamId}/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/teams/${teamId}/teams";
-      typedPath?: `/teams/${number}/teams`;
       params: {
         /** The unique identifier of the team. */
         teamId: number;
@@ -97708,15 +94868,7 @@ type Routes = {
     Response: Team[];
   };
   ["GET /user"]: {
-    Request: {
-      method?: "GET";
-      path?: "/user";
-      typedPath?: `/user`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response:
       | ({
           user_view_type: "public";
@@ -97727,9 +94879,6 @@ type Routes = {
   };
   ["PATCH /user"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/user";
-      typedPath?: `/user`;
       params?: never;
       headers?: never;
       query?: never;
@@ -97774,9 +94923,6 @@ type Routes = {
   };
   ["GET /user/blocks"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/blocks";
-      typedPath?: `/user/blocks`;
       params?: never;
       headers?: never;
       query: {
@@ -97797,9 +94943,6 @@ type Routes = {
   };
   ["GET /user/blocks/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/blocks/${username}";
-      typedPath?: `/user/blocks/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -97812,9 +94955,6 @@ type Routes = {
   };
   ["PUT /user/blocks/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/blocks/${username}";
-      typedPath?: `/user/blocks/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -97827,9 +94967,6 @@ type Routes = {
   };
   ["DELETE /user/blocks/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/blocks/${username}";
-      typedPath?: `/user/blocks/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -97842,9 +94979,6 @@ type Routes = {
   };
   ["GET /user/codespaces"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces";
-      typedPath?: `/user/codespaces`;
       params?: never;
       headers?: never;
       query: {
@@ -97870,9 +95004,6 @@ type Routes = {
   };
   ["POST /user/codespaces"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/codespaces";
-      typedPath?: `/user/codespaces`;
       params?: never;
       headers?: never;
       query?: never;
@@ -97929,9 +95060,6 @@ type Routes = {
   };
   ["GET /user/codespaces/secrets"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces/secrets";
-      typedPath?: `/user/codespaces/secrets`;
       params?: never;
       headers?: never;
       query: {
@@ -97954,22 +95082,11 @@ type Routes = {
     };
   };
   ["GET /user/codespaces/secrets/public-key"]: {
-    Request: {
-      method?: "GET";
-      path?: "/user/codespaces/secrets/public-key";
-      typedPath?: `/user/codespaces/secrets/public-key`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: CodespacesUserPublicKey;
   };
   ["GET /user/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces/secrets/${secretName}";
-      typedPath?: `/user/codespaces/secrets/${string}`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -97982,9 +95099,6 @@ type Routes = {
   };
   ["PUT /user/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/codespaces/secrets/${secretName}";
-      typedPath?: `/user/codespaces/secrets/${string}`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -98007,9 +95121,6 @@ type Routes = {
   };
   ["DELETE /user/codespaces/secrets/${secretName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/codespaces/secrets/${secretName}";
-      typedPath?: `/user/codespaces/secrets/${string}`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -98022,9 +95133,6 @@ type Routes = {
   };
   ["GET /user/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -98040,9 +95148,6 @@ type Routes = {
   };
   ["PUT /user/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/codespaces/secrets/${secretName}/repositories";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -98058,9 +95163,6 @@ type Routes = {
   };
   ["PUT /user/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -98074,9 +95176,6 @@ type Routes = {
   };
   ["DELETE /user/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/codespaces/secrets/${secretName}/repositories/${repositoryId}";
-      typedPath?: `/user/codespaces/secrets/${string}/repositories/${number}`;
       params: {
         /** The name of the secret. */
         secretName: string;
@@ -98090,9 +95189,6 @@ type Routes = {
   };
   ["GET /user/codespaces/${codespaceName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces/${codespaceName}";
-      typedPath?: `/user/codespaces/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98105,9 +95201,6 @@ type Routes = {
   };
   ["PATCH /user/codespaces/${codespaceName}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/user/codespaces/${codespaceName}";
-      typedPath?: `/user/codespaces/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98127,9 +95220,6 @@ type Routes = {
   };
   ["DELETE /user/codespaces/${codespaceName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/codespaces/${codespaceName}";
-      typedPath?: `/user/codespaces/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98142,9 +95232,6 @@ type Routes = {
   };
   ["POST /user/codespaces/${codespaceName}/exports"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/codespaces/${codespaceName}/exports";
-      typedPath?: `/user/codespaces/${string}/exports`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98157,9 +95244,6 @@ type Routes = {
   };
   ["GET /user/codespaces/${codespaceName}/exports/${exportId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces/${codespaceName}/exports/${exportId}";
-      typedPath?: `/user/codespaces/${string}/exports/${string}`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98174,9 +95258,6 @@ type Routes = {
   };
   ["GET /user/codespaces/${codespaceName}/machines"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/codespaces/${codespaceName}/machines";
-      typedPath?: `/user/codespaces/${string}/machines`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98192,9 +95273,6 @@ type Routes = {
   };
   ["POST /user/codespaces/${codespaceName}/publish"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/codespaces/${codespaceName}/publish";
-      typedPath?: `/user/codespaces/${string}/publish`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98215,9 +95293,6 @@ type Routes = {
   };
   ["POST /user/codespaces/${codespaceName}/start"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/codespaces/${codespaceName}/start";
-      typedPath?: `/user/codespaces/${string}/start`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98230,9 +95305,6 @@ type Routes = {
   };
   ["POST /user/codespaces/${codespaceName}/stop"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/codespaces/${codespaceName}/stop";
-      typedPath?: `/user/codespaces/${string}/stop`;
       params: {
         /** The name of the codespace. */
         codespaceName: string;
@@ -98244,22 +95316,11 @@ type Routes = {
     Response: Codespace;
   };
   ["GET /user/docker/conflicts"]: {
-    Request: {
-      method?: "GET";
-      path?: "/user/docker/conflicts";
-      typedPath?: `/user/docker/conflicts`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: Package[];
   };
   ["PATCH /user/email/visibility"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/user/email/visibility";
-      typedPath?: `/user/email/visibility`;
       params?: never;
       headers?: never;
       query?: never;
@@ -98272,9 +95333,6 @@ type Routes = {
   };
   ["GET /user/emails"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/emails";
-      typedPath?: `/user/emails`;
       params?: never;
       headers?: never;
       query: {
@@ -98295,9 +95353,6 @@ type Routes = {
   };
   ["POST /user/emails"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/emails";
-      typedPath?: `/user/emails`;
       params?: never;
       headers?: never;
       query?: never;
@@ -98317,9 +95372,6 @@ type Routes = {
   };
   ["DELETE /user/emails"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/emails";
-      typedPath?: `/user/emails`;
       params?: never;
       headers?: never;
       query?: never;
@@ -98338,9 +95390,6 @@ type Routes = {
   };
   ["GET /user/followers"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/followers";
-      typedPath?: `/user/followers`;
       params?: never;
       headers?: never;
       query: {
@@ -98361,9 +95410,6 @@ type Routes = {
   };
   ["GET /user/following"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/following";
-      typedPath?: `/user/following`;
       params?: never;
       headers?: never;
       query: {
@@ -98384,9 +95430,6 @@ type Routes = {
   };
   ["GET /user/following/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/following/${username}";
-      typedPath?: `/user/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -98399,9 +95442,6 @@ type Routes = {
   };
   ["PUT /user/following/${username}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/following/${username}";
-      typedPath?: `/user/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -98414,9 +95454,6 @@ type Routes = {
   };
   ["DELETE /user/following/${username}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/following/${username}";
-      typedPath?: `/user/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -98429,9 +95466,6 @@ type Routes = {
   };
   ["GET /user/gpg_keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/gpg_keys";
-      typedPath?: `/user/gpg_keys`;
       params?: never;
       headers?: never;
       query: {
@@ -98452,9 +95486,6 @@ type Routes = {
   };
   ["POST /user/gpg_keys"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/gpg_keys";
-      typedPath?: `/user/gpg_keys`;
       params?: never;
       headers?: never;
       query?: never;
@@ -98469,9 +95500,6 @@ type Routes = {
   };
   ["GET /user/gpg_keys/${gpgKeyId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/gpg_keys/${gpgKeyId}";
-      typedPath?: `/user/gpg_keys/${number}`;
       params: {
         /** The unique identifier of the GPG key. */
         gpgKeyId: number;
@@ -98484,9 +95512,6 @@ type Routes = {
   };
   ["DELETE /user/gpg_keys/${gpgKeyId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/gpg_keys/${gpgKeyId}";
-      typedPath?: `/user/gpg_keys/${number}`;
       params: {
         /** The unique identifier of the GPG key. */
         gpgKeyId: number;
@@ -98499,9 +95524,6 @@ type Routes = {
   };
   ["GET /user/installations"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/installations";
-      typedPath?: `/user/installations`;
       params?: never;
       headers?: never;
       query: {
@@ -98525,9 +95547,6 @@ type Routes = {
   };
   ["GET /user/installations/${installationId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/installations/${installationId}/repositories";
-      typedPath?: `/user/installations/${number}/repositories`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -98555,9 +95574,6 @@ type Routes = {
   };
   ["PUT /user/installations/${installationId}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/installations/${installationId}/repositories/${repositoryId}";
-      typedPath?: `/user/installations/${number}/repositories/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -98572,9 +95588,6 @@ type Routes = {
   };
   ["DELETE /user/installations/${installationId}/repositories/${repositoryId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/installations/${installationId}/repositories/${repositoryId}";
-      typedPath?: `/user/installations/${number}/repositories/${number}`;
       params: {
         /** The unique identifier of the installation. */
         installationId: number;
@@ -98588,46 +95601,19 @@ type Routes = {
     Response: void;
   };
   ["GET /user/interaction-limits"]: {
-    Request: {
-      method?: "GET";
-      path?: "/user/interaction-limits";
-      typedPath?: `/user/interaction-limits`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: InteractionLimitResponse | object;
   };
   ["PUT /user/interaction-limits"]: {
-    Request: {
-      method?: "PUT";
-      path?: "/user/interaction-limits";
-      typedPath?: `/user/interaction-limits`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body: InteractionLimit;
-    };
+    Request: { params?: never; headers?: never; query?: never; body: InteractionLimit };
     Response: InteractionLimitResponse;
   };
   ["DELETE /user/interaction-limits"]: {
-    Request: {
-      method?: "DELETE";
-      path?: "/user/interaction-limits";
-      typedPath?: `/user/interaction-limits`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: void;
   };
   ["GET /user/issues"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/issues";
-      typedPath?: `/user/issues`;
       params?: never;
       headers?: never;
       query: {
@@ -98675,9 +95661,6 @@ type Routes = {
   };
   ["GET /user/keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/keys";
-      typedPath?: `/user/keys`;
       params?: never;
       headers?: never;
       query: {
@@ -98698,9 +95681,6 @@ type Routes = {
   };
   ["POST /user/keys"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/keys";
-      typedPath?: `/user/keys`;
       params?: never;
       headers?: never;
       query?: never;
@@ -98721,9 +95701,6 @@ type Routes = {
   };
   ["GET /user/keys/${keyId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/keys/${keyId}";
-      typedPath?: `/user/keys/${number}`;
       params: {
         /** The unique identifier of the key. */
         keyId: number;
@@ -98736,9 +95713,6 @@ type Routes = {
   };
   ["DELETE /user/keys/${keyId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/keys/${keyId}";
-      typedPath?: `/user/keys/${number}`;
       params: {
         /** The unique identifier of the key. */
         keyId: number;
@@ -98751,9 +95725,6 @@ type Routes = {
   };
   ["GET /user/marketplace_purchases"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/marketplace_purchases";
-      typedPath?: `/user/marketplace_purchases`;
       params?: never;
       headers?: never;
       query: {
@@ -98774,9 +95745,6 @@ type Routes = {
   };
   ["GET /user/marketplace_purchases/stubbed"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/marketplace_purchases/stubbed";
-      typedPath?: `/user/marketplace_purchases/stubbed`;
       params?: never;
       headers?: never;
       query: {
@@ -98797,9 +95765,6 @@ type Routes = {
   };
   ["GET /user/memberships/orgs"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/memberships/orgs";
-      typedPath?: `/user/memberships/orgs`;
       params?: never;
       headers?: never;
       query: {
@@ -98822,9 +95787,6 @@ type Routes = {
   };
   ["GET /user/memberships/orgs/${org}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/memberships/orgs/${org}";
-      typedPath?: `/user/memberships/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -98837,9 +95799,6 @@ type Routes = {
   };
   ["PATCH /user/memberships/orgs/${org}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/user/memberships/orgs/${org}";
-      typedPath?: `/user/memberships/orgs/${string}`;
       params: {
         /** The organization name. The name is not case sensitive. */
         org: string;
@@ -98855,9 +95814,6 @@ type Routes = {
   };
   ["GET /user/migrations"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/migrations";
-      typedPath?: `/user/migrations`;
       params?: never;
       headers?: never;
       query: {
@@ -98878,9 +95834,6 @@ type Routes = {
   };
   ["POST /user/migrations"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/migrations";
-      typedPath?: `/user/migrations`;
       params?: never;
       headers?: never;
       query?: never;
@@ -98933,9 +95886,6 @@ type Routes = {
   };
   ["GET /user/migrations/${migrationId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/migrations/${migrationId}";
-      typedPath?: `/user/migrations/${number}`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
@@ -98950,9 +95900,6 @@ type Routes = {
   };
   ["GET /user/migrations/${migrationId}/archive"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/migrations/${migrationId}/archive";
-      typedPath?: `/user/migrations/${number}/archive`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
@@ -98965,9 +95912,6 @@ type Routes = {
   };
   ["DELETE /user/migrations/${migrationId}/archive"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/migrations/${migrationId}/archive";
-      typedPath?: `/user/migrations/${number}/archive`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
@@ -98980,9 +95924,6 @@ type Routes = {
   };
   ["DELETE /user/migrations/${migrationId}/repos/${repoName}/lock"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/migrations/${migrationId}/repos/${repoName}/lock";
-      typedPath?: `/user/migrations/${number}/repos/${string}/lock`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
@@ -98997,9 +95938,6 @@ type Routes = {
   };
   ["GET /user/migrations/${migrationId}/repositories"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/migrations/${migrationId}/repositories";
-      typedPath?: `/user/migrations/${number}/repositories`;
       params: {
         /** The unique identifier of the migration. */
         migrationId: number;
@@ -99023,9 +95961,6 @@ type Routes = {
   };
   ["GET /user/orgs"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/orgs";
-      typedPath?: `/user/orgs`;
       params?: never;
       headers?: never;
       query: {
@@ -99046,9 +95981,6 @@ type Routes = {
   };
   ["GET /user/packages"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/packages";
-      typedPath?: `/user/packages`;
       params?: never;
       headers?: never;
       query: {
@@ -99078,9 +96010,6 @@ type Routes = {
   };
   ["GET /user/packages/${packageType}/${packageName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/packages/${packageType}/${packageName}";
-      typedPath?: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99095,9 +96024,6 @@ type Routes = {
   };
   ["DELETE /user/packages/${packageType}/${packageName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/packages/${packageType}/${packageName}";
-      typedPath?: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99112,9 +96038,6 @@ type Routes = {
   };
   ["POST /user/packages/${packageType}/${packageName}/restore"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/packages/${packageType}/${packageName}/restore";
-      typedPath?: `/user/packages/${"npm" | "maven" | "rubygems" | "docker" | "nuget" | "container"}/${string}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99132,15 +96055,6 @@ type Routes = {
   };
   ["GET /user/packages/${packageType}/${packageName}/versions"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/packages/${packageType}/${packageName}/versions";
-      typedPath?: `/user/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99171,15 +96085,6 @@ type Routes = {
   };
   ["GET /user/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/user/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99196,15 +96101,6 @@ type Routes = {
   };
   ["DELETE /user/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/user/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99221,15 +96117,6 @@ type Routes = {
   };
   ["POST /user/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore";
-      typedPath?: `/user/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -99246,9 +96133,6 @@ type Routes = {
   };
   ["POST /user/projects"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/projects";
-      typedPath?: `/user/projects`;
       params?: never;
       headers?: never;
       query?: never;
@@ -99269,9 +96153,6 @@ type Routes = {
   };
   ["GET /user/public_emails"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/public_emails";
-      typedPath?: `/user/public_emails`;
       params?: never;
       headers?: never;
       query: {
@@ -99292,9 +96173,6 @@ type Routes = {
   };
   ["GET /user/repos"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/repos";
-      typedPath?: `/user/repos`;
       params?: never;
       headers?: never;
       query: {
@@ -99350,9 +96228,6 @@ type Routes = {
   };
   ["POST /user/repos"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/repos";
-      typedPath?: `/user/repos`;
       params?: never;
       headers?: never;
       query?: never;
@@ -99494,9 +96369,6 @@ type Routes = {
   };
   ["GET /user/repository_invitations"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/repository_invitations";
-      typedPath?: `/user/repository_invitations`;
       params?: never;
       headers?: never;
       query: {
@@ -99517,9 +96389,6 @@ type Routes = {
   };
   ["PATCH /user/repository_invitations/${invitationId}"]: {
     Request: {
-      method?: "PATCH";
-      path?: "/user/repository_invitations/${invitationId}";
-      typedPath?: `/user/repository_invitations/${number}`;
       params: {
         /** The unique identifier of the invitation. */
         invitationId: number;
@@ -99532,9 +96401,6 @@ type Routes = {
   };
   ["DELETE /user/repository_invitations/${invitationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/repository_invitations/${invitationId}";
-      typedPath?: `/user/repository_invitations/${number}`;
       params: {
         /** The unique identifier of the invitation. */
         invitationId: number;
@@ -99547,9 +96413,6 @@ type Routes = {
   };
   ["GET /user/social_accounts"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/social_accounts";
-      typedPath?: `/user/social_accounts`;
       params?: never;
       headers?: never;
       query: {
@@ -99570,9 +96433,6 @@ type Routes = {
   };
   ["POST /user/social_accounts"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/social_accounts";
-      typedPath?: `/user/social_accounts`;
       params?: never;
       headers?: never;
       query?: never;
@@ -99588,9 +96448,6 @@ type Routes = {
   };
   ["DELETE /user/social_accounts"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/social_accounts";
-      typedPath?: `/user/social_accounts`;
       params?: never;
       headers?: never;
       query?: never;
@@ -99606,9 +96463,6 @@ type Routes = {
   };
   ["GET /user/ssh_signing_keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/ssh_signing_keys";
-      typedPath?: `/user/ssh_signing_keys`;
       params?: never;
       headers?: never;
       query: {
@@ -99629,9 +96483,6 @@ type Routes = {
   };
   ["POST /user/ssh_signing_keys"]: {
     Request: {
-      method?: "POST";
-      path?: "/user/ssh_signing_keys";
-      typedPath?: `/user/ssh_signing_keys`;
       params?: never;
       headers?: never;
       query?: never;
@@ -99652,9 +96503,6 @@ type Routes = {
   };
   ["GET /user/ssh_signing_keys/${sshSigningKeyId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/ssh_signing_keys/${sshSigningKeyId}";
-      typedPath?: `/user/ssh_signing_keys/${number}`;
       params: {
         /** The unique identifier of the SSH signing key. */
         sshSigningKeyId: number;
@@ -99667,9 +96515,6 @@ type Routes = {
   };
   ["DELETE /user/ssh_signing_keys/${sshSigningKeyId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/ssh_signing_keys/${sshSigningKeyId}";
-      typedPath?: `/user/ssh_signing_keys/${number}`;
       params: {
         /** The unique identifier of the SSH signing key. */
         sshSigningKeyId: number;
@@ -99682,9 +96527,6 @@ type Routes = {
   };
   ["GET /user/starred"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/starred";
-      typedPath?: `/user/starred`;
       params?: never;
       headers?: never;
       query: {
@@ -99715,9 +96557,6 @@ type Routes = {
   };
   ["GET /user/starred/${owner}/${repo}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/starred/${owner}/${repo}";
-      typedPath?: `/user/starred/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -99732,9 +96571,6 @@ type Routes = {
   };
   ["PUT /user/starred/${owner}/${repo}"]: {
     Request: {
-      method?: "PUT";
-      path?: "/user/starred/${owner}/${repo}";
-      typedPath?: `/user/starred/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -99749,9 +96585,6 @@ type Routes = {
   };
   ["DELETE /user/starred/${owner}/${repo}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/user/starred/${owner}/${repo}";
-      typedPath?: `/user/starred/${string}/${string}`;
       params: {
         /** The account owner of the repository. The name is not case sensitive. */
         owner: string;
@@ -99766,9 +96599,6 @@ type Routes = {
   };
   ["GET /user/subscriptions"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/subscriptions";
-      typedPath?: `/user/subscriptions`;
       params?: never;
       headers?: never;
       query: {
@@ -99789,9 +96619,6 @@ type Routes = {
   };
   ["GET /user/teams"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/teams";
-      typedPath?: `/user/teams`;
       params?: never;
       headers?: never;
       query: {
@@ -99812,9 +96639,6 @@ type Routes = {
   };
   ["GET /user/${accountId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/user/${accountId}";
-      typedPath?: `/user/${number}`;
       params: {
         /** account_id parameter */
         accountId: number;
@@ -99833,9 +96657,6 @@ type Routes = {
   };
   ["GET /users"]: {
     Request: {
-      method?: "GET";
-      path?: "/users";
-      typedPath?: `/users`;
       params?: never;
       headers?: never;
       query: {
@@ -99853,9 +96674,6 @@ type Routes = {
   };
   ["GET /users/${username}"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}";
-      typedPath?: `/users/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -99874,9 +96692,6 @@ type Routes = {
   };
   ["POST /users/${username}/attestations/bulk-list"]: {
     Request: {
-      method?: "POST";
-      path?: "/users/${username}/attestations/bulk-list";
-      typedPath?: `/users/${string}/attestations/bulk-list`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -99938,9 +96753,6 @@ type Routes = {
   };
   ["POST /users/${username}/attestations/delete-request"]: {
     Request: {
-      method?: "POST";
-      path?: "/users/${username}/attestations/delete-request";
-      typedPath?: `/users/${string}/attestations/delete-request`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -99969,9 +96781,6 @@ type Routes = {
   };
   ["DELETE /users/${username}/attestations/digest/${subjectDigest}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/users/${username}/attestations/digest/${subjectDigest}";
-      typedPath?: `/users/${string}/attestations/digest/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -99986,9 +96795,6 @@ type Routes = {
   };
   ["DELETE /users/${username}/attestations/${attestationId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/users/${username}/attestations/${attestationId}";
-      typedPath?: `/users/${string}/attestations/${number}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100003,9 +96809,6 @@ type Routes = {
   };
   ["GET /users/${username}/attestations/${subjectDigest}"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/attestations/${subjectDigest}";
-      typedPath?: `/users/${string}/attestations/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100049,9 +96852,6 @@ type Routes = {
   };
   ["GET /users/${username}/docker/conflicts"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/docker/conflicts";
-      typedPath?: `/users/${string}/docker/conflicts`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100064,9 +96864,6 @@ type Routes = {
   };
   ["GET /users/${username}/events"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/events";
-      typedPath?: `/users/${string}/events`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100090,9 +96887,6 @@ type Routes = {
   };
   ["GET /users/${username}/events/orgs/${org}"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/events/orgs/${org}";
-      typedPath?: `/users/${string}/events/orgs/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100118,9 +96912,6 @@ type Routes = {
   };
   ["GET /users/${username}/events/public"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/events/public";
-      typedPath?: `/users/${string}/events/public`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100144,9 +96935,6 @@ type Routes = {
   };
   ["GET /users/${username}/followers"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/followers";
-      typedPath?: `/users/${string}/followers`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100170,9 +96958,6 @@ type Routes = {
   };
   ["GET /users/${username}/following"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/following";
-      typedPath?: `/users/${string}/following`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100196,9 +96981,6 @@ type Routes = {
   };
   ["GET /users/${username}/following/${targetUser}"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/following/${targetUser}";
-      typedPath?: `/users/${string}/following/${string}`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100212,9 +96994,6 @@ type Routes = {
   };
   ["GET /users/${username}/gists"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/gists";
-      typedPath?: `/users/${string}/gists`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100243,9 +97022,6 @@ type Routes = {
   };
   ["GET /users/${username}/gpg_keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/gpg_keys";
-      typedPath?: `/users/${string}/gpg_keys`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100269,9 +97045,6 @@ type Routes = {
   };
   ["GET /users/${username}/hovercard"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/hovercard";
-      typedPath?: `/users/${string}/hovercard`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100289,9 +97062,6 @@ type Routes = {
   };
   ["GET /users/${username}/installation"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/installation";
-      typedPath?: `/users/${string}/installation`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100304,9 +97074,6 @@ type Routes = {
   };
   ["GET /users/${username}/keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/keys";
-      typedPath?: `/users/${string}/keys`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100330,9 +97097,6 @@ type Routes = {
   };
   ["GET /users/${username}/orgs"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/orgs";
-      typedPath?: `/users/${string}/orgs`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100356,9 +97120,6 @@ type Routes = {
   };
   ["GET /users/${username}/packages"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/packages";
-      typedPath?: `/users/${string}/packages`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100391,15 +97152,6 @@ type Routes = {
   };
   ["GET /users/${username}/packages/${packageType}/${packageName}"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/packages/${packageType}/${packageName}";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100416,15 +97168,6 @@ type Routes = {
   };
   ["DELETE /users/${username}/packages/${packageType}/${packageName}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/users/${username}/packages/${packageType}/${packageName}";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100441,15 +97184,6 @@ type Routes = {
   };
   ["POST /users/${username}/packages/${packageType}/${packageName}/restore"]: {
     Request: {
-      method?: "POST";
-      path?: "/users/${username}/packages/${packageType}/${packageName}/restore";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100469,15 +97203,6 @@ type Routes = {
   };
   ["GET /users/${username}/packages/${packageType}/${packageName}/versions"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/packages/${packageType}/${packageName}/versions";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100494,15 +97219,6 @@ type Routes = {
   };
   ["GET /users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100521,15 +97237,6 @@ type Routes = {
   };
   ["DELETE /users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
-      method?: "DELETE";
-      path?: "/users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100548,15 +97255,6 @@ type Routes = {
   };
   ["POST /users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore"]: {
     Request: {
-      method?: "POST";
-      path?: "/users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore";
-      typedPath?: `/users/${string}/packages/${
-        | "npm"
-        | "maven"
-        | "rubygems"
-        | "docker"
-        | "nuget"
-        | "container"}/${string}/versions/${number}/restore`;
       params: {
         /** The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
         packageType: "npm" | "maven" | "rubygems" | "docker" | "nuget" | "container";
@@ -100575,9 +97273,6 @@ type Routes = {
   };
   ["GET /users/${username}/projects"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/projects";
-      typedPath?: `/users/${string}/projects`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100606,9 +97301,6 @@ type Routes = {
   };
   ["GET /users/${username}/received_events"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/received_events";
-      typedPath?: `/users/${string}/received_events`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100632,9 +97324,6 @@ type Routes = {
   };
   ["GET /users/${username}/received_events/public"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/received_events/public";
-      typedPath?: `/users/${string}/received_events/public`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100658,9 +97347,6 @@ type Routes = {
   };
   ["GET /users/${username}/repos"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/repos";
-      typedPath?: `/users/${string}/repos`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100696,9 +97382,6 @@ type Routes = {
   };
   ["GET /users/${username}/settings/billing/actions"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/settings/billing/actions";
-      typedPath?: `/users/${string}/settings/billing/actions`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100711,9 +97394,6 @@ type Routes = {
   };
   ["GET /users/${username}/settings/billing/packages"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/settings/billing/packages";
-      typedPath?: `/users/${string}/settings/billing/packages`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100726,9 +97406,6 @@ type Routes = {
   };
   ["GET /users/${username}/settings/billing/shared-storage"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/settings/billing/shared-storage";
-      typedPath?: `/users/${string}/settings/billing/shared-storage`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100741,9 +97418,6 @@ type Routes = {
   };
   ["GET /users/${username}/settings/billing/usage"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/settings/billing/usage";
-      typedPath?: `/users/${string}/settings/billing/usage`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100765,9 +97439,6 @@ type Routes = {
   };
   ["GET /users/${username}/social_accounts"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/social_accounts";
-      typedPath?: `/users/${string}/social_accounts`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100791,9 +97462,6 @@ type Routes = {
   };
   ["GET /users/${username}/ssh_signing_keys"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/ssh_signing_keys";
-      typedPath?: `/users/${string}/ssh_signing_keys`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100817,9 +97485,6 @@ type Routes = {
   };
   ["GET /users/${username}/starred"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/starred";
-      typedPath?: `/users/${string}/starred`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100853,9 +97518,6 @@ type Routes = {
   };
   ["GET /users/${username}/subscriptions"]: {
     Request: {
-      method?: "GET";
-      path?: "/users/${username}/subscriptions";
-      typedPath?: `/users/${string}/subscriptions`;
       params: {
         /** The handle for the GitHub user account. */
         username: string;
@@ -100877,28 +97539,9 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
-  ["GET /versions"]: {
-    Request: {
-      method?: "GET";
-      path?: "/versions";
-      typedPath?: `/versions`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
-    Response: string[];
-  };
+  ["GET /versions"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: string[] };
   ["GET /zen"]: {
-    Request: {
-      method?: "GET";
-      path?: "/zen";
-      typedPath?: `/zen`;
-      params?: never;
-      headers?: never;
-      query?: never;
-      body?: never;
-    };
+    Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: WebhookConfigUrl;
   };
 };

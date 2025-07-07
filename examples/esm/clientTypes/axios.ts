@@ -1,21 +1,19 @@
-import { request } from 'https';
-
-import { clientFromRequest } from '../swagger-utils.ts';
+import { clientFromAxios } from '../swagger-utils.ts';
+import axios from 'axios';
 
 import type { Routes as Github } from '../generated/github.ts';
 import type { Routes as Petstore } from '../generated/petstore.ts';
 import type { Routes as StarWars } from '../generated/swapi.ts';
 
-export const githubFetcher = clientFromRequest<Github>({
+export const githubFetcher = clientFromAxios<Github>({
   baseUrl: 'https://api.github.com',
-  request,
+  axios,
 });
-export const petFetcher = clientFromRequest<Petstore>({
+export const petFetcher = clientFromAxios<Petstore>({
   baseUrl: 'https://petstore.swagger.io/v2/',
-  request,
+  axios,
 });
-export const starWarsFetcher = clientFromRequest<StarWars>({
+export const starWarsFetcher = clientFromAxios<StarWars>({
   baseUrl: 'https://swapi.profiq.com',
-  request,
+  axios,
 });
-

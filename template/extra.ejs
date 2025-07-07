@@ -4,7 +4,7 @@ const { apiConfig, utils, routes, config } = it;
 const processRoute = (route) => {
   const { path, method, payload, query, pathParams, headers, parameters } = route.request;
 
-  const requestLines = [`method?: '${method.toUpperCase()}'`, `path?: '${path}'`];
+  const requestLines = [];
 
   const add = (enabled, name, type) => {
     if (enabled) {
@@ -13,10 +13,6 @@ const processRoute = (route) => {
       requestLines.push(`${name}?: never`);
     }
   }
-
-  const paramsByName = utils._.keyBy(route.request.parameters, 'name');
-  const typedPath = path.replace(/{([^}]*)}/g, (_, name) => `{${paramsByName[name].type}}`);
-  requestLines.push(`typedPath?: \`${typedPath}\``);
 
   add(pathParams, 'params', pathParams?.type);
   add(headers, 'headers', headers?.type);
