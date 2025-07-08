@@ -45,24 +45,18 @@ const PERSON1 = {
 
 describe('Fetch Clients', () => {
   it('works with Petstore', async () => {
-    const pet = await fetchers.petFetcher({
-      route: 'POST /pet',
-      request: {
-        body: {
-          name: 'Rex',
-          photoUrls: [],
-        },
+    const pet = await fetchers.petFetcher('POST /pet', {
+      body: {
+        name: 'Rex',
+        photoUrls: [],
       },
     });
     assert.partialDeepStrictEqual(pet, PET1);
   });
 
   it('works with StarWars', async () => {
-    const person = await fetchers.starWarsFetcher({
-      route: 'GET /api/people/${id}',
-      request: {
-        params: { id: 1 },
-      },
+    const person = await fetchers.starWarsFetcher('GET /api/people/${id}', {
+      params: { id: 1 },
     });
     assert.partialDeepStrictEqual(person, PERSON1);
   });
@@ -70,13 +64,10 @@ describe('Fetch Clients', () => {
 
 describe('Request Clients', () => {
   it('works with Petstore', async () => {
-    const pet = await requesters.petFetcher({
-      route: 'POST /pet',
-      request: {
-        body: {
-          name: 'Rex',
-          photoUrls: [],
-        },
+    const pet = await requesters.petFetcher('POST /pet', {
+      body: {
+        name: 'Rex',
+        photoUrls: [],
       },
     });
     assert.partialDeepStrictEqual(pet, PET1);
@@ -84,11 +75,8 @@ describe('Request Clients', () => {
 
   // Some 403 error, probably need to set User-Agent
   it.skip('works with StarWars', async () => {
-    const person = await requesters.starWarsFetcher({
-      route: 'GET /api/people/${id}',
-      request: {
-        params: { id: 1 },
-      },
+    const person = await requesters.starWarsFetcher('GET /api/people/${id}', {
+      params: { id: 1 },
     });
     assert.partialDeepStrictEqual(person, PERSON1);
   });
@@ -96,13 +84,10 @@ describe('Request Clients', () => {
 
 describe('Axios Clients', () => {
   it('works with Petstore', async () => {
-    const pet = await axiosers.petFetcher({
-      route: 'POST /pet',
-      request: {
-        body: {
-          name: 'Rex',
-          photoUrls: [],
-        },
+    const pet = await axiosers.petFetcher('POST /pet', {
+      body: {
+        name: 'Rex',
+        photoUrls: [],
       },
     });
     assert.partialDeepStrictEqual(pet, PET1);
@@ -110,11 +95,8 @@ describe('Axios Clients', () => {
 
   // Some 403 error, probably need to set User-Agent
   it.skip('works with StarWars', async () => {
-    const person = await axiosers.starWarsFetcher({
-      route: 'GET /api/people/${id}',
-      request: {
-        params: { id: 1 },
-      },
+    const person = await axiosers.starWarsFetcher('GET /api/people/${id}', {
+      params: { id: 1 },
     });
     assert.partialDeepStrictEqual(person, PERSON1);
   });
@@ -122,13 +104,10 @@ describe('Axios Clients', () => {
 
 describe('Got Clients', () => {
   it('works with Petstore', async () => {
-    const pet = await gots.petFetcher({
-      route: 'POST /pet',
-      request: {
-        body: {
-          name: 'Rex',
-          photoUrls: [],
-        },
+    const pet = await gots.petFetcher('POST /pet', {
+      body: {
+        name: 'Rex',
+        photoUrls: [],
       },
     });
     assert.partialDeepStrictEqual(pet, PET1);
@@ -136,11 +115,8 @@ describe('Got Clients', () => {
 
   // Some 403 error, probably need to set User-Agent
   it.skip('works with StarWars', async () => {
-    const person = await gots.starWarsFetcher({
-      route: 'GET /api/people/${id}',
-      request: {
-        params: { id: 1 },
-      },
+    const person = await gots.starWarsFetcher('GET /api/people/${id}', {
+      params: { id: 1 },
     });
     assert.partialDeepStrictEqual(person, PERSON1);
   });

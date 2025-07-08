@@ -15,41 +15,33 @@ type BaseRoute = {
 
 type BaseRoutes = Record<string, BaseRoute>;
 
-type Config<Routes extends BaseRoutes> = {
-  [K in keyof Routes & string]: {
-    route: K;
-    request: Routes[K]['Request'];
-  };
-}[keyof Routes & string];
-
-type ResponseForConfig<
+type Params<
   Routes extends BaseRoutes,
-  R extends Config<Routes>,
-> = Routes[R['route']]['Response'];
+  Route extends keyof Routes & string,
+> = Record<string, undefined> extends Routes[Route]['Request']
+  ? [route: Route] | [route: Route, request: Routes[Route]['Request']]
+  : [route: Route, request: Routes[Route]['Request']];
 
-const handlerFrom = <Routes extends BaseRoutes>() => {
-  type BaseCallback = <R extends Config<Routes>>(config: R) => any;
-  return <Callback extends BaseCallback>(callback: Callback) => callback;
-};
+type Handler<Routes extends BaseRoutes> = <
+  Callback extends <Route extends keyof Routes & string>(
+    route: Route,
+    request: Routes[Route]['Request']
+  ) => any,
+>(
+  callback: Callback
+) => Callback;
 
-const genericHandler = handlerFrom<BaseRoutes>();
-type Handler<Routes extends BaseRoutes> = ReturnType<
-  typeof handlerFrom<Routes>
->;
+// prettier-ignore
+type UpperMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'TRACE';
+type AllMethods = UpperMethods | Lowercase<UpperMethods>;
 
 const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
-  return <R extends Config<Routes>>(config: R) => {
-    type Method = R['route'] extends `${infer M} ${string}` ? M : never;
-
-    const route = config.route as R['route'];
-    const request = config.request as R['request'];
-
-    const get = <K extends keyof R['request']>(k: K) => {
-      type Returns = K extends keyof R['request'] ? R['request'][K] : never;
-      return (k in request ? request[k] : undefined) as Returns;
-    };
-
-    const [method, template] = route.split(' ') as [Method, string];
+  return <Route extends keyof Routes & string>(
+    ...[route, request]: Params<Routes, Route>
+  ) => {
+    type GetKey = keyof Routes[Route]['Request'];
+    const get = <K extends GetKey>(k: K) => request?.[k]!;
+    const [method, template] = route.split(' ') as [AllMethods, string];
     const params = get('params');
     const regex = /\$\{([^}]*)}/g;
     const formatted = template.replace(regex, (_, m) => params?.[m]);
@@ -67,82 +59,78 @@ const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
   };
 };
 
-type Prepare<Routes extends BaseRoutes> = ReturnType<
-  typeof prepareFrom<Routes>
->;
 // #endregion
+
+// import { type Routes as Github } from './generated/github.ts';
+
+// export const client2 = <Routes extends BaseRoutes>() => {
+//   const prepare = prepareFrom<BaseRoutes>('');
+//   return async <Route extends keyof Routes & string>(
+//     ...[route, request]: Params<Routes, Route>
+//   ): Promise<Routes[Route]['Response']> => {
+//     const prepared = prepare(...([route, request] as never as [Route]));
+//     return {};
+//   };
+// };
+
+// client2<Github>()('GET /gists/${gistId}', { params: { gistId: '1' } }).then(
+//   (r) => r
+// );
+// client2<Github>()('GET /gists/${gistId}').then((r) => r);
+// client2<Github>()('GET /', {}).then((r) => r);
+// client2<Github>()('GET /').then((r) => r);
 
 // #region Fetch Client
 export const clientFromFetch = <Routes extends BaseRoutes>({
   baseUrl,
   fetch = globalThis.fetch,
-  prepare,
 }: {
   baseUrl: string;
   fetch?: typeof globalThis.fetch;
-  prepare?: (originalPrepare: Prepare<Routes>) => Prepare<Routes>;
 }) => {
-  const basePrepare = prepareFrom<Routes>(baseUrl);
-  const usedPrepare = prepare ? prepare(basePrepare) : basePrepare;
-  const myHandler: Handler<Routes> = genericHandler;
+  const prepare = prepareFrom<Routes>(baseUrl);
+  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (config) => {
-    type Response = ResponseForConfig<Routes, typeof config>;
+  return myHandler(async (route, request) => {
+    type Response = Routes[typeof route]['Response'];
 
-    const prepared = usedPrepare(config);
-    const headers: Record<string, string> = prepared.headers ?? {};
-    const requestInit: RequestInit = { method: prepared.method, headers };
+    const { body, method, url, ...rest } = prepare(route, request);
+    const headers: Record<string, string> = rest.headers ?? {};
+    const requestInit: RequestInit = { method, headers };
 
-    if (prepared.body) headers['Content-Type'] ??= 'application/json';
-    if (prepared.body) requestInit.body = JSON.stringify(prepared.body);
+    if (body) headers['Content-Type'] ??= 'application/json';
+    if (body) requestInit.body = JSON.stringify(body);
 
-    const response = await fetch(prepared.url, requestInit);
+    const response = await fetch(url, requestInit);
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      const message = `Request to ${url} failed with status ${response.status}`;
+      throw new Error(message);
     }
 
     const json: Response = await response.json();
     return json;
   });
 };
-// #endregion
+// #endregion Fetch Client
 
 // #region Axios Client
 export const clientFromAxios = <Routes extends BaseRoutes>({
   axios,
   baseUrl,
-  prepare,
 }: {
   axios: AxiosInstance;
   baseUrl: string;
-  prepare?: (originalPrepare: Prepare<Routes>) => Prepare<Routes>;
 }) => {
-  const basePrepare = prepareFrom<Routes>(baseUrl);
-  const usedPrepare = prepare ? prepare(basePrepare) : basePrepare;
+  const prepare = prepareFrom<Routes>(baseUrl);
+  const myHandler: Handler<Routes> = (cb) => cb;
 
-  const myHandler: Handler<Routes> = genericHandler;
+  return myHandler(async (route, request) => {
+    type Response = Routes[typeof route]['Response'];
 
-  return myHandler(async (config) => {
-    type Response = ResponseForConfig<Routes, typeof config>;
-
-    const prepared = usedPrepare(config);
-    const headers: Record<string, string> = prepared.headers ?? {};
-    const requestConfig: AxiosRequestConfig = {
-      method: prepared.method.toLowerCase(),
-      url: prepared.url,
-      headers,
-    };
-
-    if (prepared.body) {
-      headers['Content-Type'] ??= 'application/json';
-      requestConfig.data = prepared.body;
-    }
-
-    if (prepared.query) {
-      requestConfig.params = prepared.query;
-    }
-
-    const response = await axios<Response>(requestConfig);
+    // These two types line up almost perfectly, just need omit and rename some properties.
+    const { body, ...prepared } = prepare(route, request);
+    const config: AxiosRequestConfig = { ...prepared, data: body };
+    const response = await axios<Response>(config);
     return response.data;
   });
 };
@@ -152,31 +140,19 @@ export const clientFromAxios = <Routes extends BaseRoutes>({
 export const clientFromGot = <Routes extends BaseRoutes>({
   got,
   baseUrl,
-  prepare,
 }: {
   got: Got;
   baseUrl: string;
-  prepare?: (originalPrepare: Prepare<Routes>) => Prepare<Routes>;
 }) => {
-  const basePrepare = prepareFrom<Routes>(baseUrl);
-  const usedPrepare = prepare ? prepare(basePrepare) : basePrepare;
-  const myHandler: Handler<Routes> = genericHandler;
+  const prepare = prepareFrom<Routes>(baseUrl);
+  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (config) => {
-    type Response = ResponseForConfig<Routes, typeof config>;
+  return myHandler(async (route, request) => {
+    type Response = Routes[typeof route]['Response'];
 
-    const prepared = usedPrepare(config);
-    const headers: Record<string, string> = prepared.headers ?? {};
-    const options: StrictOptions = {
-      method: prepared.method as Method,
-      url: prepared.url,
-      headers,
-    };
-
-    if (prepared.body) {
-      headers['Content-Type'] ??= 'application/json';
-      options.json = prepared.body;
-    }
+    // These two types line up almost perfectly, just need omit and rename some properties.
+    const { body, params, query, ...prepared } = prepare(route, request);
+    const options: StrictOptions = { ...prepared, json: body };
 
     const response = await got<Response>(options);
     return response.body;
@@ -188,21 +164,18 @@ export const clientFromGot = <Routes extends BaseRoutes>({
 export const clientFromRequest = <Routes extends BaseRoutes>({
   baseUrl,
   request,
-  prepare,
 }: {
   baseUrl: string;
   request: typeof import('http').request;
-  prepare?: (originalPrepare: Prepare<Routes>) => Prepare<Routes>;
 }) => {
-  const basePrepare = prepareFrom<Routes>(baseUrl);
-  const usedPrepare = prepare ? prepare(basePrepare) : basePrepare;
-  const myHandler: Handler<Routes> = genericHandler;
+  const prepare = prepareFrom<Routes>(baseUrl);
+  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (config) => {
-    type Response = ResponseForConfig<Routes, typeof config>;
+  return myHandler(async (route, req) => {
+    type Response = Routes[typeof route]['Response'];
 
-    const prepared = usedPrepare(config);
-    const headers: Record<string, string> = prepared.headers ?? {};
+    const prepared = prepare(route, req);
+    const headers = prepared.headers ?? {};
     const options: RequestOptions = { method: prepared.method, headers };
 
     if (prepared.body) headers['Content-Type'] ??= 'application/json';

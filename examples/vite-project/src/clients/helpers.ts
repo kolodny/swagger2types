@@ -11,41 +11,33 @@ type BaseRoute = {
 
 type BaseRoutes = Record<string, BaseRoute>;
 
-type Config<Routes extends BaseRoutes> = {
-  [K in keyof Routes & string]: {
-    route: K;
-    request: Routes[K]['Request'];
-  };
-}[keyof Routes & string];
-
-type ResponseForConfig<
+type Params<
   Routes extends BaseRoutes,
-  R extends Config<Routes>,
-> = Routes[R['route']]['Response'];
+  Route extends keyof Routes & string,
+> = Record<string, undefined> extends Routes[Route]['Request']
+  ? [route: Route] | [route: Route, request: Routes[Route]['Request']]
+  : [route: Route, request: Routes[Route]['Request']];
 
-const handlerFrom = <Routes extends BaseRoutes>() => {
-  type BaseCallback = <R extends Config<Routes>>(config: R) => any;
-  return <Callback extends BaseCallback>(callback: Callback) => callback;
-};
+type Handler<Routes extends BaseRoutes> = <
+  Callback extends <Route extends keyof Routes & string>(
+    route: Route,
+    request: Routes[Route]['Request']
+  ) => any,
+>(
+  callback: Callback
+) => Callback;
 
-const genericHandler = handlerFrom<BaseRoutes>();
-type Handler<Routes extends BaseRoutes> = ReturnType<
-  typeof handlerFrom<Routes>
->;
+// prettier-ignore
+type UpperMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'TRACE';
+type AllMethods = UpperMethods | Lowercase<UpperMethods>;
 
 const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
-  return <R extends Config<Routes>>(config: R) => {
-    type Method = R['route'] extends `${infer M} ${string}` ? M : never;
-
-    const route = config.route as R['route'];
-    const request = config.request as R['request'];
-
-    const get = <K extends keyof R['request']>(k: K) => {
-      type Returns = K extends keyof R['request'] ? R['request'][K] : never;
-      return (k in request ? request[k] : undefined) as Returns;
-    };
-
-    const [method, template] = route.split(' ') as [Method, string];
+  return <Route extends keyof Routes & string>(
+    ...[route, request]: Params<Routes, Route>
+  ) => {
+    type GetKey = keyof Routes[Route]['Request'];
+    const get = <K extends GetKey>(k: K) => request?.[k];
+    const [method, template] = route.split(' ') as [AllMethods, string];
     const params = get('params');
     const regex = /\$\{([^}]*)}/g;
     const formatted = template.replace(regex, (_, m) => params?.[m]);
@@ -63,36 +55,30 @@ const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
   };
 };
 
-type Prepare<Routes extends BaseRoutes> = ReturnType<
-  typeof prepareFrom<Routes>
->;
-
 export const clientFromFetch = <Routes extends BaseRoutes>({
   baseUrl,
   fetch = globalThis.fetch,
-  prepare,
 }: {
   baseUrl: string;
   fetch?: typeof globalThis.fetch;
-  prepare?: (originalPrepare: Prepare<Routes>) => Prepare<Routes>;
 }) => {
-  const basePrepare = prepareFrom<Routes>(baseUrl);
-  const usedPrepare = prepare ? prepare(basePrepare) : basePrepare;
-  const myHandler: Handler<Routes> = genericHandler;
+  const prepare = prepareFrom<Routes>(baseUrl);
+  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (config) => {
-    type Response = ResponseForConfig<Routes, typeof config>;
+  return myHandler(async (route, request) => {
+    type Response = Routes[typeof route]['Response'];
 
-    const prepared = usedPrepare(config);
-    const headers: Record<string, string> = prepared.headers ?? {};
-    const requestInit: RequestInit = { method: prepared.method, headers };
+    const { body, method, url, ...rest } = prepare(route, request);
+    const headers: Record<string, string> = rest.headers ?? {};
+    const requestInit: RequestInit = { method, headers };
 
-    if (prepared.body) headers['Content-Type'] ??= 'application/json';
-    if (prepared.body) requestInit.body = JSON.stringify(prepared.body);
+    if (body) headers['Content-Type'] ??= 'application/json';
+    if (body) requestInit.body = JSON.stringify(body);
 
-    const response = await fetch(prepared.url, requestInit);
+    const response = await fetch(url, requestInit);
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      const message = `Request to ${url} failed with status ${response.status}`;
+      throw new Error(message);
     }
 
     const json: Response = await response.json();

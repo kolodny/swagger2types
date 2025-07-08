@@ -7,10 +7,10 @@ const Swagger2Types: React.FunctionComponent = () => {
       Swagger2Types
       <button
         onClick={async () => {
-          const response = await github({
-            route: 'GET /gists/${gistId}/comments/${commentId}',
-            request: { params: { commentId: 1, gistId: '1' } },
-          });
+          const response = await github(
+            'GET /gists/${gistId}/comments/${commentId}',
+            { params: { commentId: 1, gistId: '1' } }
+          );
           console.log(response.author_association);
         }}
       >
@@ -18,14 +18,8 @@ const Swagger2Types: React.FunctionComponent = () => {
       </button>
       <button
         onClick={async () => {
-          const response = await openai({
-            route: 'POST /completions',
-            request: {
-              body: {
-                model: 'gpt-4',
-                prompt: 'Say this is a test',
-              },
-            },
+          const response = await openai('POST /completions', {
+            body: { model: 'gpt-4', prompt: 'Say this is a test' },
           });
           console.log(response.choices[0].text);
         }}
@@ -34,11 +28,8 @@ const Swagger2Types: React.FunctionComponent = () => {
       </button>
       <button
         onClick={async () => {
-          const response = await petstore({
-            route: 'GET /pet/${petId}',
-            request: {
-              params: { petId: 1 },
-            },
+          const response = await petstore('GET /pet/${petId}', {
+            params: { petId: 1 },
           });
           console.log(response.name);
         }}
@@ -47,11 +38,8 @@ const Swagger2Types: React.FunctionComponent = () => {
       </button>
       <button
         onClick={async () => {
-          const response = await starWars({
-            route: 'GET /api/people/${id}',
-            request: {
-              params: { id: 1 },
-            },
+          const response = await starWars('GET /api/people/${id}', {
+            params: { id: 1 },
           });
           console.log(response.name);
         }}

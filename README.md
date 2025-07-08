@@ -101,25 +101,25 @@ Other libraries generate runtime JavaScript code for each endpoint, which adds u
 
 #### Comparison of Bundle Sizes
 
-The examples folder has a [vite-project](./examples/vite-project/) that has a [swagger2types](./examples/vite-project/src/swagger2types.tsx) lazy loaded React component as well as a version that uses [swagger-typescript-api](./examples/vite-project/src/swagger-typescript-api.tsx). The bundle size difference is stark:
+The examples folder has a [vite-project](./examples/vite-project/) that has a [swagger2types](./examples/vite-project/src/swagger2types.tsx) lazy loaded React component as well as a version that uses [swagger-typescript-api](./examples/vite-project/src/swagger-typescript-api.tsx). Looking at the built output of both versions, you can see the difference in bundle sizes:
 
 ```
 $ npm run build
 
-vite-project@0.0.0 build
+> vite-project@0.0.0 build
 > vite build
 
 vite v7.0.2 building for production...
 ✓ 38 modules transformed.
 dist/index.html                                   0.39 kB │ gzip:  0.27 kB
-dist/assets/none-BLjBY5yk.js                      0.11 kB │ gzip:  0.12 kB
-dist/assets/swagger2types-BmqOIo0x.js             1.71 kB │ gzip:  0.92 kB
-dist/assets/swagger-typescript-api-CbVO0puf.js  183.85 kB │ gzip: 19.89 kB
-dist/assets/index-Dzc2eD_T.js                   188.93 kB │ gzip: 59.62 kB
-✓ built in 715ms
+dist/assets/none-lRNKPwMV.js                      0.51 kB │ gzip:  0.27 kB
+dist/assets/swagger2types-BkBWp9Hm.js             1.66 kB │ gzip:  0.89 kB
+dist/assets/swagger-typescript-api-t86z52Ap.js  183.91 kB │ gzip: 19.89 kB
+dist/assets/index-DaW9oWXJ.js                   188.93 kB │ gzip: 59.62 kB
+✓ built in 850ms
 ```
 
-In this example, the `swagger2types` version adds only 1.71 kB (0.92 kB gzipped) to the bundle size, while the `swagger-typescript-api` version adds a whopping 183.85 kB (19.89 kB gzipped). This demonstrates the significant difference in bundle size impact between a types-only approach and a full client library.
+In this example, the `swagger2types` version is only 1.66 kB minified and 0.89 kB gzipped, while the `swagger-typescript-api` version is 183.91 kB minified and 19.89 kB gzipped. The runtime cost for `swagger2types` remains the same (under 1kB) no matter how many APIs you add (or how large they are).
 
 ### Flexibility
 
@@ -140,7 +140,7 @@ Adding type safety to existing API calls is straightforward - no need to refacto
 In practice, you would typically:
 
 1. Generate whatever types from your Swagger/OpenAPI spec using the `generate` function or via the cli.
-2. Copy the base types and the specific flavor client generator from [this helper](./examples/esm/swagger-utils.ts). Treat this file as a TypeScript magic black box.
+2. Copy the base types and the specific flavor client generator from [this helper](./examples/esm/swagger-utils.ts). Treat this file as a TypeScript magic black box. If the flavor you want to use is not supported, you can create your own helper by following the same pattern (ChatGPT should have no trouble with this).
 3. Create a `clients.ts` file that imports the generated types and uses the helper to create type-safe clients for your APIs. You'll essentially be copying [this file](./examples/esm/clientTypes/fetch.ts) and modifying it to suit your needs.
 4. You'll import your copy of that `client.ts` file in your application code to use the type-safe API clients.
 
@@ -207,18 +207,12 @@ export const starWarsFetcher = clientFromFetch<StarWars>({
   baseUrl: 'https://swapi.profiq.com',
 });
 
-petFetcher({
-  route: 'GET /pet/${petId}',
-  request: {
-    params: { petId: 1 },
-  },
+petFetcher('GET /pet/${petId}', {
+  params: { petId: 1 },
 }).then((pet) => console.log({ pet }));
 
-starWarsFetcher({
-  route: 'GET /api/people/${id}',
-  request: {
-    params: { id: 1 },
-  },
+starWarsFetcher('GET /api/people/${id}', {
+  params: { id: 1 },
 }).then((person) => console.log({ person }));
 ```
 
