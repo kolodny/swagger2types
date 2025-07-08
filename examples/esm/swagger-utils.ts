@@ -40,7 +40,7 @@ const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
     ...[route, request]: Params<Routes, Route>
   ) => {
     type GetKey = keyof Routes[Route]['Request'];
-    const get = <K extends GetKey>(k: K) => request?.[k]!;
+    const get = <K extends GetKey>(k: K) => request?.[k];
     const [method, template] = route.split(' ') as [AllMethods, string];
     const params = get('params');
     const regex = /\$\{([^}]*)}/g;
@@ -60,25 +60,6 @@ const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
 };
 
 // #endregion
-
-// import { type Routes as Github } from './generated/github.ts';
-
-// export const client2 = <Routes extends BaseRoutes>() => {
-//   const prepare = prepareFrom<BaseRoutes>('');
-//   return async <Route extends keyof Routes & string>(
-//     ...[route, request]: Params<Routes, Route>
-//   ): Promise<Routes[Route]['Response']> => {
-//     const prepared = prepare(...([route, request] as never as [Route]));
-//     return {};
-//   };
-// };
-
-// client2<Github>()('GET /gists/${gistId}', { params: { gistId: '1' } }).then(
-//   (r) => r
-// );
-// client2<Github>()('GET /gists/${gistId}').then((r) => r);
-// client2<Github>()('GET /', {}).then((r) => r);
-// client2<Github>()('GET /').then((r) => r);
 
 // #region Fetch Client
 export const clientFromFetch = <Routes extends BaseRoutes>({
