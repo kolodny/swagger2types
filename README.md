@@ -113,13 +113,13 @@ vite v7.0.2 building for production...
 ✓ 38 modules transformed.
 dist/index.html                                   0.39 kB │ gzip:  0.27 kB
 dist/assets/none-lRNKPwMV.js                      0.51 kB │ gzip:  0.27 kB
-dist/assets/swagger2types-BkBWp9Hm.js             1.66 kB │ gzip:  0.89 kB
+dist/assets/swagger2types-BkBWp9Hm.js             1.64 kB │ gzip:  0.87 kB
 dist/assets/swagger-typescript-api-t86z52Ap.js  183.91 kB │ gzip: 19.89 kB
 dist/assets/index-DaW9oWXJ.js                   188.93 kB │ gzip: 59.62 kB
 ✓ built in 850ms
 ```
 
-In this example, the `swagger2types` version is only 1.66 kB minified and 0.89 kB gzipped, while the `swagger-typescript-api` version is 183.91 kB minified and 19.89 kB gzipped. The runtime cost for `swagger2types` remains the same (under 1kB) no matter how many APIs you add (or how large they are).
+In this example, the `swagger2types` version is only 1.64 kB minified and 0.87 kB gzipped, while the `swagger-typescript-api` version is 183.91 kB minified and 19.89 kB gzipped. The runtime cost for `swagger2types` remains the same (under 1kB) no matter how many APIs you add (or how large they are).
 
 ### Flexibility
 

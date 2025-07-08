@@ -39,20 +39,18 @@ const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
   return <Route extends keyof Routes & string>(
     ...[route, request]: Params<Routes, Route>
   ) => {
-    type GetKey = keyof Routes[Route]['Request'];
-    const get = <K extends GetKey>(k: K) => request?.[k];
     const [method, template] = route.split(' ') as [AllMethods, string];
-    const params = get('params');
+    const params = request?.['params'];
     const regex = /\$\{([^}]*)}/g;
     const formatted = template.replace(regex, (_, m) => params?.[m]);
     const url = new URL(`.${formatted}`, baseUrl);
 
-    const query = get('query');
+    const query = request?.['query'];
     const queryEntries = Object.entries(query ?? {});
     for (const [k, v] of queryEntries) url.searchParams.set(k, `${v}`);
 
-    const body = get('body');
-    const headers = get('headers');
+    const body = request?.['body'];
+    const headers = request?.['headers'];
     const urlString = `${url}`;
 
     return { url: urlString, params, method, body, headers, query };
