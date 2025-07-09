@@ -20,8 +20,7 @@ type Params<
 
 type Handler<Routes extends BaseRoutes> = <
   Callback extends <Route extends keyof Routes & string>(
-    route: Route,
-    request: Routes[Route]['Request']
+    ...params: Params<Routes, Route>
   ) => any,
 >(
   callback: Callback
@@ -63,10 +62,10 @@ export const clientFromFetch = <Routes extends BaseRoutes>({
   const prepare = prepareFrom<Routes>(baseUrl);
   const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (route, request) => {
+  return myHandler(async (...[route, request]) => {
     type Response = Routes[typeof route]['Response'];
 
-    const { body, method, url, ...rest } = prepare(route, request);
+    const { body, method, url, ...rest } = prepare(route, request!);
     const headers: Record<string, string> = rest.headers ?? {};
     const requestInit: RequestInit = { method, headers };
 

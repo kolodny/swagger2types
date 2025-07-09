@@ -1,5 +1,5 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
-import type { Got, Method, StrictOptions } from 'got';
+import type { Got, StrictOptions } from 'got';
 import type { RequestOptions } from 'https';
 
 // #region Base Types
@@ -24,8 +24,7 @@ type Params<
 
 type Handler<Routes extends BaseRoutes> = <
   Callback extends <Route extends keyof Routes & string>(
-    route: Route,
-    request: Routes[Route]['Request']
+    ...params: Params<Routes, Route>
   ) => any,
 >(
   callback: Callback
@@ -56,7 +55,6 @@ const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
     return { url: urlString, params, method, body, headers, query };
   };
 };
-
 // #endregion
 
 // #region Fetch Client
@@ -70,10 +68,10 @@ export const clientFromFetch = <Routes extends BaseRoutes>({
   const prepare = prepareFrom<Routes>(baseUrl);
   const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (route, request) => {
+  return myHandler(async (...[route, request]) => {
     type Response = Routes[typeof route]['Response'];
 
-    const { body, method, url, ...rest } = prepare(route, request);
+    const { body, method, url, ...rest } = prepare(route, request!);
     const headers: Record<string, string> = rest.headers ?? {};
     const requestInit: RequestInit = { method, headers };
 
@@ -103,11 +101,11 @@ export const clientFromAxios = <Routes extends BaseRoutes>({
   const prepare = prepareFrom<Routes>(baseUrl);
   const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (route, request) => {
+  return myHandler(async (...[route, request]) => {
     type Response = Routes[typeof route]['Response'];
 
     // These two types line up almost perfectly, just need omit and rename some properties.
-    const { body, ...prepared } = prepare(route, request);
+    const { body, ...prepared } = prepare(route, request!);
     const config: AxiosRequestConfig = { ...prepared, data: body };
     const response = await axios<Response>(config);
     return response.data;
@@ -126,11 +124,11 @@ export const clientFromGot = <Routes extends BaseRoutes>({
   const prepare = prepareFrom<Routes>(baseUrl);
   const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (route, request) => {
+  return myHandler(async (...[route, request]) => {
     type Response = Routes[typeof route]['Response'];
 
     // These two types line up almost perfectly, just need omit and rename some properties.
-    const { body, params, query, ...prepared } = prepare(route, request);
+    const { body, params, query, ...prepared } = prepare(route, request!);
     const options: StrictOptions = { ...prepared, json: body };
 
     const response = await got<Response>(options);
@@ -142,7 +140,7 @@ export const clientFromGot = <Routes extends BaseRoutes>({
 // #region Node HTTPS Client
 export const clientFromRequest = <Routes extends BaseRoutes>({
   baseUrl,
-  request,
+  request: nodeRequest,
 }: {
   baseUrl: string;
   request: typeof import('http').request;
@@ -150,17 +148,17 @@ export const clientFromRequest = <Routes extends BaseRoutes>({
   const prepare = prepareFrom<Routes>(baseUrl);
   const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (route, req) => {
+  return myHandler(async (...[route, request]) => {
     type Response = Routes[typeof route]['Response'];
 
-    const prepared = prepare(route, req);
+    const prepared = prepare(route, request!);
     const headers = prepared.headers ?? {};
     const options: RequestOptions = { method: prepared.method, headers };
 
     if (prepared.body) headers['Content-Type'] ??= 'application/json';
 
     const response = new Promise<Response>((resolve, reject) => {
-      const req = request(prepared.url, options, (res) => {
+      const req = nodeRequest(prepared.url, options, (res) => {
         let responseData = '';
         res.on('data', (chunk) => (responseData += chunk));
         res.on('end', () => {
