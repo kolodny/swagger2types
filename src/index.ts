@@ -14,8 +14,10 @@ export const generate = async (spec: Spec, params?: Params) => {
   const extraPath = `${dir}/../template/extra.ejs`;
 
   const fixer = (key: string, value: any) => {
-    const fix = key === 'description' && typeof value === 'string';
-    return !fix ? value : value.replace('*/', `*${zeroWidthSpace}/`);
+    const fix = key === 'description' || key === 'summary';
+    const isString = typeof value === 'string';
+
+    return fix && isString ? value.replace('*/', `*${zeroWidthSpace}/`) : value;
   };
 
   const fixedSpec = JSON.parse(JSON.stringify(spec, fixer));

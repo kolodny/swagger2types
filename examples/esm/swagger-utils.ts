@@ -183,3 +183,20 @@ export const clientFromRequest = <Routes extends BaseRoutes>({
   });
 };
 // #endregion
+
+// Proof of concept for a proxy in order to also get jsDoc description. I assume you know what you're doing if you use this.
+// export const fetchProxy = <Routes extends BaseRoutes>(
+//   fetcher: ReturnType<typeof clientFromFetch<Routes>>
+// ) => {
+//   type Mapped = {
+//     [K in keyof Routes]: (
+//       request: Parameters<typeof fetcher>[1]
+//     ) => ReturnType<typeof fetcher>;
+//   };
+//   return new Proxy<Mapped>({} as Mapped, {
+//     get: (t, key) => (request: any) => fetcher(key as any, request),
+//   });
+// };
+// Usage:
+// export const myProxy = fetchProxy<myRoutes>(myFetcher);
+// myProxy['GET /my/endpoint']({ params: { id: 1 } });

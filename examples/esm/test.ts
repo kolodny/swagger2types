@@ -6,6 +6,8 @@ import * as requesters from './clientTypes/request.ts';
 import * as axiosers from './clientTypes/axios.ts';
 import * as gots from './clientTypes/got.ts';
 
+import type { Routes as StarRoutes } from './generated/swapi.ts';
+
 // #region Test Data
 const PET1 = {
   name: 'Rex',
@@ -59,6 +61,33 @@ describe('Fetch Clients', () => {
       params: { id: 1 },
     });
     assert.partialDeepStrictEqual(person, PERSON1);
+  });
+
+  describe('Proxy form', () => {
+    it('works with StarWars', async () => {
+      type Endpoint = Parameters<typeof fetchers.starWarsFetcher>[0];
+      type Mapped = {
+        [K in keyof StarRoutes]: (
+          request: Parameters<typeof fetchers.starWarsFetcher<K>>[1]
+        ) => ReturnType<typeof fetchers.starWarsFetcher<K>>;
+      };
+
+      const proxy: Mapped = new Proxy<Mapped>({} as Mapped, {
+        get: (t, key) => (request: any) =>
+          fetchers.starWarsFetcher(key as Endpoint, request),
+      });
+      const person = await proxy['GET /api/people/${id}']({
+        params: { id: 1 },
+      });
+      assert.partialDeepStrictEqual(person, PERSON1);
+    });
+
+    it('works with StarWars', async () => {
+      const person = await fetchers.starWarsFetcher('GET /api/people/${id}', {
+        params: { id: 1 },
+      });
+      assert.partialDeepStrictEqual(person, PERSON1);
+    });
   });
 });
 

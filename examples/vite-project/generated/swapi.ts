@@ -275,7 +275,10 @@ type VehicleList = List & {
 };
 
 type Routes = {
+  /** Get URL roots for all available resources */
   ["GET /api"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Root };
+
+  /** Get all the film resources */
   ["GET /api/films"]: {
     Request: {
       params?: never;
@@ -305,6 +308,8 @@ type Routes = {
     };
     Response: FilmList;
   };
+
+  /** Get a specific film resource */
   ["GET /api/films/${id}"]: {
     Request: {
       params: {
@@ -317,6 +322,8 @@ type Routes = {
     };
     Response: Film;
   };
+
+  /** Get all people resources */
   ["GET /api/people"]: {
     Request: {
       params?: never;
@@ -346,6 +353,8 @@ type Routes = {
     };
     Response: PersonList;
   };
+
+  /** Get a specific people resource */
   ["GET /api/people/${id}"]: {
     Request: {
       params: {
@@ -358,6 +367,8 @@ type Routes = {
     };
     Response: Person;
   };
+
+  /** Get all planet resources */
   ["GET /api/planets"]: {
     Request: {
       params?: never;
@@ -387,6 +398,8 @@ type Routes = {
     };
     Response: PlanetList;
   };
+
+  /** Get a specific planet resource */
   ["GET /api/planets/${id}"]: {
     Request: {
       params: {
@@ -399,6 +412,8 @@ type Routes = {
     };
     Response: Planet;
   };
+
+  /** Get all species resources */
   ["GET /api/species"]: {
     Request: {
       params?: never;
@@ -428,6 +443,8 @@ type Routes = {
     };
     Response: SpeciesList;
   };
+
+  /** Get a specific species resource */
   ["GET /api/species/${id}"]: {
     Request: {
       params: {
@@ -440,6 +457,8 @@ type Routes = {
     };
     Response: Species;
   };
+
+  /** Get all starship resources */
   ["GET /api/starships"]: {
     Request: {
       params?: never;
@@ -469,6 +488,8 @@ type Routes = {
     };
     Response: StarshipList;
   };
+
+  /** Get a specific starship resource */
   ["GET /api/starships/${id}"]: {
     Request: {
       params: {
@@ -481,6 +502,8 @@ type Routes = {
     };
     Response: Starship;
   };
+
+  /** Get all vehicle resources */
   ["GET /api/vehicles"]: {
     Request: {
       params?: never;
@@ -510,6 +533,8 @@ type Routes = {
     };
     Response: VehicleList;
   };
+
+  /** Get a specific vehicle resource */
   ["GET /api/vehicles/${id}"]: {
     Request: {
       params: {

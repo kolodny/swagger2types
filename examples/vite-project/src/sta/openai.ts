@@ -5806,6 +5806,8 @@ export interface MCPTool {
   server_label: string;
   /** The URL for the MCP server. */
   server_url: string;
+  /** Optional description of the MCP server, used to provide more context. */
+  server_description?: string;
   /**
    * Optional HTTP headers to send to the MCP server. Use for authentication
    * or other purposes.
@@ -6541,8 +6543,16 @@ export interface OpenAIFile {
   filename: string;
   /** The object type, which is always `file`. */
   object: "file";
-  /** The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`. */
-  purpose: "assistants" | "assistants_output" | "batch" | "batch_output" | "fine-tune" | "fine-tune-results" | "vision";
+  /** The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`. */
+  purpose:
+    | "assistants"
+    | "assistants_output"
+    | "batch"
+    | "batch_output"
+    | "fine-tune"
+    | "fine-tune-results"
+    | "vision"
+    | "user_data";
   /**
    * Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
    * @deprecated
@@ -7563,6 +7573,8 @@ export interface RealtimeServerEventConversationItemInputAudioTranscriptionCompl
   transcript: string;
   /** The log probabilities of the transcription. */
   logprobs?: LogProbProperties[] | null;
+  /** Usage statistics for the transcription. */
+  usage: TranscriptTextUsageTokens | TranscriptTextUsageDuration;
 }
 
 /** Returned when the text value of an input audio transcription content part is updated. */
@@ -9449,8 +9461,8 @@ export interface ResponseItemList {
  * Emitted when there is a delta (partial update) to the arguments of an MCP tool call.
  */
 export interface ResponseMCPCallArgumentsDeltaEvent {
-  /** The type of the event. Always 'response.mcp_call.arguments_delta'. */
-  type: "response.mcp_call.arguments_delta";
+  /** The type of the event. Always 'response.mcp_call_arguments.delta'. */
+  type: "response.mcp_call_arguments.delta";
   /** The index of the output item in the response's output array. */
   output_index: number;
   /** The unique identifier of the MCP tool call item being processed. */
@@ -9466,8 +9478,8 @@ export interface ResponseMCPCallArgumentsDeltaEvent {
  * Emitted when the arguments for an MCP tool call are finalized.
  */
 export interface ResponseMCPCallArgumentsDoneEvent {
-  /** The type of the event. Always 'response.mcp_call.arguments_done'. */
-  type: "response.mcp_call.arguments_done";
+  /** The type of the event. Always 'response.mcp_call_arguments.done'. */
+  type: "response.mcp_call_arguments.done";
   /** The index of the output item in the response's output array. */
   output_index: number;
   /** The unique identifier of the MCP tool call item being processed. */
@@ -9591,8 +9603,8 @@ export interface ResponseOutputItemDoneEvent {
  * Emitted when an annotation is added to output text content.
  */
 export interface ResponseOutputTextAnnotationAddedEvent {
-  /** The type of the event. Always 'response.output_text_annotation.added'. */
-  type: "response.output_text_annotation.added";
+  /** The type of the event. Always 'response.output_text.annotation.added'. */
+  type: "response.output_text.annotation.added";
   /** The unique identifier of the item to which the annotation is being added. */
   item_id: string;
   /** The index of the output item in the response's output array. */
@@ -11000,7 +11012,7 @@ export interface TranscriptTextUsageDuration {
   /** The type of the usage object. Always `duration` for this variant. */
   type: "duration";
   /** Duration of the input audio in seconds. */
-  duration: number;
+  seconds: number;
 }
 
 /**
@@ -12091,6 +12103,8 @@ export interface InputFileContent {
   file_id?: string | null;
   /** The name of the file to be sent to the model. */
   filename?: string;
+  /** The URL of the file to be sent to the model. */
+  file_url?: string;
   /** The content of the file to be sent to the model. */
   file_data?: string;
 }

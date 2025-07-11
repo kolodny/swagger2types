@@ -21,7 +21,11 @@ const processRoute = (route) => {
 
   const key = `${method.toUpperCase()} ${path}`;
 
-  return `['${key}']: {Request: { ${requestLines.join(', ')} }, Response: ${route.response.type}};`;
+  const blurb = route.raw.description ?? route.raw.summary;
+
+  const description = blurb ? `/** ${utils.formatDescription(blurb)} */\n` : ''
+
+  return `${description}['${key}']: {Request: { ${requestLines.join(', ')} }, Response: ${route.response.type}};\n\n`;
 }
 
 const allRoutes = [...routes.outOfModule, ...(routes.combined).flatMap(item => item.routes)].filter(Boolean);

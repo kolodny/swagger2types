@@ -1,4 +1,4 @@
-import { clientFromFetch } from './helpers.ts';
+import { clientFromFetch, fetchProxy } from './helpers.ts';
 import type { Routes as Github } from '../../generated/github.ts';
 import type { Routes as OpenAI } from '../../generated/openai.ts';
 import type { Routes as Petstore } from '../../generated/petstore.ts';
@@ -16,3 +16,6 @@ export const petstore = clientFromFetch<Petstore>({
 export const starWars = clientFromFetch<StarWars>({
   baseUrl: 'https://swapi.profiq.com',
 });
+
+export const githubProxy = fetchProxy<StarWars>(starWars);
+// githubProxy['GET /api/films/${id}']({params})

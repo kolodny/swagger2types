@@ -82,3 +82,16 @@ export const clientFromFetch = <Routes extends BaseRoutes>({
     return json;
   });
 };
+
+export const fetchProxy = <Routes extends BaseRoutes>(
+  fetcher: ReturnType<typeof clientFromFetch<Routes>>
+) => {
+  type Mapped = {
+    [K in keyof Routes]: (
+      request: Parameters<typeof fetcher<K & string>>[1]
+    ) => ReturnType<typeof fetcher<K & string>>;
+  };
+  return new Proxy<Mapped>({} as Mapped, {
+    get: (_, key) => (request: any) => fetcher(key as any, request),
+  });
+};

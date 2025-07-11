@@ -5822,6 +5822,8 @@ interface MCPTool {
   server_label: string;
   /** The URL for the MCP server. */
   server_url: string;
+  /** Optional description of the MCP server, used to provide more context. */
+  server_description?: string;
   /**
    * Optional HTTP headers to send to the MCP server. Use for authentication
    * or other purposes.
@@ -6557,8 +6559,16 @@ interface OpenAIFile {
   filename: string;
   /** The object type, which is always `file`. */
   object: "file";
-  /** The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`. */
-  purpose: "assistants" | "assistants_output" | "batch" | "batch_output" | "fine-tune" | "fine-tune-results" | "vision";
+  /** The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`. */
+  purpose:
+    | "assistants"
+    | "assistants_output"
+    | "batch"
+    | "batch_output"
+    | "fine-tune"
+    | "fine-tune-results"
+    | "vision"
+    | "user_data";
   /**
    * Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
    * @deprecated
@@ -7579,6 +7589,8 @@ interface RealtimeServerEventConversationItemInputAudioTranscriptionCompleted {
   transcript: string;
   /** The log probabilities of the transcription. */
   logprobs?: LogProbProperties[] | null;
+  /** Usage statistics for the transcription. */
+  usage: TranscriptTextUsageTokens | TranscriptTextUsageDuration;
 }
 
 /** Returned when the text value of an input audio transcription content part is updated. */
@@ -9470,8 +9482,8 @@ interface ResponseItemList {
  * Emitted when there is a delta (partial update) to the arguments of an MCP tool call.
  */
 interface ResponseMCPCallArgumentsDeltaEvent {
-  /** The type of the event. Always 'response.mcp_call.arguments_delta'. */
-  type: "response.mcp_call.arguments_delta";
+  /** The type of the event. Always 'response.mcp_call_arguments.delta'. */
+  type: "response.mcp_call_arguments.delta";
   /** The index of the output item in the response's output array. */
   output_index: number;
   /** The unique identifier of the MCP tool call item being processed. */
@@ -9487,8 +9499,8 @@ interface ResponseMCPCallArgumentsDeltaEvent {
  * Emitted when the arguments for an MCP tool call are finalized.
  */
 interface ResponseMCPCallArgumentsDoneEvent {
-  /** The type of the event. Always 'response.mcp_call.arguments_done'. */
-  type: "response.mcp_call.arguments_done";
+  /** The type of the event. Always 'response.mcp_call_arguments.done'. */
+  type: "response.mcp_call_arguments.done";
   /** The index of the output item in the response's output array. */
   output_index: number;
   /** The unique identifier of the MCP tool call item being processed. */
@@ -9612,8 +9624,8 @@ interface ResponseOutputItemDoneEvent {
  * Emitted when an annotation is added to output text content.
  */
 interface ResponseOutputTextAnnotationAddedEvent {
-  /** The type of the event. Always 'response.output_text_annotation.added'. */
-  type: "response.output_text_annotation.added";
+  /** The type of the event. Always 'response.output_text.annotation.added'. */
+  type: "response.output_text.annotation.added";
   /** The unique identifier of the item to which the annotation is being added. */
   item_id: string;
   /** The index of the output item in the response's output array. */
@@ -11031,7 +11043,7 @@ interface TranscriptTextUsageDuration {
   /** The type of the usage object. Always `duration` for this variant. */
   type: "duration";
   /** Duration of the input audio in seconds. */
-  duration: number;
+  seconds: number;
 }
 
 /**
@@ -12128,6 +12140,8 @@ interface InputFileContent {
   file_id?: string | null;
   /** The name of the file to be sent to the model. */
   filename?: string;
+  /** The URL of the file to be sent to the model. */
+  file_url?: string;
   /** The content of the file to be sent to the model. */
   file_data?: string;
 }
@@ -12420,6 +12434,7 @@ interface ItemReferenceParam {
 }
 
 type Routes = {
+  /** Returns a list of assistants. */
   ["GET /assistants"]: {
     Request: {
       params?: never;
@@ -12444,10 +12459,14 @@ type Routes = {
     };
     Response: ListAssistantsResponse;
   };
+
+  /** Create an assistant with a model and instructions. */
   ["POST /assistants"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateAssistantRequest };
     Response: AssistantObject;
   };
+
+  /** Retrieves an assistant. */
   ["GET /assistants/${assistantId}"]: {
     Request: {
       params: {
@@ -12460,6 +12479,8 @@ type Routes = {
     };
     Response: AssistantObject;
   };
+
+  /** Modifies an assistant. */
   ["POST /assistants/${assistantId}"]: {
     Request: {
       params: {
@@ -12472,6 +12493,8 @@ type Routes = {
     };
     Response: AssistantObject;
   };
+
+  /** Delete an assistant. */
   ["DELETE /assistants/${assistantId}"]: {
     Request: {
       params: {
@@ -12484,18 +12507,26 @@ type Routes = {
     };
     Response: DeleteAssistantResponse;
   };
+
+  /** Generates audio from the input text. */
   ["POST /audio/speech"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateSpeechRequest };
     Response: File;
   };
+
+  /** Transcribes audio into the input language. */
   ["POST /audio/transcriptions"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateTranscriptionRequest };
     Response: CreateTranscriptionResponseJson | CreateTranscriptionResponseVerboseJson;
   };
+
+  /** Translates audio into English. */
   ["POST /audio/translations"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateTranslationRequest };
     Response: CreateTranslationResponseJson | CreateTranslationResponseVerboseJson;
   };
+
+  /** Creates and executes a batch from an uploaded file of requests */
   ["POST /batches"]: {
     Request: {
       params?: never;
@@ -12527,6 +12558,8 @@ type Routes = {
     };
     Response: Batch;
   };
+
+  /** List your organization's batches. */
   ["GET /batches"]: {
     Request: {
       params?: never;
@@ -12544,6 +12577,8 @@ type Routes = {
     };
     Response: ListBatchesResponse;
   };
+
+  /** Retrieves a batch. */
   ["GET /batches/${batchId}"]: {
     Request: {
       params: {
@@ -12556,6 +12591,8 @@ type Routes = {
     };
     Response: Batch;
   };
+
+  /** Cancels an in-progress batch. The batch will be in status `cancelling` for up to 10 minutes, before changing to `cancelled`, where it will have partial results (if any) available in the output file. */
   ["POST /batches/${batchId}/cancel"]: {
     Request: {
       params: {
@@ -12568,6 +12605,9 @@ type Routes = {
     };
     Response: Batch;
   };
+
+  /** List stored Chat Completions. Only Chat Completions that have been stored
+with the `store` parameter set to `true` will be returned. */
   ["GET /chat/completions"]: {
     Request: {
       params?: never;
@@ -12598,10 +12638,29 @@ type Routes = {
     };
     Response: ChatCompletionList;
   };
+
+  /** **Starting a new project?** We recommend trying [Responses](/docs/api-reference/responses) 
+to take advantage of the latest OpenAI platform features. Compare
+[Chat Completions with Responses](/docs/guides/responses-vs-chat-completions?api-mode=responses).
+
+---
+
+Creates a model response for the given chat conversation. Learn more in the
+[text generation](/docs/guides/text-generation), [vision](/docs/guides/vision),
+and [audio](/docs/guides/audio) guides.
+
+Parameter support can differ depending on the model used to generate the
+response, particularly for newer reasoning models. Parameters that are only
+supported for reasoning models are noted below. For the current state of 
+unsupported parameters in reasoning models, 
+[refer to the reasoning guide](/docs/guides/reasoning). */
   ["POST /chat/completions"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateChatCompletionRequest };
     Response: CreateChatCompletionResponse;
   };
+
+  /** Get a stored chat completion. Only Chat Completions that have been created
+with the `store` parameter set to `true` will be returned. */
   ["GET /chat/completions/${completionId}"]: {
     Request: {
       params: {
@@ -12614,6 +12673,10 @@ type Routes = {
     };
     Response: CreateChatCompletionResponse;
   };
+
+  /** Modify a stored chat completion. Only Chat Completions that have been
+created with the `store` parameter set to `true` can be modified. Currently,
+the only supported modification is to update the `metadata` field. */
   ["POST /chat/completions/${completionId}"]: {
     Request: {
       params: {
@@ -12636,6 +12699,9 @@ type Routes = {
     };
     Response: CreateChatCompletionResponse;
   };
+
+  /** Delete a stored chat completion. Only Chat Completions that have been
+created with the `store` parameter set to `true` can be deleted. */
   ["DELETE /chat/completions/${completionId}"]: {
     Request: {
       params: {
@@ -12648,6 +12714,10 @@ type Routes = {
     };
     Response: ChatCompletionDeleted;
   };
+
+  /** Get the messages in a stored chat completion. Only Chat Completions that
+have been created with the `store` parameter set to `true` will be
+returned. */
   ["GET /chat/completions/${completionId}/messages"]: {
     Request: {
       params: {
@@ -12673,10 +12743,14 @@ type Routes = {
     };
     Response: ChatCompletionMessageList;
   };
+
+  /** Creates a completion for the provided prompt and parameters. */
   ["POST /completions"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateCompletionRequest };
     Response: CreateCompletionResponse;
   };
+
+  /** Lists containers. */
   ["GET /containers"]: {
     Request: {
       params?: never;
@@ -12699,10 +12773,14 @@ type Routes = {
     };
     Response: ContainerListResource;
   };
+
+  /** Creates a container. */
   ["POST /containers"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateContainerBody };
     Response: ContainerResource;
   };
+
+  /** Retrieves a container. */
   ["GET /containers/${containerId}"]: {
     Request: {
       params: {
@@ -12714,6 +12792,8 @@ type Routes = {
     };
     Response: ContainerResource;
   };
+
+  /** Delete a container. */
   ["DELETE /containers/${containerId}"]: {
     Request: {
       params: {
@@ -12726,6 +12806,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Creates a container file. */
   ["POST /containers/${containerId}/files"]: {
     Request: {
       params: {
@@ -12737,6 +12819,8 @@ type Routes = {
     };
     Response: ContainerFileResource;
   };
+
+  /** Lists container files. */
   ["GET /containers/${containerId}/files"]: {
     Request: {
       params: {
@@ -12761,6 +12845,8 @@ type Routes = {
     };
     Response: ContainerFileListResource;
   };
+
+  /** Retrieves a container file. */
   ["GET /containers/${containerId}/files/${fileId}"]: {
     Request: {
       params: {
@@ -12773,6 +12859,8 @@ type Routes = {
     };
     Response: ContainerFileResource;
   };
+
+  /** Delete a container file. */
   ["DELETE /containers/${containerId}/files/${fileId}"]: {
     Request: {
       params: {
@@ -12785,6 +12873,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Retrieves a container file content. */
   ["GET /containers/${containerId}/files/${fileId}/content"]: {
     Request: {
       params: {
@@ -12797,10 +12887,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Creates an embedding vector representing the input text. */
   ["POST /embeddings"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateEmbeddingRequest };
     Response: CreateEmbeddingResponse;
   };
+
+  /** List evaluations for a project. */
   ["GET /evals"]: {
     Request: {
       params?: never;
@@ -12829,10 +12923,16 @@ type Routes = {
     };
     Response: EvalList;
   };
+
+  /** Create the structure of an evaluation that can be used to test a model's performance.
+An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
+For more information, see the [Evals guide](/docs/guides/evals). */
   ["POST /evals"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateEvalRequest };
     Response: Eval;
   };
+
+  /** Get an evaluation by ID. */
   ["GET /evals/${evalId}"]: {
     Request: {
       params: {
@@ -12845,6 +12945,8 @@ type Routes = {
     };
     Response: Eval;
   };
+
+  /** Update certain properties of an evaluation. */
   ["POST /evals/${evalId}"]: {
     Request: {
       params: {
@@ -12869,6 +12971,8 @@ type Routes = {
     };
     Response: Eval;
   };
+
+  /** Delete an evaluation. */
   ["DELETE /evals/${evalId}"]: {
     Request: {
       params: {
@@ -12888,6 +12992,8 @@ type Routes = {
       eval_id: string;
     };
   };
+
+  /** Get a list of runs for an evaluation. */
   ["GET /evals/${evalId}/runs"]: {
     Request: {
       params: {
@@ -12915,6 +13021,8 @@ type Routes = {
     };
     Response: EvalRunList;
   };
+
+  /** Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation. */
   ["POST /evals/${evalId}/runs"]: {
     Request: {
       params: {
@@ -12927,6 +13035,8 @@ type Routes = {
     };
     Response: EvalRun;
   };
+
+  /** Get an evaluation run by ID. */
   ["GET /evals/${evalId}/runs/${runId}"]: {
     Request: {
       params: {
@@ -12941,6 +13051,8 @@ type Routes = {
     };
     Response: EvalRun;
   };
+
+  /** Cancel an ongoing evaluation run. */
   ["POST /evals/${evalId}/runs/${runId}"]: {
     Request: {
       params: {
@@ -12955,6 +13067,8 @@ type Routes = {
     };
     Response: EvalRun;
   };
+
+  /** Delete an eval run. */
   ["DELETE /evals/${evalId}/runs/${runId}"]: {
     Request: {
       params: {
@@ -12976,6 +13090,8 @@ type Routes = {
       run_id?: string;
     };
   };
+
+  /** Get a list of output items for an evaluation run. */
   ["GET /evals/${evalId}/runs/${runId}/output_items"]: {
     Request: {
       params: {
@@ -13008,6 +13124,8 @@ type Routes = {
     };
     Response: EvalRunOutputItemList;
   };
+
+  /** Get an evaluation run output item by ID. */
   ["GET /evals/${evalId}/runs/${runId}/output_items/${outputItemId}"]: {
     Request: {
       params: {
@@ -13024,6 +13142,8 @@ type Routes = {
     };
     Response: EvalRunOutputItem;
   };
+
+  /** Returns a list of files. */
   ["GET /files"]: {
     Request: {
       params?: never;
@@ -13048,10 +13168,22 @@ type Routes = {
     };
     Response: ListFilesResponse;
   };
+
+  /** Upload a file that can be used across various endpoints. Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 100 GB.
+
+The Assistants API supports files up to 2 million tokens and of specific file types. See the [Assistants Tools guide](/docs/assistants/tools) for details.
+
+The Fine-tuning API only supports `.jsonl` files. The input also has certain required formats for fine-tuning [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) models.
+
+The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](/docs/api-reference/batch/request-input).
+
+Please [contact us](https://help.openai.com/) if you need to increase these storage limits. */
   ["POST /files"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateFileRequest };
     Response: OpenAIFile;
   };
+
+  /** Delete a file. */
   ["DELETE /files/${fileId}"]: {
     Request: {
       params: {
@@ -13064,6 +13196,8 @@ type Routes = {
     };
     Response: DeleteFileResponse;
   };
+
+  /** Returns information about a specific file. */
   ["GET /files/${fileId}"]: {
     Request: {
       params: {
@@ -13076,6 +13210,8 @@ type Routes = {
     };
     Response: OpenAIFile;
   };
+
+  /** Returns the contents of the specified file. */
   ["GET /files/${fileId}/content"]: {
     Request: {
       params: {
@@ -13088,14 +13224,22 @@ type Routes = {
     };
     Response: string;
   };
+
+  /** Run a grader. */
   ["POST /fine_tuning/alpha/graders/run"]: {
     Request: { params?: never; headers?: never; query?: never; body: RunGraderRequest };
     Response: RunGraderResponse;
   };
+
+  /** Validate a grader. */
   ["POST /fine_tuning/alpha/graders/validate"]: {
     Request: { params?: never; headers?: never; query?: never; body: ValidateGraderRequest };
     Response: ValidateGraderResponse;
   };
+
+  /** **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+
+Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint. */
   ["GET /fine_tuning/checkpoints/${fineTunedModelCheckpoint}/permissions"]: {
     Request: {
       params: {
@@ -13126,6 +13270,10 @@ type Routes = {
     };
     Response: ListFineTuningCheckpointPermissionResponse;
   };
+
+  /** **NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
+
+This enables organization owners to share fine-tuned models with other projects in their organization. */
   ["POST /fine_tuning/checkpoints/${fineTunedModelCheckpoint}/permissions"]: {
     Request: {
       params: {
@@ -13141,6 +13289,10 @@ type Routes = {
     };
     Response: ListFineTuningCheckpointPermissionResponse;
   };
+
+  /** **NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+
+Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint. */
   ["DELETE /fine_tuning/checkpoints/${fineTunedModelCheckpoint}/permissions/${permissionId}"]: {
     Request: {
       params: {
@@ -13161,10 +13313,18 @@ type Routes = {
     };
     Response: DeleteFineTuningCheckpointPermissionResponse;
   };
+
+  /** Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
+
+Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
+
+[Learn more about fine-tuning](/docs/guides/model-optimization) */
   ["POST /fine_tuning/jobs"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateFineTuningJobRequest };
     Response: FineTuningJob;
   };
+
+  /** List your organization's fine-tuning jobs */
   ["GET /fine_tuning/jobs"]: {
     Request: {
       params?: never;
@@ -13184,6 +13344,10 @@ type Routes = {
     };
     Response: ListPaginatedFineTuningJobsResponse;
   };
+
+  /** Get info about a fine-tuning job.
+
+[Learn more about fine-tuning](/docs/guides/model-optimization) */
   ["GET /fine_tuning/jobs/${fineTuningJobId}"]: {
     Request: {
       params: {
@@ -13199,6 +13363,8 @@ type Routes = {
     };
     Response: FineTuningJob;
   };
+
+  /** Immediately cancel a fine-tune job. */
   ["POST /fine_tuning/jobs/${fineTuningJobId}/cancel"]: {
     Request: {
       params: {
@@ -13214,6 +13380,8 @@ type Routes = {
     };
     Response: FineTuningJob;
   };
+
+  /** List checkpoints for a fine-tuning job. */
   ["GET /fine_tuning/jobs/${fineTuningJobId}/checkpoints"]: {
     Request: {
       params: {
@@ -13237,6 +13405,8 @@ type Routes = {
     };
     Response: ListFineTuningJobCheckpointsResponse;
   };
+
+  /** Get status updates for a fine-tuning job. */
   ["GET /fine_tuning/jobs/${fineTuningJobId}/events"]: {
     Request: {
       params: {
@@ -13260,6 +13430,8 @@ type Routes = {
     };
     Response: ListFineTuningJobEventsResponse;
   };
+
+  /** Pause a fine-tune job. */
   ["POST /fine_tuning/jobs/${fineTuningJobId}/pause"]: {
     Request: {
       params: {
@@ -13275,6 +13447,8 @@ type Routes = {
     };
     Response: FineTuningJob;
   };
+
+  /** Resume a fine-tune job. */
   ["POST /fine_tuning/jobs/${fineTuningJobId}/resume"]: {
     Request: {
       params: {
@@ -13290,22 +13464,32 @@ type Routes = {
     };
     Response: FineTuningJob;
   };
+
+  /** Creates an edited or extended image given one or more source images and a prompt. This endpoint only supports `gpt-image-1` and `dall-e-2`. */
   ["POST /images/edits"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateImageEditRequest };
     Response: ImagesResponse;
   };
+
+  /** Creates an image given a prompt. [Learn more](/docs/guides/images). */
   ["POST /images/generations"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateImageRequest };
     Response: ImagesResponse;
   };
+
+  /** Creates a variation of a given image. This endpoint only supports `dall-e-2`. */
   ["POST /images/variations"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateImageVariationRequest };
     Response: ImagesResponse;
   };
+
+  /** Lists the currently available models, and provides basic information about each one such as the owner and availability. */
   ["GET /models"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: ListModelsResponse;
   };
+
+  /** Retrieves a model instance, providing basic information about the model such as the owner and permissioning. */
   ["GET /models/${model}"]: {
     Request: {
       params: {
@@ -13321,6 +13505,8 @@ type Routes = {
     };
     Response: Model;
   };
+
+  /** Delete a fine-tuned model. You must have the Owner role in your organization to delete a model. */
   ["DELETE /models/${model}"]: {
     Request: {
       params: {
@@ -13336,10 +13522,15 @@ type Routes = {
     };
     Response: DeleteModelResponse;
   };
+
+  /** Classifies if text and/or image inputs are potentially harmful. Learn
+more in the [moderation guide](/docs/guides/moderation). */
   ["POST /moderations"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateModerationRequest };
     Response: CreateModerationResponse;
   };
+
+  /** Retrieve a paginated list of organization admin API keys. */
   ["GET /organization/admin_api_keys"]: {
     Request: {
       params?: never;
@@ -13362,6 +13553,8 @@ type Routes = {
     };
     Response: ApiKeyList;
   };
+
+  /** Create a new admin-level API key for the organization. */
   ["POST /organization/admin_api_keys"]: {
     Request: {
       params?: never;
@@ -13374,6 +13567,8 @@ type Routes = {
     };
     Response: AdminApiKey;
   };
+
+  /** Get details for a specific organization API key by its ID. */
   ["GET /organization/admin_api_keys/${keyId}"]: {
     Request: {
       params: {
@@ -13386,6 +13581,8 @@ type Routes = {
     };
     Response: AdminApiKey;
   };
+
+  /** Delete the specified admin API key. */
   ["DELETE /organization/admin_api_keys/${keyId}"]: {
     Request: {
       params: {
@@ -13405,6 +13602,8 @@ type Routes = {
       deleted?: boolean;
     };
   };
+
+  /** List user actions and configuration changes within this organization. */
   ["GET /organization/audit_logs"]: {
     Request: {
       params?: never;
@@ -13445,6 +13644,8 @@ type Routes = {
     };
     Response: ListAuditLogsResponse;
   };
+
+  /** List uploaded certificates for this organization. */
   ["GET /organization/certificates"]: {
     Request: {
       params?: never;
@@ -13467,18 +13668,34 @@ type Routes = {
     };
     Response: ListCertificatesResponse;
   };
+
+  /** Upload a certificate to the organization. This does **not** automatically activate the certificate.
+
+Organizations can upload up to 50 certificates. */
   ["POST /organization/certificates"]: {
     Request: { params?: never; headers?: never; query?: never; body: UploadCertificateRequest };
     Response: Certificate;
   };
+
+  /** Activate certificates at the organization level.
+
+You can atomically and idempotently activate up to 10 certificates at a time. */
   ["POST /organization/certificates/activate"]: {
     Request: { params?: never; headers?: never; query?: never; body: ToggleCertificatesRequest };
     Response: ListCertificatesResponse;
   };
+
+  /** Deactivate certificates at the organization level.
+
+You can atomically and idempotently deactivate up to 10 certificates at a time. */
   ["POST /organization/certificates/deactivate"]: {
     Request: { params?: never; headers?: never; query?: never; body: ToggleCertificatesRequest };
     Response: ListCertificatesResponse;
   };
+
+  /** Get a certificate that has been uploaded to the organization.
+
+You can get a certificate regardless of whether it is active or not. */
   ["GET /organization/certificates/${certificateId}"]: {
     Request: {
       params: {
@@ -13494,6 +13711,8 @@ type Routes = {
     };
     Response: Certificate;
   };
+
+  /** Modify a certificate. Note that only the name can be modified. */
   ["POST /organization/certificates/${certificateId}"]: {
     Request: {
       params: {
@@ -13505,6 +13724,10 @@ type Routes = {
     };
     Response: Certificate;
   };
+
+  /** Delete a certificate from the organization.
+
+The certificate must be inactive for the organization and all projects. */
   ["DELETE /organization/certificates/${certificateId}"]: {
     Request: {
       params: {
@@ -13516,6 +13739,8 @@ type Routes = {
     };
     Response: DeleteCertificateResponse;
   };
+
+  /** Get costs details for the organization. */
   ["GET /organization/costs"]: {
     Request: {
       params?: never;
@@ -13546,6 +13771,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Returns a list of invites in the organization. */
   ["GET /organization/invites"]: {
     Request: {
       params?: never;
@@ -13563,10 +13790,14 @@ type Routes = {
     };
     Response: InviteListResponse;
   };
+
+  /** Create an invite for a user to the organization. The invite must be accepted by the user before they have access to the organization. */
   ["POST /organization/invites"]: {
     Request: { params?: never; headers?: never; query?: never; body: InviteRequest };
     Response: Invite;
   };
+
+  /** Retrieves an invite. */
   ["GET /organization/invites/${inviteId}"]: {
     Request: {
       params: {
@@ -13579,6 +13810,8 @@ type Routes = {
     };
     Response: Invite;
   };
+
+  /** Delete an invite. If the invite has already been accepted, it cannot be deleted. */
   ["DELETE /organization/invites/${inviteId}"]: {
     Request: {
       params: {
@@ -13591,6 +13824,8 @@ type Routes = {
     };
     Response: InviteDeleteResponse;
   };
+
+  /** Returns a list of projects. */
   ["GET /organization/projects"]: {
     Request: {
       params?: never;
@@ -13613,10 +13848,14 @@ type Routes = {
     };
     Response: ProjectListResponse;
   };
+
+  /** Create a new project in the organization. Projects can be created and archived, but cannot be deleted. */
   ["POST /organization/projects"]: {
     Request: { params?: never; headers?: never; query?: never; body: ProjectCreateRequest };
     Response: Project;
   };
+
+  /** Retrieves a project. */
   ["GET /organization/projects/${projectId}"]: {
     Request: {
       params: {
@@ -13629,6 +13868,8 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** Modifies a project in the organization. */
   ["POST /organization/projects/${projectId}"]: {
     Request: {
       params: {
@@ -13641,6 +13882,8 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** Returns a list of API keys in the project. */
   ["GET /organization/projects/${projectId}/api_keys"]: {
     Request: {
       params: {
@@ -13661,6 +13904,8 @@ type Routes = {
     };
     Response: ProjectApiKeyListResponse;
   };
+
+  /** Retrieves an API key in the project. */
   ["GET /organization/projects/${projectId}/api_keys/${keyId}"]: {
     Request: {
       params: {
@@ -13675,6 +13920,8 @@ type Routes = {
     };
     Response: ProjectApiKey;
   };
+
+  /** Deletes an API key from the project. */
   ["DELETE /organization/projects/${projectId}/api_keys/${keyId}"]: {
     Request: {
       params: {
@@ -13689,6 +13936,8 @@ type Routes = {
     };
     Response: ProjectApiKeyDeleteResponse;
   };
+
+  /** Archives a project in the organization. Archived projects cannot be used or updated. */
   ["POST /organization/projects/${projectId}/archive"]: {
     Request: {
       params: {
@@ -13701,6 +13950,8 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** List certificates for this project. */
   ["GET /organization/projects/${projectId}/certificates"]: {
     Request: {
       params: {
@@ -13726,6 +13977,10 @@ type Routes = {
     };
     Response: ListCertificatesResponse;
   };
+
+  /** Activate certificates at the project level.
+
+You can atomically and idempotently activate up to 10 certificates at a time. */
   ["POST /organization/projects/${projectId}/certificates/activate"]: {
     Request: {
       params: {
@@ -13738,6 +13993,9 @@ type Routes = {
     };
     Response: ListCertificatesResponse;
   };
+
+  /** Deactivate certificates at the project level. You can atomically and 
+idempotently deactivate up to 10 certificates at a time. */
   ["POST /organization/projects/${projectId}/certificates/deactivate"]: {
     Request: {
       params: {
@@ -13750,6 +14008,8 @@ type Routes = {
     };
     Response: ListCertificatesResponse;
   };
+
+  /** Returns the rate limits per model for a project. */
   ["GET /organization/projects/${projectId}/rate_limits"]: {
     Request: {
       params: {
@@ -13772,6 +14032,8 @@ type Routes = {
     };
     Response: ProjectRateLimitListResponse;
   };
+
+  /** Updates a project rate limit. */
   ["POST /organization/projects/${projectId}/rate_limits/${rateLimitId}"]: {
     Request: {
       params: {
@@ -13786,6 +14048,8 @@ type Routes = {
     };
     Response: ProjectRateLimit;
   };
+
+  /** Returns a list of service accounts in the project. */
   ["GET /organization/projects/${projectId}/service_accounts"]: {
     Request: {
       params: {
@@ -13806,6 +14070,8 @@ type Routes = {
     };
     Response: ProjectServiceAccountListResponse;
   };
+
+  /** Creates a new service account in the project. This also returns an unredacted API key for the service account. */
   ["POST /organization/projects/${projectId}/service_accounts"]: {
     Request: {
       params: {
@@ -13818,6 +14084,8 @@ type Routes = {
     };
     Response: ProjectServiceAccountCreateResponse;
   };
+
+  /** Retrieves a service account in the project. */
   ["GET /organization/projects/${projectId}/service_accounts/${serviceAccountId}"]: {
     Request: {
       params: {
@@ -13832,6 +14100,8 @@ type Routes = {
     };
     Response: ProjectServiceAccount;
   };
+
+  /** Deletes a service account from the project. */
   ["DELETE /organization/projects/${projectId}/service_accounts/${serviceAccountId}"]: {
     Request: {
       params: {
@@ -13846,6 +14116,8 @@ type Routes = {
     };
     Response: ProjectServiceAccountDeleteResponse;
   };
+
+  /** Returns a list of users in the project. */
   ["GET /organization/projects/${projectId}/users"]: {
     Request: {
       params: {
@@ -13866,6 +14138,8 @@ type Routes = {
     };
     Response: ProjectUserListResponse;
   };
+
+  /** Adds a user to the project. Users must already be members of the organization to be added to a project. */
   ["POST /organization/projects/${projectId}/users"]: {
     Request: {
       params: {
@@ -13878,6 +14152,8 @@ type Routes = {
     };
     Response: ProjectUser;
   };
+
+  /** Retrieves a user in the project. */
   ["GET /organization/projects/${projectId}/users/${userId}"]: {
     Request: {
       params: {
@@ -13892,6 +14168,8 @@ type Routes = {
     };
     Response: ProjectUser;
   };
+
+  /** Modifies a user's role in the project. */
   ["POST /organization/projects/${projectId}/users/${userId}"]: {
     Request: {
       params: {
@@ -13906,6 +14184,8 @@ type Routes = {
     };
     Response: ProjectUser;
   };
+
+  /** Deletes a user from the project. */
   ["DELETE /organization/projects/${projectId}/users/${userId}"]: {
     Request: {
       params: {
@@ -13920,6 +14200,8 @@ type Routes = {
     };
     Response: ProjectUserDeleteResponse;
   };
+
+  /** Get audio speeches usage details for the organization. */
   ["GET /organization/usage/audio_speeches"]: {
     Request: {
       params?: never;
@@ -13958,6 +14240,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get audio transcriptions usage details for the organization. */
   ["GET /organization/usage/audio_transcriptions"]: {
     Request: {
       params?: never;
@@ -13996,6 +14280,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get code interpreter sessions usage details for the organization. */
   ["GET /organization/usage/code_interpreter_sessions"]: {
     Request: {
       params?: never;
@@ -14028,6 +14314,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get completions usage details for the organization. */
   ["GET /organization/usage/completions"]: {
     Request: {
       params?: never;
@@ -14068,6 +14356,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get embeddings usage details for the organization. */
   ["GET /organization/usage/embeddings"]: {
     Request: {
       params?: never;
@@ -14106,6 +14396,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get images usage details for the organization. */
   ["GET /organization/usage/images"]: {
     Request: {
       params?: never;
@@ -14148,6 +14440,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get moderations usage details for the organization. */
   ["GET /organization/usage/moderations"]: {
     Request: {
       params?: never;
@@ -14186,6 +14480,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Get vector stores usage details for the organization. */
   ["GET /organization/usage/vector_stores"]: {
     Request: {
       params?: never;
@@ -14218,6 +14514,8 @@ type Routes = {
     };
     Response: UsageResponse;
   };
+
+  /** Lists all of the users in the organization. */
   ["GET /organization/users"]: {
     Request: {
       params?: never;
@@ -14237,6 +14535,8 @@ type Routes = {
     };
     Response: UserListResponse;
   };
+
+  /** Retrieves a user by their identifier. */
   ["GET /organization/users/${userId}"]: {
     Request: {
       params: {
@@ -14249,6 +14549,8 @@ type Routes = {
     };
     Response: User;
   };
+
+  /** Modifies a user's role in the organization. */
   ["POST /organization/users/${userId}"]: {
     Request: {
       params: {
@@ -14261,6 +14563,8 @@ type Routes = {
     };
     Response: User;
   };
+
+  /** Deletes a user from the organization. */
   ["DELETE /organization/users/${userId}"]: {
     Request: {
       params: {
@@ -14273,18 +14577,44 @@ type Routes = {
     };
     Response: UserDeleteResponse;
   };
+
+  /** Create an ephemeral API token for use in client-side applications with the
+Realtime API. Can be configured with the same session parameters as the
+`session.update` client event.
+
+It responds with a session object, plus a `client_secret` key which contains
+a usable ephemeral API token that can be used to authenticate browser clients
+for the Realtime API. */
   ["POST /realtime/sessions"]: {
     Request: { params?: never; headers?: never; query?: never; body: RealtimeSessionCreateRequest };
     Response: RealtimeSessionCreateResponse;
   };
+
+  /** Create an ephemeral API token for use in client-side applications with the
+Realtime API specifically for realtime transcriptions. 
+Can be configured with the same session parameters as the `transcription_session.update` client event.
+
+It responds with a session object, plus a `client_secret` key which contains
+a usable ephemeral API token that can be used to authenticate browser clients
+for the Realtime API. */
   ["POST /realtime/transcription_sessions"]: {
     Request: { params?: never; headers?: never; query?: never; body: RealtimeTranscriptionSessionCreateRequest };
     Response: RealtimeTranscriptionSessionCreateResponse;
   };
+
+  /** Creates a model response. Provide [text](/docs/guides/text) or
+[image](/docs/guides/images) inputs to generate [text](/docs/guides/text)
+or [JSON](/docs/guides/structured-outputs) outputs. Have the model call
+your own [custom code](/docs/guides/function-calling) or use built-in
+[tools](/docs/guides/tools) like [web search](/docs/guides/tools-web-search)
+or [file search](/docs/guides/tools-file-search) to use your own data
+as input for the model's response. */
   ["POST /responses"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateResponse };
     Response: Response;
   };
+
+  /** Retrieves a model response with the given ID. */
   ["GET /responses/${responseId}"]: {
     Request: {
       params: {
@@ -14315,6 +14645,8 @@ type Routes = {
     };
     Response: Response;
   };
+
+  /** Deletes a model response with the given ID. */
   ["DELETE /responses/${responseId}"]: {
     Request: {
       params: {
@@ -14330,6 +14662,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Cancels a model response with the given ID. Only responses created with
+the `background` parameter set to `true` can be cancelled. 
+[Learn more](/docs/guides/background). */
   ["POST /responses/${responseId}/cancel"]: {
     Request: {
       params: {
@@ -14345,6 +14681,8 @@ type Routes = {
     };
     Response: Response;
   };
+
+  /** Returns a list of input items for a given response. */
   ["GET /responses/${responseId}/input_items"]: {
     Request: {
       params: {
@@ -14379,14 +14717,20 @@ type Routes = {
     };
     Response: ResponseItemList;
   };
+
+  /** Create a thread. */
   ["POST /threads"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateThreadRequest };
     Response: ThreadObject;
   };
+
+  /** Create a thread and run it in one request. */
   ["POST /threads/runs"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateThreadAndRunRequest };
     Response: RunObject;
   };
+
+  /** Retrieves a thread. */
   ["GET /threads/${threadId}"]: {
     Request: {
       params: {
@@ -14399,6 +14743,8 @@ type Routes = {
     };
     Response: ThreadObject;
   };
+
+  /** Modifies a thread. */
   ["POST /threads/${threadId}"]: {
     Request: {
       params: {
@@ -14411,6 +14757,8 @@ type Routes = {
     };
     Response: ThreadObject;
   };
+
+  /** Delete a thread. */
   ["DELETE /threads/${threadId}"]: {
     Request: {
       params: {
@@ -14423,6 +14771,8 @@ type Routes = {
     };
     Response: DeleteThreadResponse;
   };
+
+  /** Returns a list of messages for a given thread. */
   ["GET /threads/${threadId}/messages"]: {
     Request: {
       params: {
@@ -14452,6 +14802,8 @@ type Routes = {
     };
     Response: ListMessagesResponse;
   };
+
+  /** Create a message. */
   ["POST /threads/${threadId}/messages"]: {
     Request: {
       params: {
@@ -14464,6 +14816,8 @@ type Routes = {
     };
     Response: MessageObject;
   };
+
+  /** Retrieve a message. */
   ["GET /threads/${threadId}/messages/${messageId}"]: {
     Request: {
       params: {
@@ -14478,6 +14832,8 @@ type Routes = {
     };
     Response: MessageObject;
   };
+
+  /** Modifies a message. */
   ["POST /threads/${threadId}/messages/${messageId}"]: {
     Request: {
       params: {
@@ -14492,6 +14848,8 @@ type Routes = {
     };
     Response: MessageObject;
   };
+
+  /** Deletes a message. */
   ["DELETE /threads/${threadId}/messages/${messageId}"]: {
     Request: {
       params: {
@@ -14506,6 +14864,8 @@ type Routes = {
     };
     Response: DeleteMessageResponse;
   };
+
+  /** Returns a list of runs belonging to a thread. */
   ["GET /threads/${threadId}/runs"]: {
     Request: {
       params: {
@@ -14533,6 +14893,8 @@ type Routes = {
     };
     Response: ListRunsResponse;
   };
+
+  /** Create a run. */
   ["POST /threads/${threadId}/runs"]: {
     Request: {
       params: {
@@ -14552,6 +14914,8 @@ type Routes = {
     };
     Response: RunObject;
   };
+
+  /** Retrieves a run. */
   ["GET /threads/${threadId}/runs/${runId}"]: {
     Request: {
       params: {
@@ -14566,6 +14930,8 @@ type Routes = {
     };
     Response: RunObject;
   };
+
+  /** Modifies a run. */
   ["POST /threads/${threadId}/runs/${runId}"]: {
     Request: {
       params: {
@@ -14580,6 +14946,8 @@ type Routes = {
     };
     Response: RunObject;
   };
+
+  /** Cancels a run that is `in_progress`. */
   ["POST /threads/${threadId}/runs/${runId}/cancel"]: {
     Request: {
       params: {
@@ -14594,6 +14962,8 @@ type Routes = {
     };
     Response: RunObject;
   };
+
+  /** Returns a list of run steps belonging to a run. */
   ["GET /threads/${threadId}/runs/${runId}/steps"]: {
     Request: {
       params: {
@@ -14629,6 +14999,8 @@ type Routes = {
     };
     Response: ListRunStepsResponse;
   };
+
+  /** Retrieves a run step. */
   ["GET /threads/${threadId}/runs/${runId}/steps/${stepId}"]: {
     Request: {
       params: {
@@ -14652,6 +15024,8 @@ type Routes = {
     };
     Response: RunStepObject;
   };
+
+  /** When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request. */
   ["POST /threads/${threadId}/runs/${runId}/submit_tool_outputs"]: {
     Request: {
       params: {
@@ -14666,10 +15040,30 @@ type Routes = {
     };
     Response: RunObject;
   };
+
+  /** Creates an intermediate [Upload](/docs/api-reference/uploads/object) object
+that you can add [Parts](/docs/api-reference/uploads/part-object) to.
+Currently, an Upload can accept at most 8 GB in total and expires after an
+hour after you create it.
+
+Once you complete the Upload, we will create a
+[File](/docs/api-reference/files/object) object that contains all the parts
+you uploaded. This File is usable in the rest of our platform as a regular
+File object.
+
+For certain `purpose` values, the correct `mime_type` must be specified. 
+Please refer to documentation for the 
+[supported MIME types for your use case](/docs/assistants/tools/file-search#supported-files).
+
+For guidance on the proper filename extensions for each purpose, please
+follow the documentation on [creating a
+File](/docs/api-reference/files/create). */
   ["POST /uploads"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateUploadRequest };
     Response: Upload;
   };
+
+  /** Cancels the Upload. No Parts may be added after an Upload is cancelled. */
   ["POST /uploads/${uploadId}/cancel"]: {
     Request: {
       params: {
@@ -14685,6 +15079,14 @@ type Routes = {
     };
     Response: Upload;
   };
+
+  /** Completes the [Upload](/docs/api-reference/uploads/object). 
+
+Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
+
+You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+
+The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed. */
   ["POST /uploads/${uploadId}/complete"]: {
     Request: {
       params: {
@@ -14700,6 +15102,12 @@ type Routes = {
     };
     Response: Upload;
   };
+
+  /** Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload. 
+
+Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
+
+It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](/docs/api-reference/uploads/complete). */
   ["POST /uploads/${uploadId}/parts"]: {
     Request: {
       params: {
@@ -14715,6 +15123,8 @@ type Routes = {
     };
     Response: UploadPart;
   };
+
+  /** Returns a list of vector stores. */
   ["GET /vector_stores"]: {
     Request: {
       params?: never;
@@ -14739,10 +15149,14 @@ type Routes = {
     };
     Response: ListVectorStoresResponse;
   };
+
+  /** Create a vector store. */
   ["POST /vector_stores"]: {
     Request: { params?: never; headers?: never; query?: never; body: CreateVectorStoreRequest };
     Response: VectorStoreObject;
   };
+
+  /** Retrieves a vector store. */
   ["GET /vector_stores/${vectorStoreId}"]: {
     Request: {
       params: {
@@ -14755,6 +15169,8 @@ type Routes = {
     };
     Response: VectorStoreObject;
   };
+
+  /** Modifies a vector store. */
   ["POST /vector_stores/${vectorStoreId}"]: {
     Request: {
       params: {
@@ -14767,6 +15183,8 @@ type Routes = {
     };
     Response: VectorStoreObject;
   };
+
+  /** Delete a vector store. */
   ["DELETE /vector_stores/${vectorStoreId}"]: {
     Request: {
       params: {
@@ -14779,6 +15197,8 @@ type Routes = {
     };
     Response: DeleteVectorStoreResponse;
   };
+
+  /** Create a vector store file batch. */
   ["POST /vector_stores/${vectorStoreId}/file_batches"]: {
     Request: {
       params: {
@@ -14794,6 +15214,8 @@ type Routes = {
     };
     Response: VectorStoreFileBatchObject;
   };
+
+  /** Retrieves a vector store file batch. */
   ["GET /vector_stores/${vectorStoreId}/file_batches/${batchId}"]: {
     Request: {
       params: {
@@ -14814,6 +15236,8 @@ type Routes = {
     };
     Response: VectorStoreFileBatchObject;
   };
+
+  /** Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible. */
   ["POST /vector_stores/${vectorStoreId}/file_batches/${batchId}/cancel"]: {
     Request: {
       params: {
@@ -14828,6 +15252,8 @@ type Routes = {
     };
     Response: VectorStoreFileBatchObject;
   };
+
+  /** Returns a list of vector store files in a batch. */
   ["GET /vector_stores/${vectorStoreId}/file_batches/${batchId}/files"]: {
     Request: {
       params: {
@@ -14859,6 +15285,8 @@ type Routes = {
     };
     Response: ListVectorStoreFilesResponse;
   };
+
+  /** Returns a list of vector store files. */
   ["GET /vector_stores/${vectorStoreId}/files"]: {
     Request: {
       params: {
@@ -14888,6 +15316,8 @@ type Routes = {
     };
     Response: ListVectorStoreFilesResponse;
   };
+
+  /** Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object). */
   ["POST /vector_stores/${vectorStoreId}/files"]: {
     Request: {
       params: {
@@ -14903,6 +15333,8 @@ type Routes = {
     };
     Response: VectorStoreFileObject;
   };
+
+  /** Retrieves a vector store file. */
   ["GET /vector_stores/${vectorStoreId}/files/${fileId}"]: {
     Request: {
       params: {
@@ -14923,6 +15355,8 @@ type Routes = {
     };
     Response: VectorStoreFileObject;
   };
+
+  /** Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint. */
   ["DELETE /vector_stores/${vectorStoreId}/files/${fileId}"]: {
     Request: {
       params: {
@@ -14937,6 +15371,8 @@ type Routes = {
     };
     Response: DeleteVectorStoreFileResponse;
   };
+
+  /** Update attributes on a vector store file. */
   ["POST /vector_stores/${vectorStoreId}/files/${fileId}"]: {
     Request: {
       params: {
@@ -14957,6 +15393,8 @@ type Routes = {
     };
     Response: VectorStoreFileObject;
   };
+
+  /** Retrieve the parsed contents of a vector store file. */
   ["GET /vector_stores/${vectorStoreId}/files/${fileId}/content"]: {
     Request: {
       params: {
@@ -14977,6 +15415,8 @@ type Routes = {
     };
     Response: VectorStoreFileContentResponse;
   };
+
+  /** Search a vector store for relevant chunks based on a query and file attributes filter. */
   ["POST /vector_stores/${vectorStoreId}/search"]: {
     Request: {
       params: {

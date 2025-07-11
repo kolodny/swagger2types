@@ -89,8 +89,12 @@ type Routes = {
     };
     Response: ApiResponse;
   };
+
   ["POST /pet"]: { Request: { params?: never; headers?: never; query?: never; body: Pet }; Response: any };
+
   ["PUT /pet"]: { Request: { params?: never; headers?: never; query?: never; body: Pet }; Response: any };
+
+  /** Multiple status values can be provided with comma separated strings */
   ["GET /pet/findByStatus"]: {
     Request: {
       params?: never;
@@ -103,6 +107,8 @@ type Routes = {
     };
     Response: Pet[];
   };
+
+  /** Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing. */
   ["GET /pet/findByTags"]: {
     Request: {
       params?: never;
@@ -115,6 +121,8 @@ type Routes = {
     };
     Response: Pet[];
   };
+
+  /** Returns a single pet */
   ["GET /pet/${petId}"]: {
     Request: {
       params: {
@@ -130,6 +138,7 @@ type Routes = {
     };
     Response: Pet;
   };
+
   ["POST /pet/${petId}"]: {
     Request: {
       params: {
@@ -150,6 +159,7 @@ type Routes = {
     };
     Response: any;
   };
+
   ["DELETE /pet/${petId}"]: {
     Request: {
       params: {
@@ -167,11 +177,16 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Returns a map of status codes to quantities */
   ["GET /store/inventory"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: Record<string, number>;
   };
+
   ["POST /store/order"]: { Request: { params?: never; headers?: never; query?: never; body: Order }; Response: Order };
+
+  /** For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions */
   ["GET /store/order/${orderId}"]: {
     Request: {
       params: {
@@ -189,6 +204,8 @@ type Routes = {
     };
     Response: Order;
   };
+
+  /** For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors */
   ["DELETE /store/order/${orderId}"]: {
     Request: {
       params: {
@@ -205,10 +222,12 @@ type Routes = {
     };
     Response: any;
   };
+
   ["POST /user/createWithList"]: {
     Request: { params?: never; headers?: never; query?: never; body: User[] };
     Response: void;
   };
+
   ["GET /user/${username}"]: {
     Request: {
       params: {
@@ -221,6 +240,8 @@ type Routes = {
     };
     Response: User;
   };
+
+  /** This can only be done by the logged in user. */
   ["PUT /user/${username}"]: {
     Request: {
       params: {
@@ -233,6 +254,8 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** This can only be done by the logged in user. */
   ["DELETE /user/${username}"]: {
     Request: {
       params: {
@@ -245,6 +268,7 @@ type Routes = {
     };
     Response: any;
   };
+
   ["GET /user/login"]: {
     Request: {
       params?: never;
@@ -259,11 +283,15 @@ type Routes = {
     };
     Response: string;
   };
+
   ["GET /user/logout"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: void };
+
   ["POST /user/createWithArray"]: {
     Request: { params?: never; headers?: never; query?: never; body: User[] };
     Response: void;
   };
+
+  /** This can only be done by the logged in user. */
   ["POST /user"]: { Request: { params?: never; headers?: never; query?: never; body: User }; Response: void };
 };
 

@@ -74369,7 +74369,12 @@ interface WebhookWorkflowRunRequested {
 }
 
 type Routes = {
+  /** Get Hypermedia links to resources accessible in GitHub's REST API */
   ["GET /"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Root };
+
+  /** Lists all global security advisories that match the specified parameters. If no other parameters are defined, the request will return only GitHub-reviewed advisories that are not malware.
+
+By default, all responses will exclude advisories for malware, because malware are not standard vulnerabilities. To list advisories for malware, you must include the `type` parameter in your request, with the value `malware`. For more information about the different types of security advisories, see "[About the GitHub Advisory database](https://docs.github.com/code-security/security-advisories/global-security-advisories/about-the-github-advisory-database#about-types-of-security-advisories)." */
   ["GET /advisories"]: {
     Request: {
       params?: never;
@@ -74457,6 +74462,8 @@ type Routes = {
     };
     Response: GlobalAdvisory[];
   };
+
+  /** Gets a global security advisory using its GitHub Security Advisory (GHSA) identifier. */
   ["GET /advisories/${ghsaId}"]: {
     Request: {
       params: {
@@ -74469,11 +74476,23 @@ type Routes = {
     };
     Response: GlobalAdvisory;
   };
+
+  /** Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/rest/apps/apps#list-installations-for-the-authenticated-app)" endpoint.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /app"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Integration };
+
+  /** Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /app/hook/config"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: WebhookConfig;
   };
+
+  /** Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["PATCH /app/hook/config"]: {
     Request: {
       params?: never;
@@ -74492,6 +74511,10 @@ type Routes = {
     };
     Response: WebhookConfig;
   };
+
+  /** Returns a list of webhook deliveries for the webhook configured for a GitHub App.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /app/hook/deliveries"]: {
     Request: {
       params?: never;
@@ -74509,6 +74532,10 @@ type Routes = {
     };
     Response: HookDeliveryItem[];
   };
+
+  /** Returns a delivery for the webhook configured for a GitHub App.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /app/hook/deliveries/${deliveryId}"]: {
     Request: {
       params: {
@@ -74520,6 +74547,10 @@ type Routes = {
     };
     Response: HookDelivery;
   };
+
+  /** Redeliver a delivery for the webhook configured for a GitHub App.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["POST /app/hook/deliveries/${deliveryId}/attempts"]: {
     Request: {
       params: {
@@ -74531,6 +74562,8 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Lists all the pending installation requests for the authenticated GitHub App. */
   ["GET /app/installation-requests"]: {
     Request: {
       params?: never;
@@ -74551,6 +74584,10 @@ type Routes = {
     };
     Response: IntegrationInstallationRequest[];
   };
+
+  /** The permissions the installation has are included under the `permissions` key.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /app/installations"]: {
     Request: {
       params?: never;
@@ -74577,6 +74614,10 @@ type Routes = {
     };
     Response: Installation[];
   };
+
+  /** Enables an authenticated GitHub App to find an installation's information using the installation id.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /app/installations/${installationId}"]: {
     Request: {
       params: {
@@ -74589,6 +74630,10 @@ type Routes = {
     };
     Response: Installation;
   };
+
+  /** Uninstalls a GitHub App on a user, organization, or enterprise account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/rest/apps/apps#suspend-an-app-installation)" endpoint.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["DELETE /app/installations/${installationId}"]: {
     Request: {
       params: {
@@ -74601,6 +74646,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access.
+
+Optionally, you can use the `repositories` or `repository_ids` body parameters to specify individual repositories that the installation access token can access. If you don't use `repositories` or `repository_ids` to grant access to specific repositories, the installation access token will have access to all repositories that the installation was granted access to. The installation access token cannot be granted access to repositories that the installation was not granted access to. Up to 500 repositories can be listed in this manner.
+
+Optionally, use the `permissions` body parameter to specify the permissions that the installation access token should have. If `permissions` is not specified, the installation access token will have all of the permissions that were granted to the app. The installation access token cannot be granted permissions that the app was not granted.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["POST /app/installations/${installationId}/access_tokens"]: {
     Request: {
       params: {
@@ -74623,6 +74676,10 @@ type Routes = {
     };
     Response: InstallationToken;
   };
+
+  /** Suspends a GitHub App on a user, organization, or enterprise account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub API or webhook events is blocked for that account.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["PUT /app/installations/${installationId}/suspended"]: {
     Request: {
       params: {
@@ -74635,6 +74692,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a GitHub App installation suspension.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["DELETE /app/installations/${installationId}/suspended"]: {
     Request: {
       params: {
@@ -74647,6 +74708,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`. */
   ["POST /app-manifests/${code}/conversions"]: {
     Request: {
       params: {
@@ -74664,6 +74727,9 @@ type Routes = {
       [key: string]: any;
     };
   };
+
+  /** OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+Deleting an application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). */
   ["DELETE /applications/${clientId}/grant"]: {
     Request: {
       params: {
@@ -74679,6 +74745,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. Invalid tokens will return `404 NOT FOUND`. */
   ["POST /applications/${clientId}/token"]: {
     Request: {
       params: {
@@ -74694,6 +74762,8 @@ type Routes = {
     };
     Response: Authorization;
   };
+
+  /** OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. Invalid tokens will return `404 NOT FOUND`. */
   ["PATCH /applications/${clientId}/token"]: {
     Request: {
       params: {
@@ -74709,6 +74779,8 @@ type Routes = {
     };
     Response: Authorization;
   };
+
+  /** OAuth  or GitHub application owners can revoke a single token for an OAuth application or a GitHub application with an OAuth authorization. */
   ["DELETE /applications/${clientId}/token"]: {
     Request: {
       params: {
@@ -74724,6 +74796,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Use a non-scoped user access token to create a repository-scoped and/or permission-scoped user access token. You can specify
+which repositories the token can access and which permissions are granted to the
+token.
+
+Invalid tokens will return `404 NOT FOUND`. */
   ["POST /applications/${clientId}/token/scoped"]: {
     Request: {
       params: {
@@ -74761,6 +74839,9 @@ type Routes = {
     };
     Response: Authorization;
   };
+
+  /** > [!NOTE]
+> The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`). */
   ["GET /apps/${appSlug}"]: {
     Request: {
       params: {
@@ -74772,6 +74853,8 @@ type Routes = {
     };
     Response: Integration;
   };
+
+  /** Gets a GitHub Classroom assignment. Assignment will only be returned if the current user is an administrator of the GitHub Classroom for the assignment. */
   ["GET /assignments/${assignmentId}"]: {
     Request: {
       params: {
@@ -74784,6 +74867,8 @@ type Routes = {
     };
     Response: ClassroomAssignment;
   };
+
+  /** Lists any assignment repositories that have been created by students accepting a GitHub Classroom assignment. Accepted assignments will only be returned if the current user is an administrator of the GitHub Classroom for the assignment. */
   ["GET /assignments/${assignmentId}/accepted_assignments"]: {
     Request: {
       params: {
@@ -74807,6 +74892,8 @@ type Routes = {
     };
     Response: ClassroomAcceptedAssignment[];
   };
+
+  /** Gets grades for a GitHub Classroom assignment. Grades will only be returned if the current user is an administrator of the GitHub Classroom for the assignment. */
   ["GET /assignments/${assignmentId}/grades"]: {
     Request: {
       params: {
@@ -74819,6 +74906,8 @@ type Routes = {
     };
     Response: ClassroomAssignmentGrade[];
   };
+
+  /** Lists GitHub Classroom classrooms for the current user. Classrooms will only be returned if the current user is an administrator of one or more GitHub Classrooms. */
   ["GET /classrooms"]: {
     Request: {
       params?: never;
@@ -74839,6 +74928,8 @@ type Routes = {
     };
     Response: SimpleClassroom[];
   };
+
+  /** Gets a GitHub Classroom classroom for the current user. Classroom will only be returned if the current user is an administrator of the GitHub Classroom. */
   ["GET /classrooms/${classroomId}"]: {
     Request: {
       params: {
@@ -74851,6 +74942,8 @@ type Routes = {
     };
     Response: Classroom;
   };
+
+  /** Lists GitHub Classroom assignments for a classroom. Assignments will only be returned if the current user is an administrator of the GitHub Classroom. */
   ["GET /classrooms/${classroomId}/assignments"]: {
     Request: {
       params: {
@@ -74874,10 +74967,14 @@ type Routes = {
     };
     Response: SimpleClassroomAssignment[];
   };
+
+  /** Returns array of all GitHub's codes of conduct. */
   ["GET /codes_of_conduct"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: CodeOfConduct[];
   };
+
+  /** Returns information about the specified GitHub code of conduct. */
   ["GET /codes_of_conduct/${key}"]: {
     Request: {
       params: {
@@ -74889,6 +74986,20 @@ type Routes = {
     };
     Response: CodeOfConduct;
   };
+
+  /** Submit a list of credentials to be revoked. This endpoint is intended to revoke credentials the caller does not own and may have found exposed on GitHub.com or elsewhere. It can also be used for credentials associated with an old user account that you no longer have access to. Credential owners will be notified of the revocation.
+
+This endpoint currently accepts the following credential types:
+- Personal access tokens (classic)
+- Fine-grained personal access tokens
+
+Revoked credentials may impact users on GitHub Free, Pro, & Team and GitHub Enterprise Cloud, and GitHub Enterprise Cloud with Enterprise Managed Users.
+GitHub cannot reactivate any credentials that have been revoked; new credentials will need to be generated.
+
+To prevent abuse, this API is limited to only 60 unauthenticated requests per hour and a max of 1000 tokens per API request.
+
+> [!NOTE]
+> Any authenticated requests will return a 403. */
   ["POST /credentials/revoke"]: {
     Request: {
       params?: never;
@@ -74905,10 +75016,18 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Lists all the emojis available to use on GitHub. */
   ["GET /emojis"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: Record<string, string>;
   };
+
+  /** Lists all code security configurations available in an enterprise.
+
+The authenticated user must be an administrator of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `read:enterprise` scope to use this endpoint. */
   ["GET /enterprises/${enterprise}/code-security/configurations"]: {
     Request: {
       params: {
@@ -74931,6 +75050,12 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration[];
   };
+
+  /** Creates a code security configuration in an enterprise.
+
+The authenticated user must be an administrator of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint. */
   ["POST /enterprises/${enterprise}/code-security/configurations"]: {
     Request: {
       params: {
@@ -75036,6 +75161,12 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration;
   };
+
+  /** Lists the default code security configurations for an enterprise.
+
+The authenticated user must be an administrator of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `read:enterprise` scope to use this endpoint. */
   ["GET /enterprises/${enterprise}/code-security/configurations/defaults"]: {
     Request: {
       params: {
@@ -75048,6 +75179,12 @@ type Routes = {
     };
     Response: CodeSecurityDefaultConfigurations;
   };
+
+  /** Gets a code security configuration available in an enterprise.
+
+The authenticated user must be an administrator of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `read:enterprise` scope to use this endpoint. */
   ["GET /enterprises/${enterprise}/code-security/configurations/${configurationId}"]: {
     Request: {
       params: {
@@ -75062,6 +75199,12 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration;
   };
+
+  /** Updates a code security configuration in an enterprise.
+
+The authenticated user must be an administrator of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint. */
   ["PATCH /enterprises/${enterprise}/code-security/configurations/${configurationId}"]: {
     Request: {
       params: {
@@ -75130,6 +75273,14 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration;
   };
+
+  /** Deletes a code security configuration from an enterprise.
+Repositories attached to the configuration will retain their settings but will no longer be associated with
+the configuration.
+
+The authenticated user must be an administrator for the enterprise to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint. */
   ["DELETE /enterprises/${enterprise}/code-security/configurations/${configurationId}"]: {
     Request: {
       params: {
@@ -75144,6 +75295,14 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Attaches an enterprise code security configuration to repositories. If the repositories specified are already attached to a configuration, they will be re-attached to the provided configuration.
+
+If insufficient GHAS licenses are available to attach the configuration to a repository, only free features will be enabled.
+
+The authenticated user must be an administrator for the enterprise to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint. */
   ["POST /enterprises/${enterprise}/code-security/configurations/${configurationId}/attach"]: {
     Request: {
       params: {
@@ -75161,6 +75320,14 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Sets a code security configuration as a default to be applied to new repositories in your enterprise.
+
+This configuration will be applied by default to the matching repository type when created, but only for organizations within the enterprise that do not already have a default code security configuration set.
+
+The authenticated user must be an administrator for the enterprise to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint. */
   ["PUT /enterprises/${enterprise}/code-security/configurations/${configurationId}/defaults"]: {
     Request: {
       params: {
@@ -75183,6 +75350,12 @@ type Routes = {
       configuration?: CodeSecurityConfiguration;
     };
   };
+
+  /** Lists the repositories associated with an enterprise code security configuration in an organization.
+
+The authenticated user must be an administrator of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `read:enterprise` scope to use this endpoint. */
   ["GET /enterprises/${enterprise}/code-security/configurations/${configurationId}/repositories"]: {
     Request: {
       params: {
@@ -75214,6 +75387,14 @@ type Routes = {
     };
     Response: CodeSecurityConfigurationRepositories[];
   };
+
+  /** Lists Dependabot alerts for repositories that are owned by the specified enterprise.
+
+The authenticated user must be a member of the enterprise to use this endpoint.
+
+Alerts are only returned for organizations in the enterprise for which you are an organization owner or a security manager. For more information about security managers, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. */
   ["GET /enterprises/${enterprise}/dependabot/alerts"]: {
     Request: {
       params: {
@@ -75302,6 +75483,14 @@ type Routes = {
     };
     Response: DependabotAlertWithRepository[];
   };
+
+  /** Lists secret scanning alerts for eligible repositories in an enterprise, from newest to oldest.
+
+Alerts are only returned for organizations in the enterprise for which the authenticated user is an organization owner or a [security manager](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).
+
+The authenticated user must be a member of the enterprise in order to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope or `security_events` scope to use this endpoint. */
   ["GET /enterprises/${enterprise}/secret-scanning/alerts"]: {
     Request: {
       params: {
@@ -75357,6 +75546,9 @@ type Routes = {
     };
     Response: OrganizationSecretScanningAlert[];
   };
+
+  /** > [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /events"]: {
     Request: {
       params?: never;
@@ -75377,7 +75569,24 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** Lists the feeds available to the authenticated user. The response provides a URL for each feed. You can then get a specific feed by sending a request to one of the feed URLs.
+
+*   **Timeline**: The GitHub global public timeline
+*   **User**: The public timeline for any user, using `uri_template`. For more information, see "[Hypermedia](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
+*   **Current user public**: The public timeline for the authenticated user
+*   **Current user**: The private timeline for the authenticated user
+*   **Current user actor**: The private timeline for activity created by the authenticated user
+*   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
+*   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub.
+
+By default, timeline resources are returned in JSON. You can specify the `application/atom+xml` type in the `Accept` header to return timeline resources in Atom format. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+> [!NOTE]
+> Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) since current feed URIs use the older, non revocable auth tokens. */
   ["GET /feeds"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Feed };
+
+  /** Lists the authenticated user's gists or if called anonymously, this endpoint returns all public gists: */
   ["GET /gists"]: {
     Request: {
       params?: never;
@@ -75403,6 +75612,11 @@ type Routes = {
     };
     Response: BaseGist[];
   };
+
+  /** Allows you to add a new gist with one or more files.
+
+> [!NOTE]
+> Don't name your files "gistfile" with a numerical suffix. This is the format of the automatic naming scheme that Gist uses internally. */
   ["POST /gists"]: {
     Request: {
       params?: never;
@@ -75431,6 +75645,10 @@ type Routes = {
     };
     Response: GistSimple;
   };
+
+  /** List public gists sorted by most recently updated to least recently updated.
+
+Note: With [pagination](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page. */
   ["GET /gists/public"]: {
     Request: {
       params?: never;
@@ -75456,6 +75674,8 @@ type Routes = {
     };
     Response: BaseGist[];
   };
+
+  /** List the authenticated user's starred gists: */
   ["GET /gists/starred"]: {
     Request: {
       params?: never;
@@ -75481,6 +75701,13 @@ type Routes = {
     };
     Response: BaseGist[];
   };
+
+  /** Gets a specified gist.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["GET /gists/${gistId}"]: {
     Request: {
       params: {
@@ -75493,6 +75720,17 @@ type Routes = {
     };
     Response: GistSimple;
   };
+
+  /** Allows you to update a gist's description and to update, delete, or rename gist files. Files
+from the previous version of the gist that aren't explicitly changed during an edit
+are unchanged.
+
+At least one of `description` or `files` is required.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["PATCH /gists/${gistId}"]: {
     Request: {
       params: {
@@ -75528,6 +75766,7 @@ type Routes = {
     };
     Response: GistSimple;
   };
+
   ["DELETE /gists/${gistId}"]: {
     Request: {
       params: {
@@ -75540,6 +75779,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the comments on a gist.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["GET /gists/${gistId}/comments"]: {
     Request: {
       params: {
@@ -75563,6 +75809,13 @@ type Routes = {
     };
     Response: GistComment[];
   };
+
+  /** Creates a comment on a gist.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["POST /gists/${gistId}/comments"]: {
     Request: {
       params: {
@@ -75582,6 +75835,13 @@ type Routes = {
     };
     Response: GistComment;
   };
+
+  /** Gets a comment on a gist.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["GET /gists/${gistId}/comments/${commentId}"]: {
     Request: {
       params: {
@@ -75599,6 +75859,13 @@ type Routes = {
     };
     Response: GistComment;
   };
+
+  /** Updates a comment on a gist.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["PATCH /gists/${gistId}/comments/${commentId}"]: {
     Request: {
       params: {
@@ -75623,6 +75890,7 @@ type Routes = {
     };
     Response: GistComment;
   };
+
   ["DELETE /gists/${gistId}/comments/${commentId}"]: {
     Request: {
       params: {
@@ -75640,6 +75908,7 @@ type Routes = {
     };
     Response: void;
   };
+
   ["GET /gists/${gistId}/commits"]: {
     Request: {
       params: {
@@ -75663,6 +75932,7 @@ type Routes = {
     };
     Response: GistCommit[];
   };
+
   ["GET /gists/${gistId}/forks"]: {
     Request: {
       params: {
@@ -75686,6 +75956,7 @@ type Routes = {
     };
     Response: GistSimple[];
   };
+
   ["POST /gists/${gistId}/forks"]: {
     Request: {
       params: {
@@ -75698,6 +75969,7 @@ type Routes = {
     };
     Response: BaseGist;
   };
+
   ["GET /gists/${gistId}/star"]: {
     Request: {
       params: {
@@ -75710,6 +75982,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
   ["PUT /gists/${gistId}/star"]: {
     Request: {
       params: {
@@ -75722,6 +75996,7 @@ type Routes = {
     };
     Response: void;
   };
+
   ["DELETE /gists/${gistId}/star"]: {
     Request: {
       params: {
@@ -75734,6 +76009,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a specified gist revision.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences. */
   ["GET /gists/${gistId}/${sha}"]: {
     Request: {
       params: {
@@ -75747,10 +76029,18 @@ type Routes = {
     };
     Response: GistSimple;
   };
+
+  /** List all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user). */
   ["GET /gitignore/templates"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: string[];
   };
+
+  /** Get the content of a gitignore template.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw .gitignore contents. */
   ["GET /gitignore/templates/${name}"]: {
     Request: {
       params: {
@@ -75762,6 +76052,8 @@ type Routes = {
     };
     Response: GitignoreTemplate;
   };
+
+  /** List repositories that an app installation can access. */
   ["GET /installation/repositories"]: {
     Request: {
       params?: never;
@@ -75787,10 +76079,28 @@ type Routes = {
       repository_selection?: string;
     };
   };
+
+  /** Revokes the installation token you're using to authenticate as an installation and access this endpoint.
+
+Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/rest/apps/apps#create-an-installation-access-token-for-an-app)" endpoint. */
   ["DELETE /installation/token"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: void;
   };
+
+  /** List issues assigned to the authenticated user across all visible repositories including owned repositories, member
+repositories, and organization repositories. You can use the `filter` query parameter to fetch issues that are not
+necessarily assigned to you.
+
+> [!NOTE]
+> GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /issues"]: {
     Request: {
       params?: never;
@@ -75842,6 +76152,8 @@ type Routes = {
     };
     Response: Issue[];
   };
+
+  /** Lists the most commonly used licenses on GitHub. For more information, see "[Licensing a repository ](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)." */
   ["GET /licenses"]: {
     Request: {
       params?: never;
@@ -75863,6 +76175,8 @@ type Routes = {
     };
     Response: LicenseSimple[];
   };
+
+  /** Gets information about a specific license. For more information, see "[Licensing a repository ](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)." */
   ["GET /licenses/${license}"]: {
     Request: {
       params: {
@@ -75874,6 +76188,8 @@ type Routes = {
     };
     Response: License;
   };
+
+  /** Depending on what is rendered in the Markdown, you may need to provide additional token scopes for labels, such as `issues:read` or `pull_requests:read`. */
   ["POST /markdown"]: {
     Request: {
       params?: never;
@@ -75894,10 +76210,16 @@ type Routes = {
     };
     Response: WebhookConfigUrl;
   };
+
+  /** You must send Markdown as plain text (using a `Content-Type` header of `text/plain` or `text/x-markdown`) to this endpoint, rather than using JSON format. In raw mode, [GitHub Flavored Markdown](https://github.github.com/gfm/) is not supported and Markdown will be rendered in plain format like a README.md file. Markdown content must be 400 KB or less. */
   ["POST /markdown/raw"]: {
     Request: { params?: never; headers?: never; query?: never; body: WebhookConfigUrl };
     Response: WebhookConfigUrl;
   };
+
+  /** Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+
+GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth apps must use [basic authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) with their client ID and client secret to access this endpoint. */
   ["GET /marketplace_listing/accounts/${accountId}"]: {
     Request: {
       params: {
@@ -75910,6 +76232,10 @@ type Routes = {
     };
     Response: MarketplacePurchase;
   };
+
+  /** Lists all plans that are part of your GitHub Marketplace listing.
+
+GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth apps must use [basic authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) with their client ID and client secret to access this endpoint. */
   ["GET /marketplace_listing/plans"]: {
     Request: {
       params?: never;
@@ -75930,6 +76256,10 @@ type Routes = {
     };
     Response: MarketplaceListingPlan[];
   };
+
+  /** Returns user and organization accounts associated with the specified plan, including free plans. For per-seat pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+
+GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth apps must use [basic authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) with their client ID and client secret to access this endpoint. */
   ["GET /marketplace_listing/plans/${planId}/accounts"]: {
     Request: {
       params: {
@@ -75960,6 +76290,10 @@ type Routes = {
     };
     Response: MarketplacePurchase[];
   };
+
+  /** Shows whether the user or organization account actively subscribes to a plan listed by the authenticated GitHub App. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+
+GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth apps must use [basic authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) with their client ID and client secret to access this endpoint. */
   ["GET /marketplace_listing/stubbed/accounts/${accountId}"]: {
     Request: {
       params: {
@@ -75972,6 +76306,10 @@ type Routes = {
     };
     Response: MarketplacePurchase;
   };
+
+  /** Lists all plans that are part of your GitHub Marketplace listing.
+
+GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth apps must use [basic authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) with their client ID and client secret to access this endpoint. */
   ["GET /marketplace_listing/stubbed/plans"]: {
     Request: {
       params?: never;
@@ -75992,6 +76330,10 @@ type Routes = {
     };
     Response: MarketplaceListingPlan[];
   };
+
+  /** Returns repository and organization accounts associated with the specified plan, including free plans. For per-seat pricing, you see the list of accounts that have purchased the plan, including the number of seats purchased. When someone submits a plan change that won't be processed until the end of their billing cycle, you will also see the upcoming pending change.
+
+GitHub Apps must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. OAuth apps must use [basic authentication](https://docs.github.com/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) with their client ID and client secret to access this endpoint. */
   ["GET /marketplace_listing/stubbed/plans/${planId}/accounts"]: {
     Request: {
       params: {
@@ -76022,7 +76364,19 @@ type Routes = {
     };
     Response: MarketplacePurchase[];
   };
+
+  /** Returns meta information about GitHub, including a list of GitHub's IP addresses. For more information, see "[About GitHub's IP addresses](https://docs.github.com/articles/about-github-s-ip-addresses/)."
+
+The API's response also includes a list of GitHub's domain names.
+
+The values shown in the documentation's response are example values. You must always query the API directly to get the latest values.
+
+> [!NOTE]
+> This endpoint returns both IPv4 and IPv6 addresses. However, not all features support IPv6. You should refer to the specific documentation for each feature to determine if IPv6 is supported. */
   ["GET /meta"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: ApiOverview };
+
+  /** > [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /networks/${owner}/${repo}/events"]: {
     Request: {
       params: {
@@ -76048,6 +76402,8 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** List all notifications for the current user, sorted by most recently updated. */
   ["GET /notifications"]: {
     Request: {
       params?: never;
@@ -76088,6 +76444,8 @@ type Routes = {
     };
     Response: Thread[];
   };
+
+  /** Marks all notifications as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
   ["PUT /notifications"]: {
     Request: {
       params?: never;
@@ -76107,6 +76465,8 @@ type Routes = {
       message?: string;
     };
   };
+
+  /** Gets information about a notification thread. */
   ["GET /notifications/threads/${threadId}"]: {
     Request: {
       params: {
@@ -76119,6 +76479,8 @@ type Routes = {
     };
     Response: Thread;
   };
+
+  /** Marks a thread as "read." Marking a thread as "read" is equivalent to clicking a notification in your notification inbox on GitHub: https://github.com/notifications. */
   ["PATCH /notifications/threads/${threadId}"]: {
     Request: {
       params: {
@@ -76131,6 +76493,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Marks a thread as "done." Marking a thread as "done" is equivalent to marking a notification in your notification inbox on GitHub as done: https://github.com/notifications. */
   ["DELETE /notifications/threads/${threadId}"]: {
     Request: {
       params: {
@@ -76143,6 +76507,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/rest/activity/watching#get-a-repository-subscription).
+
+Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread. */
   ["GET /notifications/threads/${threadId}/subscription"]: {
     Request: {
       params: {
@@ -76155,6 +76523,12 @@ type Routes = {
     };
     Response: ThreadSubscription;
   };
+
+  /** If you are watching a repository, you receive notifications for all threads by default. Use this endpoint to ignore future notifications for threads until you comment on the thread or get an **@mention**.
+
+You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
+
+Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/rest/activity/notifications#delete-a-thread-subscription) endpoint. */
   ["PUT /notifications/threads/${threadId}/subscription"]: {
     Request: {
       params: {
@@ -76173,6 +76547,8 @@ type Routes = {
     };
     Response: ThreadSubscription;
   };
+
+  /** Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/rest/activity/notifications#set-a-thread-subscription) endpoint and set `ignore` to `true`. */
   ["DELETE /notifications/threads/${threadId}/subscription"]: {
     Request: {
       params: {
@@ -76185,6 +76561,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Get the octocat as ASCII art */
   ["GET /octocat"]: {
     Request: {
       params?: never;
@@ -76197,6 +76575,11 @@ type Routes = {
     };
     Response: WebhookConfigUrl;
   };
+
+  /** Lists all organizations, in the order that they were created.
+
+> [!NOTE]
+> Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of organizations. */
   ["GET /organizations"]: {
     Request: {
       params?: never;
@@ -76214,6 +76597,11 @@ type Routes = {
     };
     Response: OrganizationSimple[];
   };
+
+  /** Lists repositories that organization admins have allowed Dependabot to access when updating dependencies.
+> [!NOTE]
+>    This operation supports both server-to-server and user-to-server access.
+Unauthorized users will not see the existence of this endpoint. */
   ["GET /organizations/${org}/dependabot/repository-access"]: {
     Request: {
       params: {
@@ -76240,6 +76628,20 @@ type Routes = {
     };
     Response: DependabotRepositoryAccessDetails;
   };
+
+  /** Updates repositories according to the list of repositories that organization admins have given Dependabot access to when they've updated dependencies.
+
+> [!NOTE]
+>    This operation supports both server-to-server and user-to-server access.
+Unauthorized users will not see the existence of this endpoint.
+
+**Example request body:**
+```json
+{
+  "repository_ids_to_add": [123, 456],
+  "repository_ids_to_remove": [789]
+}
+``` */
   ["PATCH /organizations/${org}/dependabot/repository-access"]: {
     Request: {
       params: {
@@ -76257,6 +76659,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Sets the default level of repository access Dependabot will have while performing an update.  Available values are:
+- 'public' - Dependabot will only have access to public repositories, unless access is explicitly granted to non-public repositories.
+- 'internal' - Dependabot will only have access to public and internal repositories, unless access is explicitly granted to private repositories.
+
+Unauthorized users will not see the existence of this endpoint.
+
+This operation supports both server-to-server and user-to-server access. */
   ["PUT /organizations/${org}/dependabot/repository-access/default-level"]: {
     Request: {
       params: {
@@ -76275,6 +76685,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a report of the total usage for an organization. To use this endpoint, you must be an administrator of an organization within an enterprise or an organization account.
+
+**Note:** This endpoint is only available to organizations with access to the enhanced billing platform. For more information, see "[About the enhanced billing platform](https://docs.github.com/billing/using-the-new-billing-platform)." */
   ["GET /organizations/${org}/settings/billing/usage"]: {
     Request: {
       params: {
@@ -76296,6 +76710,16 @@ type Routes = {
     };
     Response: BillingUsageReport;
   };
+
+  /** Gets information about an organization.
+
+When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, outside collaborators, guest collaborators, repository collaborators, or everyone with access to any repository within the organization to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
+
+To see the full details about an organization, the authenticated user must be an organization owner.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to see the full details about an organization.
+
+To see information about an organization's GitHub plan, GitHub Apps need the `Organization plan` permission. */
   ["GET /orgs/${org}"]: {
     Request: {
       params: {
@@ -76308,6 +76732,18 @@ type Routes = {
     };
     Response: OrganizationFull;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
+
+> [!WARNING]
+> **Closing down notice:** Code security product enablement for new repositories through the organization API is closing down. Please use [code security configurations](https://docs.github.com/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization) to set defaults instead. For more information on setting a default security configuration, see the [changelog](https://github.blog/changelog/2024-07-09-sunsetting-security-settings-defaults-parameters-in-the-organizations-rest-api/).
+
+Updates the organization's profile and member privileges.
+
+The authenticated user must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` or `repo` scope to use this endpoint. */
   ["PATCH /orgs/${org}"]: {
     Request: {
       params: {
@@ -76459,6 +76895,14 @@ type Routes = {
     };
     Response: OrganizationFull;
   };
+
+  /** Deletes an organization and all its repositories.
+
+The organization login will be unavailable for 90 days after deletion.
+
+Please review the Terms of Service regarding account deletion before using this endpoint:
+
+https://docs.github.com/site-policy/github-terms/github-terms-of-service */
   ["DELETE /orgs/${org}"]: {
     Request: {
       params: {
@@ -76471,6 +76915,11 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Gets the total GitHub Actions cache usage for an organization.
+The data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.
+
+OAuth tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/cache/usage"]: {
     Request: {
       params: {
@@ -76483,6 +76932,11 @@ type Routes = {
     };
     Response: ActionsCacheUsageOrgEnterprise;
   };
+
+  /** Lists repositories and their GitHub Actions cache usage for an organization.
+The data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.
+
+OAuth tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/cache/usage-by-repository"]: {
     Request: {
       params: {
@@ -76509,6 +76963,10 @@ type Routes = {
       repository_cache_usages: ActionsCacheUsageByRepository[];
     };
   };
+
+  /** Lists all GitHub-hosted runners configured in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `manage_runner:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/hosted-runners"]: {
     Request: {
       params: {
@@ -76535,6 +76993,9 @@ type Routes = {
       runners: ActionsHostedRunner[];
     };
   };
+
+  /** Creates a GitHub-hosted runner for an organization.
+OAuth tokens and personal access tokens (classic) need the `manage_runners:org` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/hosted-runners"]: {
     Request: {
       params: {
@@ -76565,6 +77026,8 @@ type Routes = {
     };
     Response: ActionsHostedRunner;
   };
+
+  /** Get the list of GitHub-owned images available for GitHub-hosted runners for an organization. */
   ["GET /orgs/${org}/actions/hosted-runners/images/github-owned"]: {
     Request: {
       params: {
@@ -76580,6 +77043,8 @@ type Routes = {
       images: ActionsHostedRunnerImage[];
     };
   };
+
+  /** Get the list of partner images available for GitHub-hosted runners for an organization. */
   ["GET /orgs/${org}/actions/hosted-runners/images/partner"]: {
     Request: {
       params: {
@@ -76595,6 +77060,8 @@ type Routes = {
       images: ActionsHostedRunnerImage[];
     };
   };
+
+  /** Get the GitHub-hosted runners limits for an organization. */
   ["GET /orgs/${org}/actions/hosted-runners/limits"]: {
     Request: {
       params: {
@@ -76607,6 +77074,8 @@ type Routes = {
     };
     Response: ActionsHostedRunnerLimits;
   };
+
+  /** Get the list of machine specs available for GitHub-hosted runners for an organization. */
   ["GET /orgs/${org}/actions/hosted-runners/machine-sizes"]: {
     Request: {
       params: {
@@ -76622,6 +77091,8 @@ type Routes = {
       machine_specs: ActionsHostedRunnerMachineSpec[];
     };
   };
+
+  /** Get the list of platforms available for GitHub-hosted runners for an organization. */
   ["GET /orgs/${org}/actions/hosted-runners/platforms"]: {
     Request: {
       params: {
@@ -76637,6 +77108,10 @@ type Routes = {
       platforms: string[];
     };
   };
+
+  /** Gets a GitHub-hosted runner configured in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `manage_runners:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/hosted-runners/${hostedRunnerId}"]: {
     Request: {
       params: {
@@ -76651,6 +77126,9 @@ type Routes = {
     };
     Response: ActionsHostedRunner;
   };
+
+  /** Updates a GitHub-hosted runner for an organization.
+OAuth app tokens and personal access tokens (classic) need the `manage_runners:org` scope to use this endpoint. */
   ["PATCH /orgs/${org}/actions/hosted-runners/${hostedRunnerId}"]: {
     Request: {
       params: {
@@ -76674,6 +77152,8 @@ type Routes = {
     };
     Response: ActionsHostedRunner;
   };
+
+  /** Deletes a GitHub-hosted runner for an organization. */
   ["DELETE /orgs/${org}/actions/hosted-runners/${hostedRunnerId}"]: {
     Request: {
       params: {
@@ -76688,6 +77168,10 @@ type Routes = {
     };
     Response: ActionsHostedRunner;
   };
+
+  /** Gets the customization template for an OpenID Connect (OIDC) subject claim.
+
+OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/oidc/customization/sub"]: {
     Request: {
       params: {
@@ -76700,6 +77184,10 @@ type Routes = {
     };
     Response: OidcCustomSub;
   };
+
+  /** Creates or updates the customization template for an OpenID Connect (OIDC) subject claim.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/oidc/customization/sub"]: {
     Request: {
       params: {
@@ -76712,6 +77200,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Gets the GitHub Actions permissions policy for repositories and allowed actions and reusable workflows in an organization.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/permissions"]: {
     Request: {
       params: {
@@ -76724,6 +77216,10 @@ type Routes = {
     };
     Response: ActionsOrganizationPermissions;
   };
+
+  /** Sets the GitHub Actions permissions policy for repositories and allowed actions and reusable workflows in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/permissions"]: {
     Request: {
       params: {
@@ -76741,6 +77237,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/permissions/repositories"]: {
     Request: {
       params: {
@@ -76767,6 +77267,11 @@ type Routes = {
       repositories: Repository[];
     };
   };
+
+  /** Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/permissions/repositories"]: {
     Request: {
       params: {
@@ -76782,6 +77287,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/permissions/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -76796,6 +77305,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/permissions/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -76810,6 +77323,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the selected actions and reusable workflows that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/permissions/selected-actions"]: {
     Request: {
       params: {
@@ -76822,6 +77339,10 @@ type Routes = {
     };
     Response: SelectedActions;
   };
+
+  /** Sets the actions and reusable workflows that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/permissions/selected-actions"]: {
     Request: {
       params: {
@@ -76834,6 +77355,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an organization,
+as well as whether GitHub Actions can submit approving pull request reviews. For more information, see
+"[Setting the permissions of the GITHUB_TOKEN for your organization](https://docs.github.com/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#setting-the-permissions-of-the-github_token-for-your-organization)."
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/permissions/workflow"]: {
     Request: {
       params: {
@@ -76846,6 +77373,12 @@ type Routes = {
     };
     Response: ActionsGetDefaultWorkflowPermissions;
   };
+
+  /** Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an organization, and sets if GitHub Actions
+can submit approving pull request reviews. For more information, see
+"[Setting the permissions of the GITHUB_TOKEN for your organization](https://docs.github.com/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#setting-the-permissions-of-the-github_token-for-your-organization)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/permissions/workflow"]: {
     Request: {
       params: {
@@ -76858,6 +77391,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/runner-groups"]: {
     Request: {
       params: {
@@ -76886,6 +77423,10 @@ type Routes = {
       runner_groups: RunnerGroupsOrg[];
     };
   };
+
+  /** Creates a new self-hosted runner group for an organization.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/runner-groups"]: {
     Request: {
       params: {
@@ -76924,6 +77465,10 @@ type Routes = {
     };
     Response: RunnerGroupsOrg;
   };
+
+  /** Gets a specific self-hosted runner group for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}"]: {
     Request: {
       params: {
@@ -76938,6 +77483,10 @@ type Routes = {
     };
     Response: RunnerGroupsOrg;
   };
+
+  /** Updates the `name` and `visibility` of a self-hosted runner group in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PATCH /orgs/${org}/actions/runner-groups/${runnerGroupId}"]: {
     Request: {
       params: {
@@ -76971,6 +77520,10 @@ type Routes = {
     };
     Response: RunnerGroupsOrg;
   };
+
+  /** Deletes a self-hosted runner group for an organization.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/runner-groups/${runnerGroupId}"]: {
     Request: {
       params: {
@@ -76985,6 +77538,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the GitHub-hosted runners in an organization group.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}/hosted-runners"]: {
     Request: {
       params: {
@@ -77013,6 +77570,10 @@ type Routes = {
       runners: ActionsHostedRunner[];
     };
   };
+
+  /** Lists the repositories with access to a self-hosted runner group configured in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories"]: {
     Request: {
       params: {
@@ -77041,6 +77602,10 @@ type Routes = {
       repositories: MinimalRepository[];
     };
   };
+
+  /** Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories"]: {
     Request: {
       params: {
@@ -77058,6 +77623,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to the list of repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -77074,6 +77643,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/runner-groups/${runnerGroupId}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -77090,6 +77663,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists self-hosted runners that are in a specific organization group.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners"]: {
     Request: {
       params: {
@@ -77118,6 +77695,10 @@ type Routes = {
       runners: Runner[];
     };
   };
+
+  /** Replaces the list of self-hosted runners that are part of an organization runner group.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners"]: {
     Request: {
       params: {
@@ -77135,6 +77716,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a self-hosted runner to a runner group configured in an organization.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}"]: {
     Request: {
       params: {
@@ -77151,6 +77736,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/runner-groups/${runnerGroupId}/runners/${runnerId}"]: {
     Request: {
       params: {
@@ -77167,6 +77756,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all self-hosted runners configured in an organization.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/runners"]: {
     Request: {
       params: {
@@ -77195,6 +77790,12 @@ type Routes = {
       runners: Runner[];
     };
   };
+
+  /** Lists binaries for the runner application that you can download and run.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.  If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/runners/downloads"]: {
     Request: {
       params: {
@@ -77207,6 +77808,12 @@ type Routes = {
     };
     Response: RunnerApplication[];
   };
+
+  /** Generates a configuration that can be passed to the runner application at startup.
+
+The authenticated user must have admin access to the organization.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/runners/generate-jitconfig"]: {
     Request: {
       params: {
@@ -77240,6 +77847,18 @@ type Routes = {
       encoded_jit_config: string;
     };
   };
+
+  /** Returns a token that you can pass to the `config` script. The token expires after one hour.
+
+For example, you can replace `TOKEN` in the following example with the registration token provided by this endpoint to configure your self-hosted runner:
+
+```
+./config.sh --url https://github.com/octo-org --token TOKEN
+```
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/runners/registration-token"]: {
     Request: {
       params: {
@@ -77252,6 +77871,18 @@ type Routes = {
     };
     Response: AuthenticationToken;
   };
+
+  /** Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
+
+For example, you can replace `TOKEN` in the following example with the registration token provided by this endpoint to remove your self-hosted runner from an organization:
+
+```
+./config.sh remove --token TOKEN
+```
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/runners/remove-token"]: {
     Request: {
       params: {
@@ -77264,6 +77895,12 @@ type Routes = {
     };
     Response: AuthenticationToken;
   };
+
+  /** Gets a specific self-hosted runner configured in an organization.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/runners/${runnerId}"]: {
     Request: {
       params: {
@@ -77278,6 +77915,12 @@ type Routes = {
     };
     Response: Runner;
   };
+
+  /** Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/runners/${runnerId}"]: {
     Request: {
       params: {
@@ -77292,6 +77935,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all labels for a self-hosted runner configured in an organization.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -77309,6 +77958,12 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Adds custom labels to a self-hosted runner configured in an organization.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -77333,6 +77988,13 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Remove all previous custom labels and set the new custom labels for a specific
+self-hosted runner configured in an organization.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["PUT /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -77357,6 +78019,13 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Remove all custom labels from a self-hosted runner configured in an
+organization. Returns the remaining read-only labels from the runner.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["DELETE /orgs/${org}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -77374,6 +78043,16 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Remove a custom label from a self-hosted runner configured
+in an organization. Returns the remaining labels from the runner.
+
+This endpoint returns a `404 Not Found` status if the custom label is not
+present on the runner.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["DELETE /orgs/${org}/actions/runners/${runnerId}/labels/${name}"]: {
     Request: {
       params: {
@@ -77393,6 +78072,13 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Lists all secrets available in an organization without revealing their
+encrypted values.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/secrets"]: {
     Request: {
       params: {
@@ -77419,6 +78105,13 @@ type Routes = {
       secrets: OrganizationActionsSecret[];
     };
   };
+
+  /** Gets your public key, which you need to encrypt secrets. You need to
+encrypt a secret before you can create or update secrets.
+
+The authenticated user must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/secrets/public-key"]: {
     Request: {
       params: {
@@ -77431,6 +78124,12 @@ type Routes = {
     };
     Response: ActionsPublicKey;
   };
+
+  /** Gets a single organization secret without revealing its encrypted value.
+
+The authenticated user must have collaborator access to a repository to create, update, or read secrets
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -77445,6 +78144,13 @@ type Routes = {
     };
     Response: OrganizationActionsSecret;
   };
+
+  /** Creates or updates an organization secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -77471,6 +78177,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a secret in an organization using the secret name.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -77485,6 +78197,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all repositories that have been selected when the `visibility`
+for repository access to a secret is set to `selected`.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -77513,6 +78232,14 @@ type Routes = {
       repositories: MinimalRepository[];
     };
   };
+
+  /** Replaces all repositories for an organization secret when the `visibility`
+for repository access is set to `selected`. The visibility is set when you [Create
+or update an organization secret](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret).
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["PUT /orgs/${org}/actions/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -77530,6 +78257,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to an organization secret when the `visibility` for
+repository access is set to `selected`. For more information about setting the visibility, see [Create or
+update an organization secret](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret).
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -77545,6 +78280,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from an organization secret when the `visibility`
+for repository access is set to `selected`. The visibility is set when you [Create
+or update an organization secret](https://docs.github.com/rest/actions/secrets#create-or-update-an-organization-secret).
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["DELETE /orgs/${org}/actions/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -77560,6 +78303,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all organization variables.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/variables"]: {
     Request: {
       params: {
@@ -77586,6 +78335,12 @@ type Routes = {
       variables: OrganizationActionsVariable[];
     };
   };
+
+  /** Creates an organization variable that you can reference in a GitHub Actions workflow.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /orgs/${org}/actions/variables"]: {
     Request: {
       params: {
@@ -77607,6 +78362,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Gets a specific variable in an organization.
+
+The authenticated user must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /orgs/${org}/actions/variables/${name}"]: {
     Request: {
       params: {
@@ -77621,6 +78382,12 @@ type Routes = {
     };
     Response: OrganizationActionsVariable;
   };
+
+  /** Updates an organization variable that you can reference in a GitHub Actions workflow.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["PATCH /orgs/${org}/actions/variables/${name}"]: {
     Request: {
       params: {
@@ -77644,6 +78411,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Deletes an organization variable using the variable name.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the`admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /orgs/${org}/actions/variables/${name}"]: {
     Request: {
       params: {
@@ -77658,6 +78431,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all repositories that can access an organization variable
+that is available to selected repositories.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["GET /orgs/${org}/actions/variables/${name}/repositories"]: {
     Request: {
       params: {
@@ -77686,6 +78466,14 @@ type Routes = {
       repositories: MinimalRepository[];
     };
   };
+
+  /** Replaces all repositories for an organization variable that is available
+to selected repositories. Organization variables that are available to selected
+repositories have their `visibility` field set to `selected`.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["PUT /orgs/${org}/actions/variables/${name}/repositories"]: {
     Request: {
       params: {
@@ -77703,6 +78491,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to an organization variable that is available to selected repositories.
+Organization variables that are available to selected repositories have their `visibility` field set to `selected`.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /orgs/${org}/actions/variables/${name}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -77718,6 +78513,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from an organization variable that is
+available to selected repositories. Organization variables that are available to
+selected repositories have their `visibility` field set to `selected`.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. If the repository is private, the `repo` scope is also required. */
   ["DELETE /orgs/${org}/actions/variables/${name}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -77733,6 +78536,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List a collection of artifact attestations associated with any entry in a list of subject digests owned by an organization.
+
+The collection of attestations returned by this endpoint is filtered according to the authenticated user's permissions; if the authenticated user cannot read a repository, the attestations associated with that repository will not be included in the response. In addition, when using a fine-grained access token the `attestations:read` permission is required.
+
+**Please note:** in order to offer meaningful security benefits, an attestation's signature and timestamps **must** be cryptographically verified, and the identity of the attestation signer **must** be validated. Attestations can be verified using the [GitHub CLI `attestation verify` command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use artifact attestations to establish a build's provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). */
   ["POST /orgs/${org}/attestations/bulk-list"]: {
     Request: {
       params: {
@@ -77794,6 +78603,8 @@ type Routes = {
       };
     };
   };
+
+  /** Delete artifact attestations in bulk by either subject digests or unique ID. */
   ["POST /orgs/${org}/attestations/delete-request"]: {
     Request: {
       params: {
@@ -77822,6 +78633,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Delete an artifact attestation by subject digest. */
   ["DELETE /orgs/${org}/attestations/digest/${subjectDigest}"]: {
     Request: {
       params: {
@@ -77836,6 +78649,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Delete an artifact attestation by unique ID that is associated with a repository owned by an org. */
   ["DELETE /orgs/${org}/attestations/${attestationId}"]: {
     Request: {
       params: {
@@ -77850,6 +78665,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List a collection of artifact attestations with a given subject digest that are associated with repositories owned by an organization.
+
+The collection of attestations returned by this endpoint is filtered according to the authenticated user's permissions; if the authenticated user cannot read a repository, the attestations associated with that repository will not be included in the response. In addition, when using a fine-grained access token the `attestations:read` permission is required.
+
+**Please note:** in order to offer meaningful security benefits, an attestation's signature and timestamps **must** be cryptographically verified, and the identity of the attestation signer **must** be validated. Attestations can be verified using the [GitHub CLI `attestation verify` command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use artifact attestations to establish a build's provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). */
   ["GET /orgs/${org}/attestations/${subjectDigest}"]: {
     Request: {
       params: {
@@ -77893,6 +78714,8 @@ type Routes = {
       }[];
     };
   };
+
+  /** List the users blocked by an organization. */
   ["GET /orgs/${org}/blocks"]: {
     Request: {
       params: {
@@ -77916,6 +78739,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Returns a 204 if the given user is blocked by the given organization. Returns a 404 if the organization is not blocking the user, or if the user account has been identified as spam by GitHub. */
   ["GET /orgs/${org}/blocks/${username}"]: {
     Request: {
       params: {
@@ -77930,6 +78755,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Blocks the given user on behalf of the specified organization and returns a 204. If the organization cannot block the given user a 422 is returned. */
   ["PUT /orgs/${org}/blocks/${username}"]: {
     Request: {
       params: {
@@ -77944,6 +78771,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Unblocks the given user on behalf of the specified organization. */
   ["DELETE /orgs/${org}/blocks/${username}"]: {
     Request: {
       params: {
@@ -77958,6 +78787,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists campaigns in an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. */
   ["GET /orgs/${org}/campaigns"]: {
     Request: {
       params: {
@@ -77993,6 +78828,15 @@ type Routes = {
     };
     Response: CampaignSummary[];
   };
+
+  /** Create a campaign for an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint.
+
+Fine-grained tokens must have the "Code scanning alerts" repository permissions (read) on all repositories included
+in the campaign. */
   ["POST /orgs/${org}/campaigns"]: {
     Request: {
       params: {
@@ -78056,6 +78900,12 @@ type Routes = {
     };
     Response: CampaignSummary;
   };
+
+  /** Gets a campaign for an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. */
   ["GET /orgs/${org}/campaigns/${campaignNumber}"]: {
     Request: {
       params: {
@@ -78070,6 +78920,12 @@ type Routes = {
     };
     Response: CampaignSummary;
   };
+
+  /** Updates a campaign in an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. */
   ["PATCH /orgs/${org}/campaigns/${campaignNumber}"]: {
     Request: {
       params: {
@@ -78119,6 +78975,12 @@ type Routes = {
     };
     Response: CampaignSummary;
   };
+
+  /** Deletes a campaign in an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. */
   ["DELETE /orgs/${org}/campaigns/${campaignNumber}"]: {
     Request: {
       params: {
@@ -78133,6 +78995,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists code scanning alerts for the default branch for all eligible repositories in an organization. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` or `repo`s cope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /orgs/${org}/code-scanning/alerts"]: {
     Request: {
       params: {
@@ -78178,6 +79046,12 @@ type Routes = {
     };
     Response: CodeScanningOrganizationAlertItems[];
   };
+
+  /** Lists all code security configurations available in an organization.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations"]: {
     Request: {
       params: {
@@ -78205,6 +79079,12 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration[];
   };
+
+  /** Creates a code security configuration in an organization.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["POST /orgs/${org}/code-security/configurations"]: {
     Request: {
       params: {
@@ -78322,6 +79202,12 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration;
   };
+
+  /** Lists the default code security configurations for an organization.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations/defaults"]: {
     Request: {
       params: {
@@ -78334,6 +79220,13 @@ type Routes = {
     };
     Response: CodeSecurityDefaultConfigurations;
   };
+
+  /** Detach code security configuration(s) from a set of repositories.
+Repositories will retain their settings but will no longer be associated with the configuration.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/code-security/configurations/detach"]: {
     Request: {
       params: {
@@ -78353,6 +79246,12 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Gets a code security configuration available in an organization.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations/${configurationId}"]: {
     Request: {
       params: {
@@ -78367,6 +79266,12 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration;
   };
+
+  /** Updates a code security configuration in an organization.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["PATCH /orgs/${org}/code-security/configurations/${configurationId}"]: {
     Request: {
       params: {
@@ -78441,6 +79346,14 @@ type Routes = {
     };
     Response: CodeSecurityConfiguration;
   };
+
+  /** Deletes the desired code security configuration from an organization.
+Repositories attached to the configuration will retain their settings but will no longer be associated with
+the configuration.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/code-security/configurations/${configurationId}"]: {
     Request: {
       params: {
@@ -78455,6 +79368,14 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Attach a code security configuration to a set of repositories. If the repositories specified are already attached to a configuration, they will be re-attached to the provided configuration.
+
+If insufficient GHAS licenses are available to attach the configuration to a repository, only free features will be enabled.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["POST /orgs/${org}/code-security/configurations/${configurationId}/attach"]: {
     Request: {
       params: {
@@ -78474,6 +79395,14 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Sets a code security configuration as a default to be applied to new repositories in your organization.
+
+This configuration will be applied to the matching repository type (all, none, public, private and internal) by default when they are created.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/code-security/configurations/${configurationId}/defaults"]: {
     Request: {
       params: {
@@ -78496,6 +79425,12 @@ type Routes = {
       configuration?: CodeSecurityConfiguration;
     };
   };
+
+  /** Lists the repositories associated with a code security configuration in an organization.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations/${configurationId}/repositories"]: {
     Request: {
       params: {
@@ -78527,6 +79462,10 @@ type Routes = {
     };
     Response: CodeSecurityConfigurationRepositories[];
   };
+
+  /** Lists the codespaces associated to a specified organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/codespaces"]: {
     Request: {
       params: {
@@ -78553,6 +79492,9 @@ type Routes = {
       codespaces: Codespace[];
     };
   };
+
+  /** Sets which users can access codespaces in an organization. This is synonymous with granting or revoking codespaces access permissions for users according to the visibility.
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/codespaces/access"]: {
     Request: {
       params: {
@@ -78573,6 +79515,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Codespaces for the specified users will be billed to the organization.
+
+To use this endpoint, the access settings for the organization must be set to `selected_members`.
+For information on how to change this setting, see "[Manage access control for organization codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["POST /orgs/${org}/codespaces/access/selected_users"]: {
     Request: {
       params: {
@@ -78591,6 +79540,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Codespaces for the specified users will no longer be billed to the organization.
+
+To use this endpoint, the access settings for the organization must be set to `selected_members`.
+For information on how to change this setting, see "[Manage access control for organization codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/codespaces/access/selected_users"]: {
     Request: {
       params: {
@@ -78609,6 +79565,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all Codespaces development environment secrets available at the organization-level without revealing their encrypted
+values.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/codespaces/secrets"]: {
     Request: {
       params: {
@@ -78635,6 +79596,9 @@ type Routes = {
       secrets: CodespacesOrgSecret[];
     };
   };
+
+  /** Gets a public key for an organization, which is required in order to encrypt secrets. You need to encrypt the value of a secret before you can create or update secrets.
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/codespaces/secrets/public-key"]: {
     Request: {
       params: {
@@ -78647,6 +79611,10 @@ type Routes = {
     };
     Response: CodespacesPublicKey;
   };
+
+  /** Gets an organization development environment secret without revealing its encrypted value.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -78661,6 +79629,11 @@ type Routes = {
     };
     Response: CodespacesOrgSecret;
   };
+
+  /** Creates or updates an organization development environment secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -78687,6 +79660,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes an organization development environment secret using the secret name.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -78701,6 +79678,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all repositories that have been selected when the `visibility`
+for repository access to a secret is set to `selected`.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -78729,6 +79711,12 @@ type Routes = {
       repositories: MinimalRepository[];
     };
   };
+
+  /** Replaces all repositories for an organization development environment secret when the `visibility`
+for repository access is set to `selected`. The visibility is set when you [Create
+or update an organization secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret).
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -78746,6 +79734,9 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to an organization development environment secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret).
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -78761,6 +79752,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from an organization development environment secret when the `visibility`
+for repository access is set to `selected`. The visibility is set when you [Create
+or update an organization secret](https://docs.github.com/rest/codespaces/organization-secrets#create-or-update-an-organization-secret).
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -78776,6 +79773,17 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Gets information about an organization's Copilot subscription, including seat breakdown
+and feature policies. To configure these settings, go to your organization's settings on GitHub.com.
+For more information, see "[Managing policies for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-policies-for-copilot-business-in-your-organization)."
+
+Only organization owners can view details about the organization's Copilot Business or Copilot Enterprise subscription.
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use this endpoint. */
   ["GET /orgs/${org}/copilot/billing"]: {
     Request: {
       params: {
@@ -78788,6 +79796,17 @@ type Routes = {
     };
     Response: CopilotOrganizationDetails;
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Lists all Copilot seats for which an organization with a Copilot Business or Copilot Enterprise subscription is currently being billed.
+Only organization owners can view assigned seats.
+
+Each seat object contains information about the assigned user's most recent Copilot activity. Users must have telemetry enabled in their IDE for Copilot in the IDE activity to be reflected in `last_activity_at`.
+For more information about activity data, see "[Reviewing user activity data for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-user-activity-data-for-copilot-in-your-organization)."
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use this endpoint. */
   ["GET /orgs/${org}/copilot/billing/seats"]: {
     Request: {
       params: {
@@ -78815,6 +79834,20 @@ type Routes = {
       seats?: CopilotSeatDetails[];
     };
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Purchases a GitHub Copilot seat for all users within each specified team.
+The organization will be billed for each seat based on the organization's Copilot plan. For more information about Copilot pricing, see "[About billing for GitHub Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/about-billing-for-github-copilot-in-your-organization)."
+
+Only organization owners can purchase Copilot seats for their organization members. The organization must have a Copilot Business or Copilot Enterprise subscription and a configured suggestion matching policy.
+For more information about setting up a Copilot subscription, see "[Subscribing to Copilot for your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/subscribing-to-copilot-for-your-organization)."
+For more information about setting a suggestion matching policy, see "[Managing policies for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/setting-policies-for-copilot-in-your-organization/managing-policies-for-copilot-in-your-organization#policies-for-suggestion-matching)."
+
+The response contains the total number of new seats that were created and existing seats that were refreshed.
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `admin:org` scopes to use this endpoint. */
   ["POST /orgs/${org}/copilot/billing/selected_teams"]: {
     Request: {
       params: {
@@ -78835,6 +79868,19 @@ type Routes = {
       seats_created: number;
     };
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Sets seats for all members of each team specified to "pending cancellation".
+This will cause the members of the specified team(s) to lose access to GitHub Copilot at the end of the current billing cycle unless they retain access through another team.
+For more information about disabling access to Copilot, see "[Revoking access to Copilot for members of your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-access-to-github-copilot-in-your-organization/revoking-access-to-copilot-for-members-of-your-organization)."
+
+Only organization owners can cancel Copilot seats for their organization members.
+
+The response contains the total number of seats set to "pending cancellation".
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `admin:org` scopes to use this endpoint. */
   ["DELETE /orgs/${org}/copilot/billing/selected_teams"]: {
     Request: {
       params: {
@@ -78855,6 +79901,20 @@ type Routes = {
       seats_cancelled: number;
     };
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Purchases a GitHub Copilot seat for each user specified.
+The organization will be billed for each seat based on the organization's Copilot plan. For more information about Copilot pricing, see "[About billing for GitHub Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/about-billing-for-github-copilot-in-your-organization)."
+
+Only organization owners can purchase Copilot seats for their organization members. The organization must have a Copilot Business or Copilot Enterprise subscription and a configured suggestion matching policy.
+For more information about setting up a Copilot subscription, see "[Subscribing to Copilot for your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-the-copilot-subscription-for-your-organization/subscribing-to-copilot-for-your-organization)."
+For more information about setting a suggestion matching policy, see "[Managing policies for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/setting-policies-for-copilot-in-your-organization/managing-policies-for-copilot-in-your-organization#policies-for-suggestion-matching)."
+
+The response contains the total number of new seats that were created and existing seats that were refreshed.
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `admin:org` scopes to use this endpoint. */
   ["POST /orgs/${org}/copilot/billing/selected_users"]: {
     Request: {
       params: {
@@ -78875,6 +79935,19 @@ type Routes = {
       seats_created: number;
     };
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Sets seats for all users specified to "pending cancellation".
+This will cause the specified users to lose access to GitHub Copilot at the end of the current billing cycle unless they retain access through team membership.
+For more information about disabling access to Copilot, see "[Revoking access to Copilot for members of your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-access-to-github-copilot-in-your-organization/revoking-access-to-copilot-for-members-of-your-organization)."
+
+Only organization owners can cancel Copilot seats for their organization members.
+
+The response contains the total number of seats set to "pending cancellation".
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `admin:org` scopes to use this endpoint. */
   ["DELETE /orgs/${org}/copilot/billing/selected_users"]: {
     Request: {
       params: {
@@ -78895,6 +79968,20 @@ type Routes = {
       seats_cancelled: number;
     };
   };
+
+  /** Use this endpoint to see a breakdown of aggregated metrics for various GitHub Copilot features. See the response schema tab for detailed metrics definitions.
+
+> [!NOTE]
+> This endpoint will only return results for a given day if the organization contained **five or more members with active Copilot licenses** on that day, as evaluated at the end of that day.
+
+The response contains metrics for up to 28 days prior. Metrics are processed once per day for the previous day,
+and the response will only include data up until yesterday. In order for an end user to be counted towards these metrics,
+they must have telemetry enabled in their IDE.
+
+To access this endpoint, the Copilot Metrics API access policy must be enabled for the organization.
+Only organization owners and owners and billing managers of the parent enterprise can view Copilot metrics.
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint. */
   ["GET /orgs/${org}/copilot/metrics"]: {
     Request: {
       params: {
@@ -78922,6 +80009,12 @@ type Routes = {
     };
     Response: CopilotUsageMetricsDay[];
   };
+
+  /** Lists Dependabot alerts for an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /orgs/${org}/dependabot/alerts"]: {
     Request: {
       params: {
@@ -79010,6 +80103,11 @@ type Routes = {
     };
     Response: DependabotAlertWithRepository[];
   };
+
+  /** Lists all secrets available in an organization without revealing their
+encrypted values.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/dependabot/secrets"]: {
     Request: {
       params: {
@@ -79036,6 +80134,11 @@ type Routes = {
       secrets: OrganizationDependabotSecret[];
     };
   };
+
+  /** Gets your public key, which you need to encrypt secrets. You need to
+encrypt a secret before you can create or update secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/dependabot/secrets/public-key"]: {
     Request: {
       params: {
@@ -79048,6 +80151,10 @@ type Routes = {
     };
     Response: DependabotPublicKey;
   };
+
+  /** Gets a single organization secret without revealing its encrypted value.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/dependabot/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -79062,6 +80169,11 @@ type Routes = {
     };
     Response: OrganizationDependabotSecret;
   };
+
+  /** Creates or updates an organization secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/dependabot/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -79088,6 +80200,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a secret in an organization using the secret name.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/dependabot/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -79102,6 +80218,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all repositories that have been selected when the `visibility`
+for repository access to a secret is set to `selected`.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/dependabot/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -79130,6 +80251,12 @@ type Routes = {
       repositories: MinimalRepository[];
     };
   };
+
+  /** Replaces all repositories for an organization secret when the `visibility`
+for repository access is set to `selected`. The visibility is set when you [Create
+or update an organization secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret).
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/dependabot/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -79147,6 +80274,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to an organization secret when the `visibility` for
+repository access is set to `selected`. The visibility is set when you [Create or
+update an organization secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret).
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -79162,6 +80295,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from an organization secret when the `visibility`
+for repository access is set to `selected`. The visibility is set when you [Create
+or update an organization secret](https://docs.github.com/rest/dependabot/secrets#create-or-update-an-organization-secret).
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/dependabot/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -79177,6 +80316,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all packages that are in a specific organization, are readable by the requesting user, and that encountered a conflict during a Docker migration.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. */
   ["GET /orgs/${org}/docker/conflicts"]: {
     Request: {
       params: {
@@ -79189,6 +80332,9 @@ type Routes = {
     };
     Response: Package[];
   };
+
+  /** > [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /orgs/${org}/events"]: {
     Request: {
       params: {
@@ -79212,6 +80358,8 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** The return hash contains `failed_at` and `failed_reason` fields which represent the time at which the invitation failed and the reason for the failure. */
   ["GET /orgs/${org}/failed_invitations"]: {
     Request: {
       params: {
@@ -79235,6 +80383,13 @@ type Routes = {
     };
     Response: OrganizationInvitation[];
   };
+
+  /** List webhooks for an organization.
+
+The authenticated user must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["GET /orgs/${org}/hooks"]: {
     Request: {
       params: {
@@ -79258,6 +80413,13 @@ type Routes = {
     };
     Response: OrgHook[];
   };
+
+  /** Create a hook that posts payloads in JSON format.
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or
+edit webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["POST /orgs/${org}/hooks"]: {
     Request: {
       params: {
@@ -79298,6 +80460,14 @@ type Routes = {
     };
     Response: OrgHook;
   };
+
+  /** Returns a webhook configured in an organization. To get only the webhook
+`config` properties, see "[Get a webhook configuration for an organization](/rest/orgs/webhooks#get-a-webhook-configuration-for-an-organization).
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["GET /orgs/${org}/hooks/${hookId}"]: {
     Request: {
       params: {
@@ -79312,6 +80482,17 @@ type Routes = {
     };
     Response: OrgHook;
   };
+
+  /** Updates a webhook configured in an organization. When you update a webhook,
+the `secret` will be overwritten. If you previously had a `secret` set, you must
+provide the same `secret` or set a new `secret` or the secret will be removed. If
+you are only updating individual webhook `config` properties, use "[Update a webhook
+configuration for an organization](/rest/orgs/webhooks#update-a-webhook-configuration-for-an-organization)".
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["PATCH /orgs/${org}/hooks/${hookId}"]: {
     Request: {
       params: {
@@ -79350,6 +80531,13 @@ type Routes = {
     };
     Response: OrgHook;
   };
+
+  /** Delete a webhook for an organization.
+
+The authenticated user must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["DELETE /orgs/${org}/hooks/${hookId}"]: {
     Request: {
       params: {
@@ -79364,6 +80552,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/orgs/webhooks#get-an-organization-webhook)."
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["GET /orgs/${org}/hooks/${hookId}/config"]: {
     Request: {
       params: {
@@ -79378,6 +80573,13 @@ type Routes = {
     };
     Response: WebhookConfig;
   };
+
+  /** Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/orgs/webhooks#update-an-organization-webhook)."
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["PATCH /orgs/${org}/hooks/${hookId}/config"]: {
     Request: {
       params: {
@@ -79401,6 +80603,13 @@ type Routes = {
     };
     Response: WebhookConfig;
   };
+
+  /** Returns a list of webhook deliveries for a webhook configured in an organization.
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["GET /orgs/${org}/hooks/${hookId}/deliveries"]: {
     Request: {
       params: {
@@ -79423,6 +80632,13 @@ type Routes = {
     };
     Response: HookDeliveryItem[];
   };
+
+  /** Returns a delivery for a webhook configured in an organization.
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["GET /orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}"]: {
     Request: {
       params: {
@@ -79438,6 +80654,13 @@ type Routes = {
     };
     Response: HookDelivery;
   };
+
+  /** Redeliver a delivery for a webhook configured in an organization.
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["POST /orgs/${org}/hooks/${hookId}/deliveries/${deliveryId}/attempts"]: {
     Request: {
       params: {
@@ -79453,6 +80676,14 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** This will trigger a [ping event](https://docs.github.com/webhooks/#ping-event)
+to be sent to the hook.
+
+You must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need `admin:org_hook` scope. OAuth apps cannot list, view, or edit
+webhooks that they did not create and users cannot list, view, or edit webhooks that were created by OAuth apps. */
   ["POST /orgs/${org}/hooks/${hookId}/pings"]: {
     Request: {
       params: {
@@ -79467,6 +80698,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Get API request count statistics for an actor broken down by route within a specified time frame. */
   ["GET /orgs/${org}/insights/api/route-stats/${actorType}/${actorId}"]: {
     Request: {
       params: {
@@ -79514,6 +80747,8 @@ type Routes = {
     };
     Response: ApiInsightsRouteStats;
   };
+
+  /** Get API request statistics for all subjects within an organization within a specified time frame. Subjects can be users or GitHub Apps. */
   ["GET /orgs/${org}/insights/api/subject-stats"]: {
     Request: {
       params: {
@@ -79556,6 +80791,8 @@ type Routes = {
     };
     Response: ApiInsightsSubjectStats;
   };
+
+  /** Get overall statistics of API requests made within an organization by all users and apps within a specified time frame. */
   ["GET /orgs/${org}/insights/api/summary-stats"]: {
     Request: {
       params: {
@@ -79573,6 +80810,8 @@ type Routes = {
     };
     Response: ApiInsightsSummaryStats;
   };
+
+  /** Get overall statistics of API requests within the organization for a user. */
   ["GET /orgs/${org}/insights/api/summary-stats/users/${userId}"]: {
     Request: {
       params: {
@@ -79592,6 +80831,8 @@ type Routes = {
     };
     Response: ApiInsightsSummaryStats;
   };
+
+  /** Get overall statistics of API requests within the organization made by a specific actor. Actors can be GitHub App installations, OAuth apps or other tokens on behalf of a user. */
   ["GET /orgs/${org}/insights/api/summary-stats/${actorType}/${actorId}"]: {
     Request: {
       params: {
@@ -79613,6 +80854,8 @@ type Routes = {
     };
     Response: ApiInsightsSummaryStats;
   };
+
+  /** Get the number of API requests and rate-limited requests made within an organization over a specified time period. */
   ["GET /orgs/${org}/insights/api/time-stats"]: {
     Request: {
       params: {
@@ -79632,6 +80875,8 @@ type Routes = {
     };
     Response: ApiInsightsTimeStats;
   };
+
+  /** Get the number of API requests and rate-limited requests made within an organization by a specific user over a specified time period. */
   ["GET /orgs/${org}/insights/api/time-stats/users/${userId}"]: {
     Request: {
       params: {
@@ -79653,6 +80898,8 @@ type Routes = {
     };
     Response: ApiInsightsTimeStats;
   };
+
+  /** Get the number of API requests and rate-limited requests made within an organization by a specific actor within a specified time period. */
   ["GET /orgs/${org}/insights/api/time-stats/${actorType}/${actorId}"]: {
     Request: {
       params: {
@@ -79676,6 +80923,8 @@ type Routes = {
     };
     Response: ApiInsightsTimeStats;
   };
+
+  /** Get API usage statistics within an organization for a user broken down by the type of access. */
   ["GET /orgs/${org}/insights/api/user-stats/${userId}"]: {
     Request: {
       params: {
@@ -79720,6 +80969,10 @@ type Routes = {
     };
     Response: ApiInsightsUserStats;
   };
+
+  /** Enables an authenticated GitHub App to find the organization's installation information.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /orgs/${org}/installation"]: {
     Request: {
       params: {
@@ -79732,6 +80985,13 @@ type Routes = {
     };
     Response: Installation;
   };
+
+  /** Lists all GitHub Apps in an organization. The installation count includes
+all GitHub Apps installed on repositories in the organization.
+
+The authenticated user must be an organization owner to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:read` scope to use this endpoint. */
   ["GET /orgs/${org}/installations"]: {
     Request: {
       params: {
@@ -79758,6 +81018,8 @@ type Routes = {
       installations: Installation[];
     };
   };
+
+  /** Shows which type of GitHub user can interact with this organization and when the restriction expires. If there is no restrictions, you will see an empty response. */
   ["GET /orgs/${org}/interaction-limits"]: {
     Request: {
       params: {
@@ -79770,6 +81032,8 @@ type Routes = {
     };
     Response: InteractionLimitResponse | object;
   };
+
+  /** Temporarily restricts interactions to a certain type of GitHub user in any public repository in the given organization. You must be an organization owner to set these restrictions. Setting the interaction limit at the organization level will overwrite any interaction limits that are set for individual repositories owned by the organization. */
   ["PUT /orgs/${org}/interaction-limits"]: {
     Request: {
       params: {
@@ -79782,6 +81046,8 @@ type Routes = {
     };
     Response: InteractionLimitResponse;
   };
+
+  /** Removes all interaction restrictions from public repositories in the given organization. You must be an organization owner to remove restrictions. */
   ["DELETE /orgs/${org}/interaction-limits"]: {
     Request: {
       params: {
@@ -79794,6 +81060,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** The return hash contains a `role` field which refers to the Organization
+Invitation role and will be one of the following values: `direct_member`, `admin`,
+`billing_manager`, or `hiring_manager`. If the invitee is not a GitHub
+member, the `login` field in the return hash will be `null`. */
   ["GET /orgs/${org}/invitations"]: {
     Request: {
       params: {
@@ -79827,6 +81098,11 @@ type Routes = {
     };
     Response: OrganizationInvitation[];
   };
+
+  /** Invite people to an organization by using their GitHub user ID or their email address. In order to create invitations in an organization, the authenticated user must be an organization owner.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)." */
   ["POST /orgs/${org}/invitations"]: {
     Request: {
       params: {
@@ -79855,6 +81131,10 @@ type Routes = {
     };
     Response: OrganizationInvitation;
   };
+
+  /** Cancel an organization invitation. In order to cancel an organization invitation, the authenticated user must be an organization owner.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). */
   ["DELETE /orgs/${org}/invitations/${invitationId}"]: {
     Request: {
       params: {
@@ -79869,6 +81149,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List all teams associated with an invitation. In order to see invitations in an organization, the authenticated user must be an organization owner. */
   ["GET /orgs/${org}/invitations/${invitationId}/teams"]: {
     Request: {
       params: {
@@ -79894,6 +81176,8 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** Lists all issue types for an organization. OAuth app tokens and personal access tokens (classic) need the read:org scope to use this endpoint. */
   ["GET /orgs/${org}/issue-types"]: {
     Request: {
       params: {
@@ -79906,6 +81190,13 @@ type Routes = {
     };
     Response: IssueType[];
   };
+
+  /** Create a new issue type for an organization.
+
+You can find out more about issue types in [Managing issue types in an organization](https://docs.github.com/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization).
+
+To use this endpoint, the authenticated user must be an administrator for the organization. OAuth app tokens and
+personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["POST /orgs/${org}/issue-types"]: {
     Request: {
       params: {
@@ -79918,6 +81209,13 @@ type Routes = {
     };
     Response: IssueType;
   };
+
+  /** Updates an issue type for an organization.
+
+You can find out more about issue types in [Managing issue types in an organization](https://docs.github.com/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization).
+
+To use this endpoint, the authenticated user must be an administrator for the organization. OAuth app tokens and
+personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/issue-types/${issueTypeId}"]: {
     Request: {
       params: {
@@ -79932,6 +81230,13 @@ type Routes = {
     };
     Response: IssueType;
   };
+
+  /** Deletes an issue type for an organization.
+
+You can find out more about issue types in [Managing issue types in an organization](https://docs.github.com/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization).
+
+To use this endpoint, the authenticated user must be an administrator for the organization. OAuth app tokens and
+personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/issue-types/${issueTypeId}"]: {
     Request: {
       params: {
@@ -79946,6 +81251,18 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List issues in an organization assigned to the authenticated user.
+
+> [!NOTE]
+> GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /orgs/${org}/issues"]: {
     Request: {
       params: {
@@ -79998,6 +81315,8 @@ type Routes = {
     };
     Response: Issue[];
   };
+
+  /** List all users who are members of an organization. If the authenticated user is also a member of this organization then both concealed and public members will be returned. */
   ["GET /orgs/${org}/members"]: {
     Request: {
       params: {
@@ -80031,6 +81350,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Check if a user is, publicly or privately, a member of the organization. */
   ["GET /orgs/${org}/members/${username}"]: {
     Request: {
       params: {
@@ -80045,6 +81366,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removing a user from this list will remove them from all teams and they will no longer have any access to the organization's repositories.
+
+> [!NOTE]
+> If a user has both direct membership in the organization as well as indirect membership via an enterprise team, only their direct membership will be removed. Their indirect membership via an enterprise team remains until the user is removed from the enterprise team. */
   ["DELETE /orgs/${org}/members/${username}"]: {
     Request: {
       params: {
@@ -80059,6 +81385,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the codespaces that a member of an organization has for repositories in that organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/members/${username}/codespaces"]: {
     Request: {
       params: {
@@ -80087,6 +81417,10 @@ type Routes = {
       codespaces: Codespace[];
     };
   };
+
+  /** Deletes a user's codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/members/${username}/codespaces/${codespaceName}"]: {
     Request: {
       params: {
@@ -80103,6 +81437,10 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Stops a user's codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["POST /orgs/${org}/members/${username}/codespaces/${codespaceName}/stop"]: {
     Request: {
       params: {
@@ -80119,6 +81457,18 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** > [!NOTE]
+> This endpoint is in public preview and is subject to change.
+
+Gets the GitHub Copilot seat details for a member of an organization who currently has access to GitHub Copilot.
+
+The seat object contains information about the user's most recent Copilot activity. Users must have telemetry enabled in their IDE for Copilot in the IDE activity to be reflected in `last_activity_at`.
+For more information about activity data, see "[Reviewing user activity data for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-user-activity-data-for-copilot-in-your-organization)."
+
+Only organization owners can view Copilot seat assignment details for members of their organization.
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use this endpoint. */
   ["GET /orgs/${org}/members/${username}/copilot"]: {
     Request: {
       params: {
@@ -80133,6 +81483,8 @@ type Routes = {
     };
     Response: CopilotSeatDetails;
   };
+
+  /** In order to get a user's membership with an organization, the authenticated user must be an organization member. The `state` parameter in the response can be used to identify the user's membership status. */
   ["GET /orgs/${org}/memberships/${username}"]: {
     Request: {
       params: {
@@ -80147,6 +81499,16 @@ type Routes = {
     };
     Response: OrgMembership;
   };
+
+  /** Only authenticated organization owners can add a member to the organization or update the member's role.
+
+*   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+    
+*   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
+
+**Rate limits**
+
+To prevent abuse, organization owners are limited to creating 50 organization invitations for an organization within a 24 hour period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour period. */
   ["PUT /orgs/${org}/memberships/${username}"]: {
     Request: {
       params: {
@@ -80169,6 +81531,13 @@ type Routes = {
     };
     Response: OrgMembership;
   };
+
+  /** In order to remove a user's membership with an organization, the authenticated user must be an organization owner.
+
+If the specified user is an active member of the organization, this will remove them from the organization. If the specified user has been invited to the organization, this will cancel their invitation. The specified user will receive an email notification in both cases.
+
+> [!NOTE]
+> If a user has both direct membership in the organization as well as indirect membership via an enterprise team, only their direct membership will be removed. Their indirect membership via an enterprise team remains until the user is removed from the enterprise team. */
   ["DELETE /orgs/${org}/memberships/${username}"]: {
     Request: {
       params: {
@@ -80183,6 +81552,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the most recent migrations, including both exports (which can be started through the REST API) and imports (which cannot be started using the REST API).
+
+A list of `repositories` is only returned for export migrations. */
   ["GET /orgs/${org}/migrations"]: {
     Request: {
       params: {
@@ -80208,6 +81581,8 @@ type Routes = {
     };
     Response: Migration[];
   };
+
+  /** Initiates the generation of a migration archive. */
   ["POST /orgs/${org}/migrations"]: {
     Request: {
       params: {
@@ -80265,6 +81640,15 @@ type Routes = {
     };
     Response: Migration;
   };
+
+  /** Fetches the status of a migration.
+
+The `state` of a migration can be one of the following values:
+
+*   `pending`, which means the migration hasn't started yet.
+*   `exporting`, which means the migration is in progress.
+*   `exported`, which means the migration finished successfully.
+*   `failed`, which means the migration failed. */
   ["GET /orgs/${org}/migrations/${migrationId}"]: {
     Request: {
       params: {
@@ -80282,6 +81666,8 @@ type Routes = {
     };
     Response: Migration;
   };
+
+  /** Fetches the URL to a migration archive. */
   ["GET /orgs/${org}/migrations/${migrationId}/archive"]: {
     Request: {
       params: {
@@ -80296,6 +81682,8 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Deletes a previous migration archive. Migration archives are automatically deleted after seven days. */
   ["DELETE /orgs/${org}/migrations/${migrationId}/archive"]: {
     Request: {
       params: {
@@ -80310,6 +81698,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete them](https://docs.github.com/rest/repos/repos#delete-a-repository) when the migration is complete and you no longer need the source data. */
   ["DELETE /orgs/${org}/migrations/${migrationId}/repos/${repoName}/lock"]: {
     Request: {
       params: {
@@ -80326,6 +81716,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List all the repositories for this organization migration. */
   ["GET /orgs/${org}/migrations/${migrationId}/repositories"]: {
     Request: {
       params: {
@@ -80351,6 +81743,15 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Lists the organization roles available in this organization. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+To use this endpoint, the authenticated user must be one of:
+
+- An administrator for the organization.
+- A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/organization-roles"]: {
     Request: {
       params: {
@@ -80368,6 +81769,12 @@ type Routes = {
       roles?: OrganizationRole[];
     };
   };
+
+  /** Removes all assigned organization roles from a team. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+The authenticated user must be an administrator for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/organization-roles/teams/${teamSlug}"]: {
     Request: {
       params: {
@@ -80382,6 +81789,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Assigns an organization role to a team in an organization. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+The authenticated user must be an administrator for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}"]: {
     Request: {
       params: {
@@ -80398,6 +81811,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes an organization role from a team. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+The authenticated user must be an administrator for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/organization-roles/teams/${teamSlug}/${roleId}"]: {
     Request: {
       params: {
@@ -80414,6 +81833,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Revokes all assigned organization roles from a user. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+The authenticated user must be an administrator for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/organization-roles/users/${username}"]: {
     Request: {
       params: {
@@ -80428,6 +81853,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Assigns an organization role to a member of an organization. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+The authenticated user must be an administrator for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PUT /orgs/${org}/organization-roles/users/${username}/${roleId}"]: {
     Request: {
       params: {
@@ -80444,6 +81875,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Remove an organization role from a user. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+The authenticated user must be an administrator for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/organization-roles/users/${username}/${roleId}"]: {
     Request: {
       params: {
@@ -80460,6 +81897,15 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets an organization role that is available to this organization. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+To use this endpoint, the authenticated user must be one of:
+
+- An administrator for the organization.
+- A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/organization-roles/${roleId}"]: {
     Request: {
       params: {
@@ -80474,6 +81920,12 @@ type Routes = {
     };
     Response: OrganizationRole;
   };
+
+  /** Lists the teams that are assigned to an organization role. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+To use this endpoint, you must be an administrator for the organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/organization-roles/${roleId}/teams"]: {
     Request: {
       params: {
@@ -80499,6 +81951,12 @@ type Routes = {
     };
     Response: TeamRoleAssignment[];
   };
+
+  /** Lists organization members that are assigned to an organization role. For more information on organization roles, see "[Using organization roles](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/using-organization-roles)."
+
+To use this endpoint, you must be an administrator for the organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/organization-roles/${roleId}/users"]: {
     Request: {
       params: {
@@ -80524,6 +81982,8 @@ type Routes = {
     };
     Response: UserRoleAssignment[];
   };
+
+  /** List all users who are outside collaborators of an organization. */
   ["GET /orgs/${org}/outside_collaborators"]: {
     Request: {
       params: {
@@ -80552,6 +82012,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** When an organization member is converted to an outside collaborator, they'll only have access to the repositories that their current team membership allows. The user will no longer be a member of the organization. For more information, see "[Converting an organization member to an outside collaborator](https://docs.github.com/articles/converting-an-organization-member-to-an-outside-collaborator/)". Converting an organization member to an outside collaborator may be restricted by enterprise administrators. For more information, see "[Enforcing repository management policies in your enterprise](https://docs.github.com/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)." */
   ["PUT /orgs/${org}/outside_collaborators/${username}"]: {
     Request: {
       params: {
@@ -80572,6 +82034,8 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Removing a user from this list will remove them from all the organization's repositories. */
   ["DELETE /orgs/${org}/outside_collaborators/${username}"]: {
     Request: {
       params: {
@@ -80586,6 +82050,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists packages in an organization readable by the user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /orgs/${org}/packages"]: {
     Request: {
       params: {
@@ -80618,6 +82086,10 @@ type Routes = {
     };
     Response: Package[];
   };
+
+  /** Gets a specific package in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /orgs/${org}/packages/${packageType}/${packageName}"]: {
     Request: {
       params: {
@@ -80634,6 +82106,12 @@ type Routes = {
     };
     Response: Package;
   };
+
+  /** Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+
+The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["DELETE /orgs/${org}/packages/${packageType}/${packageName}"]: {
     Request: {
       params: {
@@ -80650,6 +82128,16 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Restores an entire package in an organization.
+
+You can restore a deleted package under the following conditions:
+  - The package was deleted within the last 30 days.
+  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+
+The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["POST /orgs/${org}/packages/${packageType}/${packageName}/restore"]: {
     Request: {
       params: {
@@ -80669,6 +82157,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists package versions for a package owned by an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /orgs/${org}/packages/${packageType}/${packageName}/versions"]: {
     Request: {
       params: {
@@ -80701,6 +82193,10 @@ type Routes = {
     };
     Response: PackageVersion[];
   };
+
+  /** Gets a specific package version in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
       params: {
@@ -80719,6 +82215,12 @@ type Routes = {
     };
     Response: PackageVersion;
   };
+
+  /** Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+
+The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["DELETE /orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
       params: {
@@ -80737,6 +82239,16 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Restores a specific package version in an organization.
+
+You can restore a deleted package under the following conditions:
+  - The package was deleted within the last 30 days.
+  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+
+The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["POST /orgs/${org}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore"]: {
     Request: {
       params: {
@@ -80755,6 +82267,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists requests from organization members to access organization resources with a fine-grained personal access token.
+
+Only GitHub Apps can use this endpoint. */
   ["GET /orgs/${org}/personal-access-token-requests"]: {
     Request: {
       params: {
@@ -80820,6 +82336,10 @@ type Routes = {
     };
     Response: OrganizationProgrammaticAccessGrantRequest[];
   };
+
+  /** Approves or denies multiple pending requests to access organization resources via a fine-grained personal access token.
+
+Only GitHub Apps can use this endpoint. */
   ["POST /orgs/${org}/personal-access-token-requests"]: {
     Request: {
       params: {
@@ -80846,6 +82366,10 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Approves or denies a pending request to access organization resources via a fine-grained personal access token.
+
+Only GitHub Apps can use this endpoint. */
   ["POST /orgs/${org}/personal-access-token-requests/${patRequestId}"]: {
     Request: {
       params: {
@@ -80868,6 +82392,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Lists the repositories a fine-grained personal access token request is requesting access to.
+
+Only GitHub Apps can use this endpoint. */
   ["GET /orgs/${org}/personal-access-token-requests/${patRequestId}/repositories"]: {
     Request: {
       params: {
@@ -80893,6 +82421,10 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Lists approved fine-grained personal access tokens owned by organization members that can access organization resources.
+
+Only GitHub Apps can use this endpoint. */
   ["GET /orgs/${org}/personal-access-tokens"]: {
     Request: {
       params: {
@@ -80958,6 +82490,10 @@ type Routes = {
     };
     Response: OrganizationProgrammaticAccessGrant[];
   };
+
+  /** Updates the access organization members have to organization resources via fine-grained personal access tokens. Limited to revoking a token's existing access.
+
+Only GitHub Apps can use this endpoint. */
   ["POST /orgs/${org}/personal-access-tokens"]: {
     Request: {
       params: {
@@ -80979,6 +82515,10 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Updates the access an organization member has to organization resources via a fine-grained personal access token. Limited to revoking the token's existing access. Limited to revoking a token's existing access.
+
+Only GitHub Apps can use this endpoint. */
   ["POST /orgs/${org}/personal-access-tokens/${patId}"]: {
     Request: {
       params: {
@@ -80996,6 +82536,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Lists the repositories a fine-grained personal access token has access to.
+
+Only GitHub Apps can use this endpoint. */
   ["GET /orgs/${org}/personal-access-tokens/${patId}/repositories"]: {
     Request: {
       params: {
@@ -81021,6 +82565,12 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** 
+Lists all private registry configurations available at the organization-level without revealing their encrypted
+values.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/private-registries"]: {
     Request: {
       params: {
@@ -81047,6 +82597,11 @@ type Routes = {
       configurations: OrgPrivateRegistryConfiguration[];
     };
   };
+
+  /** 
+Creates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["POST /orgs/${org}/private-registries"]: {
     Request: {
       params: {
@@ -81080,6 +82635,11 @@ type Routes = {
     };
     Response: OrgPrivateRegistryConfigurationWithSelectedRepositories;
   };
+
+  /** 
+Gets the org public key, which is needed to encrypt private registry secrets. You need to encrypt a secret before you can create or update secrets.
+
+OAuth tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/private-registries/public-key"]: {
     Request: {
       params: {
@@ -81103,6 +82663,11 @@ type Routes = {
       key: string;
     };
   };
+
+  /** 
+Get the configuration of a single private registry defined for an organization, omitting its encrypted value.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/private-registries/${secretName}"]: {
     Request: {
       params: {
@@ -81117,6 +82682,11 @@ type Routes = {
     };
     Response: OrgPrivateRegistryConfiguration;
   };
+
+  /** 
+Updates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["PATCH /orgs/${org}/private-registries/${secretName}"]: {
     Request: {
       params: {
@@ -81152,6 +82722,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** 
+Delete a private registry configuration at the organization-level.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
   ["DELETE /orgs/${org}/private-registries/${secretName}"]: {
     Request: {
       params: {
@@ -81166,6 +82741,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /orgs/${org}/projects"]: {
     Request: {
       params: {
@@ -81194,6 +82773,10 @@ type Routes = {
     };
     Response: Project[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /orgs/${org}/projects"]: {
     Request: {
       params: {
@@ -81211,6 +82794,9 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** Gets all custom properties defined for an organization.
+Organization members can read these properties. */
   ["GET /orgs/${org}/properties/schema"]: {
     Request: {
       params: {
@@ -81223,6 +82809,16 @@ type Routes = {
     };
     Response: CustomProperty[];
   };
+
+  /** Creates new or updates existing custom properties defined for an organization in a batch.
+
+If the property already exists, the existing property will be replaced with the new values.
+Missing optional values will fall back to default values, previous values will be overwritten.
+E.g. if a property exists with `values_editable_by: org_and_repo_actors` and it's updated without specifying `values_editable_by`, it will be updated to default value `org_actors`.
+
+To use this endpoint, the authenticated user must be one of:
+  - An administrator for the organization.
+  - A user, or a user on a team, with the fine-grained permission of `custom_properties_org_definitions_manager` in the organization. */
   ["PATCH /orgs/${org}/properties/schema"]: {
     Request: {
       params: {
@@ -81242,6 +82838,9 @@ type Routes = {
     };
     Response: CustomProperty[];
   };
+
+  /** Gets a custom property that is defined for an organization.
+Organization members can read these properties. */
   ["GET /orgs/${org}/properties/schema/${customPropertyName}"]: {
     Request: {
       params: {
@@ -81256,6 +82855,12 @@ type Routes = {
     };
     Response: CustomProperty;
   };
+
+  /** Creates a new or updates an existing custom property that is defined for an organization.
+
+To use this endpoint, the authenticated user must be one of:
+- An administrator for the organization.
+- A user, or a user on a team, with the fine-grained permission of `custom_properties_org_definitions_manager` in the organization. */
   ["PUT /orgs/${org}/properties/schema/${customPropertyName}"]: {
     Request: {
       params: {
@@ -81270,6 +82875,12 @@ type Routes = {
     };
     Response: CustomProperty;
   };
+
+  /** Removes a custom property that is defined for an organization.
+
+To use this endpoint, the authenticated user must be one of:
+  - An administrator for the organization.
+  - A user, or a user on a team, with the fine-grained permission of `custom_properties_org_definitions_manager` in the organization. */
   ["DELETE /orgs/${org}/properties/schema/${customPropertyName}"]: {
     Request: {
       params: {
@@ -81284,6 +82895,9 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Lists organization repositories with all of their custom property values.
+Organization members can read these properties. */
   ["GET /orgs/${org}/properties/values"]: {
     Request: {
       params: {
@@ -81309,6 +82923,17 @@ type Routes = {
     };
     Response: OrgRepoCustomPropertyValues[];
   };
+
+  /** Create new or update existing custom property values for repositories in a batch that belong to an organization.
+Each target repository will have its custom property values updated to match the values provided in the request.
+
+A maximum of 30 repositories can be updated in a single request.
+
+Using a value of `null` for a custom property will remove or 'unset' the property value from the repository.
+
+To use this endpoint, the authenticated user must be one of:
+  - An administrator for the organization.
+  - A user, or a user on a team, with the fine-grained permission of `custom_properties_org_values_editor` in the organization. */
   ["PATCH /orgs/${org}/properties/values"]: {
     Request: {
       params: {
@@ -81330,6 +82955,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Members of an organization can choose to have their membership publicized or not. */
   ["GET /orgs/${org}/public_members"]: {
     Request: {
       params: {
@@ -81353,6 +82980,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Check if the provided user is a public member of the organization. */
   ["GET /orgs/${org}/public_members/${username}"]: {
     Request: {
       params: {
@@ -81367,6 +82996,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** The user can publicize their own membership. (A user cannot publicize the membership for another user.)
+
+Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
   ["PUT /orgs/${org}/public_members/${username}"]: {
     Request: {
       params: {
@@ -81381,6 +83014,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes the public membership for the authenticated user from the specified organization, unless public visibility is enforced by default. */
   ["DELETE /orgs/${org}/public_members/${username}"]: {
     Request: {
       params: {
@@ -81395,6 +83030,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists repositories for the specified organization.
+
+> [!NOTE]
+> In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)." */
   ["GET /orgs/${org}/repos"]: {
     Request: {
       params: {
@@ -81430,6 +83070,10 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Creates a new repository in the specified organization. The authenticated user must be a member of the organization.
+
+OAuth app tokens and personal access tokens (classic) need the `public_repo` or `repo` scope to create a public repository, and `repo` scope to create a private repository. */
   ["POST /orgs/${org}/repos"]: {
     Request: {
       params: {
@@ -81560,6 +83204,8 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
+  /** Get all the repository rulesets for an organization. */
   ["GET /orgs/${org}/rulesets"]: {
     Request: {
       params: {
@@ -81590,6 +83236,8 @@ type Routes = {
     };
     Response: RepositoryRuleset[];
   };
+
+  /** Create a repository ruleset for an organization. */
   ["POST /orgs/${org}/rulesets"]: {
     Request: {
       params: {
@@ -81623,6 +83271,9 @@ type Routes = {
     };
     Response: RepositoryRuleset;
   };
+
+  /** Lists suites of rule evaluations at the organization level.
+For more information, see "[Managing rulesets for repositories in your organization](https://docs.github.com/organizations/managing-organization-settings/managing-rulesets-for-repositories-in-your-organization#viewing-insights-for-rulesets)." */
   ["GET /orgs/${org}/rulesets/rule-suites"]: {
     Request: {
       params: {
@@ -81664,6 +83315,9 @@ type Routes = {
     };
     Response: RuleSuites;
   };
+
+  /** Gets information about a suite of rule evaluations from within an organization.
+For more information, see "[Managing rulesets for repositories in your organization](https://docs.github.com/organizations/managing-organization-settings/managing-rulesets-for-repositories-in-your-organization#viewing-insights-for-rulesets)." */
   ["GET /orgs/${org}/rulesets/rule-suites/${ruleSuiteId}"]: {
     Request: {
       params: {
@@ -81683,6 +83337,11 @@ type Routes = {
     };
     Response: RuleSuite;
   };
+
+  /** Get a repository ruleset for an organization.
+
+**Note:** To prevent leaking sensitive information, the `bypass_actors` property is only returned if the user
+making the API request has write access to the ruleset. */
   ["GET /orgs/${org}/rulesets/${rulesetId}"]: {
     Request: {
       params: {
@@ -81697,6 +83356,8 @@ type Routes = {
     };
     Response: RepositoryRuleset;
   };
+
+  /** Update a ruleset for an organization. */
   ["PUT /orgs/${org}/rulesets/${rulesetId}"]: {
     Request: {
       params: {
@@ -81729,6 +83390,8 @@ type Routes = {
     };
     Response: RepositoryRuleset;
   };
+
+  /** Delete a ruleset for an organization. */
   ["DELETE /orgs/${org}/rulesets/${rulesetId}"]: {
     Request: {
       params: {
@@ -81743,6 +83406,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Get the history of an organization ruleset. */
   ["GET /orgs/${org}/rulesets/${rulesetId}/history"]: {
     Request: {
       params: {
@@ -81768,6 +83433,8 @@ type Routes = {
     };
     Response: RulesetVersion[];
   };
+
+  /** Get a version of an organization ruleset. */
   ["GET /orgs/${org}/rulesets/${rulesetId}/history/${versionId}"]: {
     Request: {
       params: {
@@ -81784,6 +83451,12 @@ type Routes = {
     };
     Response: RulesetVersionWithState;
   };
+
+  /** Lists secret scanning alerts for eligible repositories in an organization, from newest to oldest.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /orgs/${org}/secret-scanning/alerts"]: {
     Request: {
       params: {
@@ -81844,6 +83517,12 @@ type Routes = {
     };
     Response: OrganizationSecretScanningAlert[];
   };
+
+  /** Lists repository security advisories for an organization.
+
+The authenticated user must be an owner or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:write` scope to use this endpoint. */
   ["GET /orgs/${org}/security-advisories"]: {
     Request: {
       params: {
@@ -81880,6 +83559,9 @@ type Routes = {
     };
     Response: RepositoryAdvisory[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** This operation is closing down and will be removed starting January 1, 2026. Please use the "[Organization Roles](https://docs.github.com/rest/orgs/organization-roles)" endpoints instead. */
   ["GET /orgs/${org}/security-managers"]: {
     Request: {
       params: {
@@ -81892,6 +83574,9 @@ type Routes = {
     };
     Response: TeamSimple[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** This operation is closing down and will be removed starting January 1, 2026. Please use the "[Organization Roles](https://docs.github.com/rest/orgs/organization-roles)" endpoints instead. */
   ["PUT /orgs/${org}/security-managers/teams/${teamSlug}"]: {
     Request: {
       params: {
@@ -81906,6 +83591,9 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** This operation is closing down and will be removed starting January 1, 2026. Please use the "[Organization Roles](https://docs.github.com/rest/orgs/organization-roles)" endpoints instead. */
   ["DELETE /orgs/${org}/security-managers/teams/${teamSlug}"]: {
     Request: {
       params: {
@@ -81920,6 +83608,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the summary of the free and paid GitHub Actions minutes used.
+
+Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/settings/billing/actions"]: {
     Request: {
       params: {
@@ -81932,6 +83626,12 @@ type Routes = {
     };
     Response: ActionsBillingUsage;
   };
+
+  /** Gets the free and paid storage used for GitHub Packages in gigabytes.
+
+Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/settings/billing/packages"]: {
     Request: {
       params: {
@@ -81944,6 +83644,12 @@ type Routes = {
     };
     Response: PackagesBillingUsage;
   };
+
+  /** Gets the estimated paid and estimated total storage used for GitHub Actions and GitHub Packages.
+
+Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `admin:org` scope to use this endpoint. */
   ["GET /orgs/${org}/settings/billing/shared-storage"]: {
     Request: {
       params: {
@@ -81956,6 +83662,10 @@ type Routes = {
     };
     Response: CombinedBillingUsage;
   };
+
+  /** Lists all hosted compute network configurations configured in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `read:network_configurations` scope to use this endpoint. */
   ["GET /orgs/${org}/settings/network-configurations"]: {
     Request: {
       params: {
@@ -81982,6 +83692,10 @@ type Routes = {
       network_configurations: NetworkConfiguration[];
     };
   };
+
+  /** Creates a hosted compute network configuration for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `write:network_configurations` scope to use this endpoint. */
   ["POST /orgs/${org}/settings/network-configurations"]: {
     Request: {
       params: {
@@ -82005,6 +83719,10 @@ type Routes = {
     };
     Response: NetworkConfiguration;
   };
+
+  /** Gets a hosted compute network configuration configured in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `read:network_configurations` scope to use this endpoint. */
   ["GET /orgs/${org}/settings/network-configurations/${networkConfigurationId}"]: {
     Request: {
       params: {
@@ -82019,6 +83737,10 @@ type Routes = {
     };
     Response: NetworkConfiguration;
   };
+
+  /** Updates a hosted compute network configuration for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `write:network_configurations` scope to use this endpoint. */
   ["PATCH /orgs/${org}/settings/network-configurations/${networkConfigurationId}"]: {
     Request: {
       params: {
@@ -82044,6 +83766,10 @@ type Routes = {
     };
     Response: NetworkConfiguration;
   };
+
+  /** Deletes a hosted compute network configuration from an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `write:network_configurations` scope to use this endpoint. */
   ["DELETE /orgs/${org}/settings/network-configurations/${networkConfigurationId}"]: {
     Request: {
       params: {
@@ -82058,6 +83784,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a hosted compute network settings resource configured for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `read:network_configurations` scope to use this endpoint. */
   ["GET /orgs/${org}/settings/network-settings/${networkSettingsId}"]: {
     Request: {
       params: {
@@ -82072,6 +83802,20 @@ type Routes = {
     };
     Response: NetworkSettings;
   };
+
+  /** Use this endpoint to see a breakdown of aggregated metrics for various GitHub Copilot features. See the response schema tab for detailed metrics definitions.
+
+> [!NOTE]
+> This endpoint will only return results for a given day if the team had **five or more members with active Copilot licenses** on that day, as evaluated at the end of that day.
+
+The response contains metrics for up to 28 days prior. Metrics are processed once per day for the previous day,
+and the response will only include data up until yesterday. In order for an end user to be counted towards these metrics,
+they must have telemetry enabled in their IDE.
+
+To access this endpoint, the Copilot Metrics API access policy must be enabled for the organization containing the team within GitHub settings.
+Only organization owners for the organization that contains this team and owners and billing managers of the parent enterprise can view Copilot metrics for a team.
+
+OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot`, `read:org`, or `read:enterprise` scopes to use this endpoint. */
   ["GET /orgs/${org}/team/${teamSlug}/copilot/metrics"]: {
     Request: {
       params: {
@@ -82101,6 +83845,8 @@ type Routes = {
     };
     Response: CopilotUsageMetricsDay[];
   };
+
+  /** Lists all teams in an organization that are visible to the authenticated user. */
   ["GET /orgs/${org}/teams"]: {
     Request: {
       params: {
@@ -82124,6 +83870,10 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** To create a team, the authenticated user must be a member or owner of `{org}`. By default, organization members can create teams. Organization owners can limit team creation to organization owners. For more information, see "[Setting team creation permissions](https://docs.github.com/articles/setting-team-creation-permissions-in-your-organization)."
+
+When you create a new team, you automatically become a team maintainer without explicitly adding yourself to the optional array of `maintainers`. For more information, see "[About teams](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/about-teams)". */
   ["POST /orgs/${org}/teams"]: {
     Request: {
       params: {
@@ -82170,6 +83920,11 @@ type Routes = {
     };
     Response: TeamFull;
   };
+
+  /** Gets a team using the team's `slug`. To create the `slug`, GitHub replaces special characters in the `name` string, changes all words to lowercase, and replaces spaces with a `-` separator. For example, `"My TEam Näme"` would become `my-team-name`.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`. */
   ["GET /orgs/${org}/teams/${teamSlug}"]: {
     Request: {
       params: {
@@ -82184,6 +83939,11 @@ type Routes = {
     };
     Response: TeamFull;
   };
+
+  /** To edit a team, the authenticated user must either be an organization owner or a team maintainer.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}`. */
   ["PATCH /orgs/${org}/teams/${teamSlug}"]: {
     Request: {
       params: {
@@ -82225,6 +83985,13 @@ type Routes = {
     };
     Response: TeamFull;
   };
+
+  /** To delete a team, the authenticated user must be an organization owner or team maintainer.
+
+If you are an organization owner, deleting a parent team will delete all of its child teams as well.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}`. */
   ["DELETE /orgs/${org}/teams/${teamSlug}"]: {
     Request: {
       params: {
@@ -82239,6 +84006,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List all discussions on a team's page.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /orgs/${org}/teams/${teamSlug}/discussions"]: {
     Request: {
       params: {
@@ -82271,6 +84045,15 @@ type Routes = {
     };
     Response: TeamDiscussion[];
   };
+
+  /** Creates a new discussion post on a team's page.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /orgs/${org}/teams/${teamSlug}/discussions"]: {
     Request: {
       params: {
@@ -82295,6 +84078,13 @@ type Routes = {
     };
     Response: TeamDiscussion;
   };
+
+  /** Get a specific discussion on a team's page.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}"]: {
     Request: {
       params: {
@@ -82311,6 +84101,13 @@ type Routes = {
     };
     Response: TeamDiscussion;
   };
+
+  /** Edits the title and body text of a discussion post. Only the parameters you provide are updated.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["PATCH /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}"]: {
     Request: {
       params: {
@@ -82332,6 +84129,13 @@ type Routes = {
     };
     Response: TeamDiscussion;
   };
+
+  /** Delete a discussion from a team's page.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}"]: {
     Request: {
       params: {
@@ -82348,6 +84152,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List all comments on a team discussion.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments"]: {
     Request: {
       params: {
@@ -82380,6 +84191,15 @@ type Routes = {
     };
     Response: TeamDiscussionComment[];
   };
+
+  /** Creates a new comment on a team discussion.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments"]: {
     Request: {
       params: {
@@ -82399,6 +84219,13 @@ type Routes = {
     };
     Response: TeamDiscussionComment;
   };
+
+  /** Get a specific comment on a team discussion.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
       params: {
@@ -82417,6 +84244,13 @@ type Routes = {
     };
     Response: TeamDiscussionComment;
   };
+
+  /** Edits the body text of a discussion comment.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["PATCH /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
       params: {
@@ -82438,6 +84272,13 @@ type Routes = {
     };
     Response: TeamDiscussionComment;
   };
+
+  /** Deletes a comment on a team discussion.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
       params: {
@@ -82456,6 +84297,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the reactions to a [team discussion comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
       params: {
@@ -82487,6 +84335,15 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to a [team discussion comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+
+A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
       params: {
@@ -82508,6 +84365,13 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
+
+Delete a reaction to a [team discussion comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/comments/${commentNumber}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -82528,6 +84392,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions"]: {
     Request: {
       params: {
@@ -82557,6 +84428,15 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+
+A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions"]: {
     Request: {
       params: {
@@ -82576,6 +84456,13 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
+
+Delete a reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/discussions/${discussionNumber}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -82594,6 +84481,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/invitations`. */
   ["GET /orgs/${org}/teams/${teamSlug}/invitations"]: {
     Request: {
       params: {
@@ -82619,6 +84511,10 @@ type Routes = {
     };
     Response: OrganizationInvitation[];
   };
+
+  /** Team members will include the members of child teams.
+
+To list members in a team, the team must be visible to the authenticated user. */
   ["GET /orgs/${org}/teams/${teamSlug}/members"]: {
     Request: {
       params: {
@@ -82649,6 +84545,18 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Team members will include the members of child teams.
+
+To get a user's membership with a team, the team must be visible to the authenticated user.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/memberships/{username}`.
+
+> [!NOTE]
+> The response contains the `state` of the membership and the member's `role`.
+
+The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/teams/teams#create-a-team). */
   ["GET /orgs/${org}/teams/${teamSlug}/memberships/${username}"]: {
     Request: {
       params: {
@@ -82665,6 +84573,20 @@ type Routes = {
     };
     Response: TeamMembership;
   };
+
+  /** Adds an organization member to a team. An authenticated organization owner or team maintainer can add organization members to a team.
+
+Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+> [!NOTE]
+> When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+
+An organization owner can add someone who is not part of the team's organization to a team. When an organization owner adds someone to a team who is not an organization member, this endpoint will send an invitation to the person via email. This newly-created membership will be in the "pending" state until the person accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team.
+
+If the user is already a member of the team, this endpoint will update the role of the team member's role. To update the membership of a team member, the authenticated user must be an organization owner or a team maintainer.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/memberships/{username}`. */
   ["PUT /orgs/${org}/teams/${teamSlug}/memberships/${username}"]: {
     Request: {
       params: {
@@ -82687,6 +84609,16 @@ type Routes = {
     };
     Response: TeamMembership;
   };
+
+  /** To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
+
+Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+> [!NOTE]
+> When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/memberships/{username}`. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/memberships/${username}"]: {
     Request: {
       params: {
@@ -82703,6 +84635,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /orgs/${org}/teams/${teamSlug}/projects"]: {
     Request: {
       params: {
@@ -82728,6 +84664,10 @@ type Routes = {
     };
     Response: TeamProject[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /orgs/${org}/teams/${teamSlug}/projects/${projectId}"]: {
     Request: {
       params: {
@@ -82744,6 +84684,10 @@ type Routes = {
     };
     Response: TeamProject;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["PUT /orgs/${org}/teams/${teamSlug}/projects/${projectId}"]: {
     Request: {
       params: {
@@ -82763,6 +84707,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/projects/${projectId}"]: {
     Request: {
       params: {
@@ -82779,6 +84727,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists a team's repositories visible to the authenticated user.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`. */
   ["GET /orgs/${org}/teams/${teamSlug}/repos"]: {
     Request: {
       params: {
@@ -82804,6 +84757,17 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Checks whether a team has `admin`, `push`, `maintain`, `triage`, or `pull` permission for a repository. Repositories inherited through a parent team will also be checked.
+
+You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types/) via the `application/vnd.github.v3.repository+json` accept header.
+
+If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
+
+If the repository is private, you must have at least `read` permission for that repository, and your token must have the `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not Found` response status.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`. */
   ["GET /orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -82822,6 +84786,13 @@ type Routes = {
     };
     Response: TeamRepository;
   };
+
+  /** To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
+
+For more information about the permission levels, see "[Repository permission levels for an organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)". */
   ["PUT /orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -82843,6 +84814,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. This does not delete the repository, it just removes it from the team.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`. */
   ["DELETE /orgs/${org}/teams/${teamSlug}/repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -82861,6 +84837,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the child teams of the team specified by `{team_slug}`.
+
+> [!NOTE]
+> You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/teams`. */
   ["GET /orgs/${org}/teams/${teamSlug}/teams"]: {
     Request: {
       params: {
@@ -82886,6 +84867,15 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** The ability to enable or disable a security feature for all eligible repositories in an organization is closing down. Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead. For more information, see the [changelog](https://github.blog/changelog/2024-07-22-deprecation-of-api-endpoint-to-enable-or-disable-a-security-feature-for-an-organization/).
+
+Enables or disables the specified security feature for all eligible repositories in an organization. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+
+The authenticated user must be an organization owner or be member of a team with the security manager role to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org`, `write:org`, or `repo` scopes to use this endpoint. */
   ["POST /orgs/${org}/${securityProduct}/${enablement}"]: {
     Request: {
       params: {
@@ -82920,6 +84910,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/columns/cards/${cardId}"]: {
     Request: {
       params: {
@@ -82932,6 +84926,10 @@ type Routes = {
     };
     Response: ProjectCard;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["PATCH /projects/columns/cards/${cardId}"]: {
     Request: {
       params: {
@@ -82955,6 +84953,10 @@ type Routes = {
     };
     Response: ProjectCard;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["DELETE /projects/columns/cards/${cardId}"]: {
     Request: {
       params: {
@@ -82967,6 +84969,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /projects/columns/cards/${cardId}/moves"]: {
     Request: {
       params: {
@@ -82991,6 +84997,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/columns/${columnId}"]: {
     Request: {
       params: {
@@ -83003,6 +85013,10 @@ type Routes = {
     };
     Response: ProjectColumn;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["PATCH /projects/columns/${columnId}"]: {
     Request: {
       params: {
@@ -83021,6 +85035,10 @@ type Routes = {
     };
     Response: ProjectColumn;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["DELETE /projects/columns/${columnId}"]: {
     Request: {
       params: {
@@ -83033,6 +85051,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/columns/${columnId}/cards"]: {
     Request: {
       params: {
@@ -83061,6 +85083,10 @@ type Routes = {
     };
     Response: ProjectCard[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /projects/columns/${columnId}/cards"]: {
     Request: {
       params: {
@@ -83092,6 +85118,10 @@ type Routes = {
     };
     Response: ProjectCard;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /projects/columns/${columnId}/moves"]: {
     Request: {
       params: {
@@ -83111,6 +85141,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/${projectId}"]: {
     Request: {
       params: {
@@ -83123,6 +85157,10 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["PATCH /projects/${projectId}"]: {
     Request: {
       params: {
@@ -83155,6 +85193,10 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["DELETE /projects/${projectId}"]: {
     Request: {
       params: {
@@ -83167,6 +85209,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/${projectId}/collaborators"]: {
     Request: {
       params: {
@@ -83195,6 +85241,10 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["PUT /projects/${projectId}/collaborators/${username}"]: {
     Request: {
       params: {
@@ -83216,6 +85266,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["DELETE /projects/${projectId}/collaborators/${username}"]: {
     Request: {
       params: {
@@ -83230,6 +85284,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/${projectId}/collaborators/${username}/permission"]: {
     Request: {
       params: {
@@ -83244,6 +85302,10 @@ type Routes = {
     };
     Response: ProjectCollaboratorPermission;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /projects/${projectId}/columns"]: {
     Request: {
       params: {
@@ -83267,6 +85329,10 @@ type Routes = {
     };
     Response: ProjectColumn[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /projects/${projectId}/columns"]: {
     Request: {
       params: {
@@ -83285,10 +85351,33 @@ type Routes = {
     };
     Response: ProjectColumn;
   };
+
+  /** > [!NOTE]
+> Accessing this endpoint does not count against your REST API rate limit.
+
+Some categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:
+* The `core` object provides your rate limit status for all non-search-related resources in the REST API.
+* The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see "[Search](https://docs.github.com/rest/search/search)."
+* The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see "[Search code](https://docs.github.com/rest/search/search#search-code)."
+* The `graphql` object provides your rate limit status for the GraphQL API. For more information, see "[Resource limitations](https://docs.github.com/graphql/overview/resource-limitations#rate-limit)."
+* The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see "[Creating a GitHub App from a manifest](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration)."
+* The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/rest/dependency-graph)."
+* The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/rest/dependency-graph)."
+* The `code_scanning_upload` object provides your rate limit status for uploading SARIF results to code scanning. For more information, see "[Uploading a SARIF file to GitHub](https://docs.github.com/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)."
+* The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see "[Self-hosted runners](https://docs.github.com/rest/actions/self-hosted-runners)."
+* The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see "[API Versions](https://docs.github.com/rest/about-the-rest-api/api-versions)."
+
+> [!NOTE]
+> The `rate` object is closing down. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object. */
   ["GET /rate_limit"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: RateLimitOverview;
   };
+
+  /** The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
+
+> [!NOTE]
+> In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)." */
   ["GET /repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -83303,6 +85392,8 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
+  /** **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/rest/repos/repos#replace-all-repository-topics) endpoint. */
   ["PATCH /repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -83481,6 +85572,13 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
+  /** Deleting a repository requires admin access.
+
+If an organization owner has configured the organization to prevent members from deleting organization-owned
+repositories, you will get a `403 Forbidden` response.
+
+OAuth app tokens and personal access tokens (classic) need the `delete_repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -83495,6 +85593,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all artifacts for a repository.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/artifacts"]: {
     Request: {
       params: {
@@ -83525,6 +85629,12 @@ type Routes = {
       artifacts: Artifact[];
     };
   };
+
+  /** Gets a specific artifact for a workflow run.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/artifacts/${artifactId}"]: {
     Request: {
       params: {
@@ -83541,6 +85651,9 @@ type Routes = {
     };
     Response: Artifact;
   };
+
+  /** Deletes an artifact for a workflow run.
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/artifacts/${artifactId}"]: {
     Request: {
       params: {
@@ -83557,6 +85670,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a redirect URL to download an archive for a repository. This URL expires after 1 minute. Look for `Location:` in
+the response header to find the URL for the download. The `:archive_format` must be `zip`.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/artifacts/${artifactId}/${archiveFormat}"]: {
     Request: {
       params: {
@@ -83574,6 +85692,13 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Gets GitHub Actions cache usage for a repository.
+The data fetched using this API is refreshed approximately every 5 minutes, so values returned from this endpoint may take at least 5 minutes to get updated.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/cache/usage"]: {
     Request: {
       params: {
@@ -83588,6 +85713,10 @@ type Routes = {
     };
     Response: ActionsCacheUsageByRepository;
   };
+
+  /** Lists the GitHub Actions caches for a repository.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/caches"]: {
     Request: {
       params: {
@@ -83627,6 +85756,10 @@ type Routes = {
     };
     Response: ActionsCacheList;
   };
+
+  /** Deletes one or more GitHub Actions caches for a repository, using a complete cache key. By default, all caches that match the provided key are deleted, but you can optionally provide a Git ref to restrict deletions to caches that match both the provided key and the Git ref.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/caches"]: {
     Request: {
       params: {
@@ -83646,6 +85779,10 @@ type Routes = {
     };
     Response: ActionsCacheList;
   };
+
+  /** Deletes a GitHub Actions cache for a repository, using a cache ID.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/caches/${cacheId}"]: {
     Request: {
       params: {
@@ -83662,6 +85799,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a specific job in a workflow run.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/jobs/${jobId}"]: {
     Request: {
       params: {
@@ -83678,6 +85821,13 @@ type Routes = {
     };
     Response: Job;
   };
+
+  /** Gets a redirect URL to download a plain text file of logs for a workflow job. This link expires after 1 minute. Look
+for `Location:` in the response header to find the URL for the download.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/jobs/${jobId}/logs"]: {
     Request: {
       params: {
@@ -83694,6 +85844,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Re-run a job and its dependent jobs in a workflow run.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/jobs/${jobId}/rerun"]: {
     Request: {
       params: {
@@ -83716,6 +85870,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Gets the customization template for an OpenID Connect (OIDC) subject claim.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/oidc/customization/sub"]: {
     Request: {
       params: {
@@ -83730,6 +85888,10 @@ type Routes = {
     };
     Response: OidcCustomSubRepo;
   };
+
+  /** Sets the customization template and `opt-in` or `opt-out` flag for an OpenID Connect (OIDC) subject claim for a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/oidc/customization/sub"]: {
     Request: {
       params: {
@@ -83749,6 +85911,13 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Lists all organization secrets shared with a repository without revealing their encrypted
+values.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/organization-secrets"]: {
     Request: {
       params: {
@@ -83777,6 +85946,12 @@ type Routes = {
       secrets: ActionsSecret[];
     };
   };
+
+  /** Lists all organization variables shared with a repository.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/organization-variables"]: {
     Request: {
       params: {
@@ -83805,6 +85980,10 @@ type Routes = {
       variables: ActionsVariable[];
     };
   };
+
+  /** Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions and reusable workflows allowed to run in the repository.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/permissions"]: {
     Request: {
       params: {
@@ -83819,6 +85998,10 @@ type Routes = {
     };
     Response: ActionsRepositoryPermissions;
   };
+
+  /** Sets the GitHub Actions permissions policy for enabling GitHub Actions and allowed actions and reusable workflows in the repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/permissions"]: {
     Request: {
       params: {
@@ -83838,6 +86021,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the level of access that workflows outside of the repository have to actions and reusable workflows in the repository.
+This endpoint only applies to private repositories.
+For more information, see "[Allowing access to components in a private repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/permissions/access"]: {
     Request: {
       params: {
@@ -83852,6 +86041,12 @@ type Routes = {
     };
     Response: ActionsWorkflowAccessToRepository;
   };
+
+  /** Sets the level of access that workflows outside of the repository have to actions and reusable workflows in the repository.
+This endpoint only applies to private repositories.
+For more information, see "[Allowing access to components in a private repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-access-to-components-in-a-private-repository)".
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/permissions/access"]: {
     Request: {
       params: {
@@ -83866,6 +86061,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the settings for selected actions and reusable workflows that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/permissions/selected-actions"]: {
     Request: {
       params: {
@@ -83880,6 +86079,10 @@ type Routes = {
     };
     Response: SelectedActions;
   };
+
+  /** Sets the actions and reusable workflows that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/permissions/selected-actions"]: {
     Request: {
       params: {
@@ -83894,6 +86097,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in a repository,
+as well as if GitHub Actions can submit approving pull request reviews.
+For more information, see "[Setting the permissions of the GITHUB_TOKEN for your repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-permissions-of-the-github_token-for-your-repository)."
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/permissions/workflow"]: {
     Request: {
       params: {
@@ -83908,6 +86117,12 @@ type Routes = {
     };
     Response: ActionsGetDefaultWorkflowPermissions;
   };
+
+  /** Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in a repository, and sets if GitHub Actions
+can submit approving pull request reviews.
+For more information, see "[Setting the permissions of the GITHUB_TOKEN for your repository](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-permissions-of-the-github_token-for-your-repository)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/permissions/workflow"]: {
     Request: {
       params: {
@@ -83922,6 +86137,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all self-hosted runners configured in a repository.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runners"]: {
     Request: {
       params: {
@@ -83952,6 +86173,12 @@ type Routes = {
       runners: Runner[];
     };
   };
+
+  /** Lists binaries for the runner application that you can download and run.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runners/downloads"]: {
     Request: {
       params: {
@@ -83966,6 +86193,12 @@ type Routes = {
     };
     Response: RunnerApplication[];
   };
+
+  /** Generates a configuration that can be passed to the runner application at startup.
+
+The authenticated user must have admin access to the repository.
+
+OAuth tokens and personal access tokens (classic) need the`repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runners/generate-jitconfig"]: {
     Request: {
       params: {
@@ -84001,6 +86234,18 @@ type Routes = {
       encoded_jit_config: string;
     };
   };
+
+  /** Returns a token that you can pass to the `config` script. The token expires after one hour.
+
+For example, you can replace `TOKEN` in the following example with the registration token provided by this endpoint to configure your self-hosted runner:
+
+```
+./config.sh --url https://github.com/octo-org --token TOKEN
+```
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runners/registration-token"]: {
     Request: {
       params: {
@@ -84015,6 +86260,18 @@ type Routes = {
     };
     Response: AuthenticationToken;
   };
+
+  /** Returns a token that you can pass to the `config` script to remove a self-hosted runner from an repository. The token expires after one hour.
+
+For example, you can replace `TOKEN` in the following example with the registration token provided by this endpoint to remove your self-hosted runner from an organization:
+
+```
+./config.sh remove --token TOKEN
+```
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runners/remove-token"]: {
     Request: {
       params: {
@@ -84029,6 +86286,12 @@ type Routes = {
     };
     Response: AuthenticationToken;
   };
+
+  /** Gets a specific self-hosted runner configured in a repository.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runners/${runnerId}"]: {
     Request: {
       params: {
@@ -84045,6 +86308,12 @@ type Routes = {
     };
     Response: Runner;
   };
+
+  /** Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/runners/${runnerId}"]: {
     Request: {
       params: {
@@ -84061,6 +86330,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all labels for a self-hosted runner configured in a repository.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -84080,6 +86355,12 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Adds custom labels to a self-hosted runner configured in a repository.
+
+Authenticated users must have admin access to the organization to use this endpoint.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -84106,6 +86387,13 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Remove all previous custom labels and set the new custom labels for a specific
+self-hosted runner configured in a repository.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -84132,6 +86420,13 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Remove all custom labels from a self-hosted runner configured in a
+repository. Returns the remaining read-only labels from the runner.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/runners/${runnerId}/labels"]: {
     Request: {
       params: {
@@ -84151,6 +86446,16 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Remove a custom label from a self-hosted runner configured
+in a repository. Returns the remaining labels from the runner.
+
+This endpoint returns a `404 Not Found` status if the custom label is not
+present on the runner.
+
+Authenticated users must have admin access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/runners/${runnerId}/labels/${name}"]: {
     Request: {
       params: {
@@ -84172,6 +86477,14 @@ type Routes = {
       labels: RunnerLabel[];
     };
   };
+
+  /** Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
+
+This endpoint will return up to 1,000 results for each search when using the following parameters: `actor`, `branch`, `check_suite_id`, `created`, `event`, `head_sha`, `status`. */
   ["GET /repos/${owner}/${repo}/actions/runs"]: {
     Request: {
       params: {
@@ -84236,6 +86549,12 @@ type Routes = {
       workflow_runs: WorkflowRun[];
     };
   };
+
+  /** Gets a specific workflow run.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}"]: {
     Request: {
       params: {
@@ -84258,6 +86577,12 @@ type Routes = {
     };
     Response: WorkflowRun;
   };
+
+  /** Deletes a specific workflow run.
+
+Anyone with write access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/runs/${runId}"]: {
     Request: {
       params: {
@@ -84274,6 +86599,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/approvals"]: {
     Request: {
       params: {
@@ -84290,6 +86619,10 @@ type Routes = {
     };
     Response: EnvironmentApprovals[];
   };
+
+  /** Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see ["Approving workflow runs from public forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/approve"]: {
     Request: {
       params: {
@@ -84306,6 +86639,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Lists artifacts for a workflow run.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/artifacts"]: {
     Request: {
       params: {
@@ -84338,6 +86677,12 @@ type Routes = {
       artifacts: Artifact[];
     };
   };
+
+  /** Gets a specific workflow run attempt.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}"]: {
     Request: {
       params: {
@@ -84362,6 +86707,13 @@ type Routes = {
     };
     Response: WorkflowRun;
   };
+
+  /** Lists jobs for a specific workflow run attempt. You can use parameters to narrow the list of results. For more information
+about using parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint  with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/jobs"]: {
     Request: {
       params: {
@@ -84394,6 +86746,13 @@ type Routes = {
       jobs: Job[];
     };
   };
+
+  /** Gets a redirect URL to download an archive of log files for a specific workflow run attempt. This link expires after
+1 minute. Look for `Location:` in the response header to find the URL for the download.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/attempts/${attemptNumber}/logs"]: {
     Request: {
       params: {
@@ -84412,6 +86771,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Cancels a workflow run using its `id`.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/cancel"]: {
     Request: {
       params: {
@@ -84428,6 +86791,13 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Approve or reject custom deployment protection rules provided by a GitHub App for a workflow run. For more information, see "[Using environments for deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+
+> [!NOTE]
+> GitHub Apps can only review their own custom deployment protection rules. To approve or reject pending deployments that are waiting for review from a specific person or team, see [`POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments`](/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run).
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/deployment_protection_rule"]: {
     Request: {
       params: {
@@ -84444,6 +86814,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Cancels a workflow run and bypasses conditions that would otherwise cause a workflow execution to continue, such as an `always()` condition on a job.
+You should only use this endpoint to cancel a workflow run when the workflow run is not responding to [`POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel`](/rest/actions/workflow-runs#cancel-a-workflow-run).
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/force-cancel"]: {
     Request: {
       params: {
@@ -84460,6 +86835,13 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Lists jobs for a workflow run. You can use parameters to narrow the list of results. For more information
+about using parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/jobs"]: {
     Request: {
       params: {
@@ -84495,6 +86877,13 @@ type Routes = {
       jobs: Job[];
     };
   };
+
+  /** Gets a redirect URL to download an archive of log files for a workflow run. This link expires after 1 minute. Look for
+`Location:` in the response header to find the URL for the download.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/logs"]: {
     Request: {
       params: {
@@ -84511,6 +86900,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Deletes all logs for a workflow run.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/runs/${runId}/logs"]: {
     Request: {
       params: {
@@ -84527,6 +86920,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Get all deployment environments for a workflow run that are waiting for protection rules to pass.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments"]: {
     Request: {
       params: {
@@ -84543,6 +86942,12 @@ type Routes = {
     };
     Response: PendingDeployment[];
   };
+
+  /** Approve or reject pending deployments that are waiting on approval by a required reviewer.
+
+Required reviewers with read access to the repository contents and deployments can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/pending_deployments"]: {
     Request: {
       params: {
@@ -84575,6 +86980,10 @@ type Routes = {
     };
     Response: Deployment[];
   };
+
+  /** Re-runs your workflow run using its `id`.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/rerun"]: {
     Request: {
       params: {
@@ -84597,6 +87006,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Re-run all of the failed jobs and their dependent jobs in a workflow run using the `id` of the workflow run.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/runs/${runId}/rerun-failed-jobs"]: {
     Request: {
       params: {
@@ -84619,6 +87032,15 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** > [!WARNING]  
+> This endpoint is in the process of closing down. Refer to "[Actions Get workflow usage and Get workflow run usage endpoints closing down](https://github.blog/changelog/2025-02-02-actions-get-workflow-usage-and-get-workflow-run-usage-endpoints-closing-down/)" for more information.
+
+Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/runs/${runId}/timing"]: {
     Request: {
       params: {
@@ -84635,6 +87057,13 @@ type Routes = {
     };
     Response: WorkflowRunUsage;
   };
+
+  /** Lists all secrets available in a repository without revealing their encrypted
+values.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/secrets"]: {
     Request: {
       params: {
@@ -84663,6 +87092,13 @@ type Routes = {
       secrets: ActionsSecret[];
     };
   };
+
+  /** Gets your public key, which you need to encrypt secrets. You need to
+encrypt a secret before you can create or update secrets.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/secrets/public-key"]: {
     Request: {
       params: {
@@ -84677,6 +87113,12 @@ type Routes = {
     };
     Response: ActionsPublicKey;
   };
+
+  /** Gets a single repository secret without revealing its encrypted value.
+
+The authenticated user must have collaborator access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -84693,6 +87135,13 @@ type Routes = {
     };
     Response: ActionsSecret;
   };
+
+  /** Creates or updates a repository secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -84717,6 +87166,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a secret in a repository using the secret name.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -84733,6 +87188,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all repository variables.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/variables"]: {
     Request: {
       params: {
@@ -84761,6 +87222,12 @@ type Routes = {
       variables: ActionsVariable[];
     };
   };
+
+  /** Creates a repository variable that you can reference in a GitHub Actions workflow.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/variables"]: {
     Request: {
       params: {
@@ -84780,6 +87247,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Gets a specific variable in a repository.
+
+The authenticated user must have collaborator access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/actions/variables/${name}"]: {
     Request: {
       params: {
@@ -84796,6 +87269,12 @@ type Routes = {
     };
     Response: ActionsVariable;
   };
+
+  /** Updates a repository variable that you can reference in a GitHub Actions workflow.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PATCH /repos/${owner}/${repo}/actions/variables/${name}"]: {
     Request: {
       params: {
@@ -84817,6 +87296,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Deletes a repository variable using the variable name.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/actions/variables/${name}"]: {
     Request: {
       params: {
@@ -84833,6 +87318,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the workflows in a repository.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/workflows"]: {
     Request: {
       params: {
@@ -84861,6 +87352,13 @@ type Routes = {
       workflows: Workflow[];
     };
   };
+
+  /** Gets a specific workflow. You can replace `workflow_id` with the workflow
+file name. For example, you could use `main.yaml`.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/workflows/${workflowId}"]: {
     Request: {
       params: {
@@ -84877,6 +87375,10 @@ type Routes = {
     };
     Response: Workflow;
   };
+
+  /** Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/workflows/${workflowId}/disable"]: {
     Request: {
       params: {
@@ -84893,6 +87395,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** You can use this endpoint to manually trigger a GitHub Actions workflow run. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+
+You must configure your GitHub Actions workflow to run when the [`workflow_dispatch` webhook](/developers/webhooks-and-events/webhook-events-and-payloads#workflow_dispatch) event occurs. The `inputs` are configured in the workflow file. For more information about how to configure the `workflow_dispatch` event in the workflow file, see "[Events that trigger workflows](/actions/reference/events-that-trigger-workflows#workflow_dispatch)."
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches"]: {
     Request: {
       params: {
@@ -84914,6 +87422,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/actions/workflows/${workflowId}/enable"]: {
     Request: {
       params: {
@@ -84930,6 +87442,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#parameters).
+
+Anyone with read access to the repository can use this endpoint
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository.
+
+This endpoint will return up to 1,000 results for each search when using the following parameters: `actor`, `branch`, `check_suite_id`, `created`, `event`, `head_sha`, `status`. */
   ["GET /repos/${owner}/${repo}/actions/workflows/${workflowId}/runs"]: {
     Request: {
       params: {
@@ -84996,6 +87516,17 @@ type Routes = {
       workflow_runs: WorkflowRun[];
     };
   };
+
+  /** > [!WARNING]  
+> This endpoint is in the process of closing down. Refer to "[Actions Get workflow usage and Get workflow run usage endpoints closing down](https://github.blog/changelog/2025-02-02-actions-get-workflow-usage-and-get-workflow-run-usage-endpoints-closing-down/)" for more information.
+
+Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+
+You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/actions/workflows/${workflowId}/timing"]: {
     Request: {
       params: {
@@ -85012,6 +87543,11 @@ type Routes = {
     };
     Response: WorkflowUsage;
   };
+
+  /** Lists a detailed history of changes to a repository, such as pushes, merges, force pushes, and branch changes, and associates these changes with commits and users.
+
+For more information about viewing repository activity,
+see "[Viewing activity and data for your repository](https://docs.github.com/repositories/viewing-activity-and-data-for-your-repository)." */
   ["GET /repos/${owner}/${repo}/activity"]: {
     Request: {
       params: {
@@ -85067,6 +87603,8 @@ type Routes = {
     };
     Response: Activity[];
   };
+
+  /** Lists the [available assignees](https://docs.github.com/articles/assigning-issues-and-pull-requests-to-other-github-users/) for issues in a repository. */
   ["GET /repos/${owner}/${repo}/assignees"]: {
     Request: {
       params: {
@@ -85092,6 +87630,12 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Checks if a user has permission to be assigned to an issue in this repository.
+
+If the `assignee` can be assigned to issues in the repository, a `204` header with no content is returned.
+
+Otherwise a `404` status code is returned. */
   ["GET /repos/${owner}/${repo}/assignees/${assignee}"]: {
     Request: {
       params: {
@@ -85107,6 +87651,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Store an artifact attestation and associate it with a repository.
+
+The authenticated user must have write permission to the repository and, if using a fine-grained access token, the `attestations:write` permission is required.
+
+Artifact attestations are meant to be created using the [attest action](https://github.com/actions/attest). For more information, see our guide on [using artifact attestations to establish a build's provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). */
   ["POST /repos/${owner}/${repo}/attestations"]: {
     Request: {
       params: {
@@ -85134,6 +87684,12 @@ type Routes = {
       id?: number;
     };
   };
+
+  /** List a collection of artifact attestations with a given subject digest that are associated with a repository.
+
+The authenticated user making the request must have read access to the repository. In addition, when using a fine-grained access token the `attestations:read` permission is required.
+
+**Please note:** in order to offer meaningful security benefits, an attestation's signature and timestamps **must** be cryptographically verified, and the identity of the attestation signer **must** be validated. Attestations can be verified using the [GitHub CLI `attestation verify` command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use artifact attestations to establish a build's provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). */
   ["GET /repos/${owner}/${repo}/attestations/${subjectDigest}"]: {
     Request: {
       params: {
@@ -85179,6 +87735,10 @@ type Routes = {
       }[];
     };
   };
+
+  /** Gets all autolinks that are configured for a repository.
+
+Information about autolinks are only available to repository administrators. */
   ["GET /repos/${owner}/${repo}/autolinks"]: {
     Request: {
       params: {
@@ -85193,6 +87753,8 @@ type Routes = {
     };
     Response: Autolink[];
   };
+
+  /** Users with admin access to the repository can create an autolink. */
   ["POST /repos/${owner}/${repo}/autolinks"]: {
     Request: {
       params: {
@@ -85217,6 +87779,10 @@ type Routes = {
     };
     Response: Autolink;
   };
+
+  /** This returns a single autolink reference by ID that was configured for the given repository.
+
+Information about autolinks are only available to repository administrators. */
   ["GET /repos/${owner}/${repo}/autolinks/${autolinkId}"]: {
     Request: {
       params: {
@@ -85233,6 +87799,10 @@ type Routes = {
     };
     Response: Autolink;
   };
+
+  /** This deletes a single autolink reference by ID that was configured for the given repository.
+
+Information about autolinks are only available to repository administrators. */
   ["DELETE /repos/${owner}/${repo}/autolinks/${autolinkId}"]: {
     Request: {
       params: {
@@ -85249,6 +87819,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Shows whether Dependabot security updates are enabled, disabled or paused for a repository. The authenticated user must have admin read access to the repository. For more information, see "[Configuring Dependabot security updates](https://docs.github.com/articles/configuring-automated-security-fixes)". */
   ["GET /repos/${owner}/${repo}/automated-security-fixes"]: {
     Request: {
       params: {
@@ -85263,6 +87835,8 @@ type Routes = {
     };
     Response: CheckAutomatedSecurityFixes;
   };
+
+  /** Enables Dependabot security updates for a repository. The authenticated user must have admin access to the repository. For more information, see "[Configuring Dependabot security updates](https://docs.github.com/articles/configuring-automated-security-fixes)". */
   ["PUT /repos/${owner}/${repo}/automated-security-fixes"]: {
     Request: {
       params: {
@@ -85277,6 +87851,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Disables Dependabot security updates for a repository. The authenticated user must have admin access to the repository. For more information, see "[Configuring Dependabot security updates](https://docs.github.com/articles/configuring-automated-security-fixes)". */
   ["DELETE /repos/${owner}/${repo}/automated-security-fixes"]: {
     Request: {
       params: {
@@ -85291,6 +87867,7 @@ type Routes = {
     };
     Response: void;
   };
+
   ["GET /repos/${owner}/${repo}/branches"]: {
     Request: {
       params: {
@@ -85318,6 +87895,7 @@ type Routes = {
     };
     Response: ShortBranch[];
   };
+
   ["GET /repos/${owner}/${repo}/branches/${branch}"]: {
     Request: {
       params: {
@@ -85334,6 +87912,8 @@ type Routes = {
     };
     Response: BranchWithProtection;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection"]: {
     Request: {
       params: {
@@ -85350,6 +87930,16 @@ type Routes = {
     };
     Response: BranchProtection;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Protecting a branch requires admin or owner permissions to the repository.
+
+> [!NOTE]
+> Passing new arrays of `users` and `teams` replaces their previous values.
+
+> [!NOTE]
+> The list of users, apps, and teams in total is limited to 100 items. */
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection"]: {
     Request: {
       params: {
@@ -85447,6 +88037,8 @@ type Routes = {
     };
     Response: ProtectedBranch;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection"]: {
     Request: {
       params: {
@@ -85463,6 +88055,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins"]: {
     Request: {
       params: {
@@ -85479,6 +88073,10 @@ type Routes = {
     };
     Response: ProtectedBranchAdminEnforced;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Adding admin enforcement requires admin or owner permissions to the repository and branch protection to be enabled. */
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins"]: {
     Request: {
       params: {
@@ -85495,6 +88093,10 @@ type Routes = {
     };
     Response: ProtectedBranchAdminEnforced;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Removing admin enforcement requires admin or owner permissions to the repository and branch protection to be enabled. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/enforce_admins"]: {
     Request: {
       params: {
@@ -85511,6 +88113,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews"]: {
     Request: {
       params: {
@@ -85527,6 +88131,13 @@ type Routes = {
     };
     Response: ProtectedBranchPullRequestReview;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Updating pull request review enforcement requires admin or owner permissions to the repository and branch protection to be enabled.
+
+> [!NOTE]
+> Passing new arrays of `users` and `teams` replaces their previous values. */
   ["PATCH /repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews"]: {
     Request: {
       params: {
@@ -85573,6 +88184,8 @@ type Routes = {
     };
     Response: ProtectedBranchPullRequestReview;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_pull_request_reviews"]: {
     Request: {
       params: {
@@ -85589,6 +88202,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+When authenticated with admin or owner permissions to the repository, you can use this endpoint to check whether a branch requires signed commits. An enabled status of `true` indicates you must sign commits on this branch. For more information, see [Signing commits with GPG](https://docs.github.com/articles/signing-commits-with-gpg) in GitHub Help.
+
+> [!NOTE]
+> You must enable branch protection to require signed commits. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_signatures"]: {
     Request: {
       params: {
@@ -85605,6 +88225,10 @@ type Routes = {
     };
     Response: ProtectedBranchAdminEnforced;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+When authenticated with admin or owner permissions to the repository, you can use this endpoint to require signed commits on a branch. You must enable branch protection to require signed commits. */
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/required_signatures"]: {
     Request: {
       params: {
@@ -85621,6 +88245,10 @@ type Routes = {
     };
     Response: ProtectedBranchAdminEnforced;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+When authenticated with admin or owner permissions to the repository, you can use this endpoint to disable required signed commits on a branch. You must enable branch protection to require signed commits. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_signatures"]: {
     Request: {
       params: {
@@ -85637,6 +88265,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks"]: {
     Request: {
       params: {
@@ -85653,6 +88283,10 @@ type Routes = {
     };
     Response: StatusCheckPolicy;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Updating required status checks requires admin or owner permissions to the repository and branch protection to be enabled. */
   ["PATCH /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks"]: {
     Request: {
       params: {
@@ -85684,6 +88318,8 @@ type Routes = {
     };
     Response: StatusCheckPolicy;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks"]: {
     Request: {
       params: {
@@ -85700,6 +88336,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
       params: {
@@ -85716,6 +88354,8 @@ type Routes = {
     };
     Response: string[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
       params: {
@@ -85737,6 +88377,8 @@ type Routes = {
     };
     Response: string[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
       params: {
@@ -85758,6 +88400,8 @@ type Routes = {
     };
     Response: string[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/required_status_checks/contexts"]: {
     Request: {
       params: {
@@ -85779,6 +88423,13 @@ type Routes = {
     };
     Response: string[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Lists who has access to this protected branch.
+
+> [!NOTE]
+> Users, apps, and teams `restrictions` are only available for organization-owned repositories. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions"]: {
     Request: {
       params: {
@@ -85795,6 +88446,10 @@ type Routes = {
     };
     Response: BranchRestrictionPolicy;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Disables the ability to restrict who can push to this branch. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions"]: {
     Request: {
       params: {
@@ -85811,6 +88466,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Lists the GitHub Apps that have push access to this branch. Only GitHub Apps that are installed on the repository and that have been granted write access to the repository contents can be added as authorized actors on a protected branch. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
       params: {
@@ -85827,6 +88486,10 @@ type Routes = {
     };
     Response: Integration[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Grants the specified apps push access for this branch. Only GitHub Apps that are installed on the repository and that have been granted write access to the repository contents can be added as authorized actors on a protected branch. */
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
       params: {
@@ -85846,6 +88509,10 @@ type Routes = {
     };
     Response: Integration[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Replaces the list of apps that have push access to this branch. This removes all apps that previously had push access and grants push access to the new list of apps. Only GitHub Apps that are installed on the repository and that have been granted write access to the repository contents can be added as authorized actors on a protected branch. */
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
       params: {
@@ -85865,6 +88532,10 @@ type Routes = {
     };
     Response: Integration[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Removes the ability of an app to push to this branch. Only GitHub Apps that are installed on the repository and that have been granted write access to the repository contents can be added as authorized actors on a protected branch. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/apps"]: {
     Request: {
       params: {
@@ -85884,6 +88555,10 @@ type Routes = {
     };
     Response: Integration[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Lists the teams who have push access to this branch. The list includes child teams. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
       params: {
@@ -85900,6 +88575,10 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Grants the specified teams push access for this branch. You can also give push access to child teams. */
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
       params: {
@@ -85921,6 +88600,10 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Replaces the list of teams that have push access to this branch. This removes all teams that previously had push access and grants push access to the new list of teams. Team restrictions include child teams. */
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
       params: {
@@ -85942,6 +88625,10 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Removes the ability of a team to push to this branch. You can also remove push access for child teams. */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/teams"]: {
     Request: {
       params: {
@@ -85963,6 +88650,10 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Lists the people who have push access to this branch. */
   ["GET /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
       params: {
@@ -85979,6 +88670,14 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Grants the specified people push access for this branch.
+
+| Type    | Description                                                                                                                   |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. | */
   ["POST /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
       params: {
@@ -85998,6 +88697,14 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Replaces the list of people that have push access to this branch. This removes all people that previously had push access and grants push access to the new list of people.
+
+| Type    | Description                                                                                                                   |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `array` | Usernames for people who can have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. | */
   ["PUT /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
       params: {
@@ -86017,6 +88724,14 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Removes the ability of a user to push to this branch.
+
+| Type    | Description                                                                                                                                   |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `array` | Usernames of the people who should no longer have push access. **Note**: The list of users, apps, and teams in total is limited to 100 items. | */
   ["DELETE /repos/${owner}/${repo}/branches/${branch}/protection/restrictions/users"]: {
     Request: {
       params: {
@@ -86036,6 +88751,15 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Renames a branch in a repository.
+
+> [!NOTE]
+> Although the API responds immediately, the branch rename process might take some extra time to complete in the background. You won't be able to push to the old branch name while the rename process is in progress. For more information, see "[Renaming a branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
+
+The authenticated user must have push access to the branch. If the branch is the default branch, the authenticated user must also have admin or owner permissions.
+
+In order to rename the default branch, fine-grained access tokens also need the `administration:write` repository permission. */
   ["POST /repos/${owner}/${repo}/branches/${branch}/rename"]: {
     Request: {
       params: {
@@ -86055,6 +88779,15 @@ type Routes = {
     };
     Response: BranchWithProtection;
   };
+
+  /** Creates a new check run for a specific commit in a repository.
+
+To create a check run, you must use a GitHub App. OAuth apps and authenticated users are not able to create a check suite.
+
+In a check suite, GitHub limits the number of check runs with the same name to 1000. Once these check runs exceed 1000, GitHub will start to automatically delete older check runs.
+
+> [!NOTE]
+> The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array. */
   ["POST /repos/${owner}/${repo}/check-runs"]: {
     Request: {
       params: {
@@ -86184,6 +88917,13 @@ type Routes = {
     };
     Response: CheckRun;
   };
+
+  /** Gets a single check run using its `id`.
+
+> [!NOTE]
+> The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository. */
   ["GET /repos/${owner}/${repo}/check-runs/${checkRunId}"]: {
     Request: {
       params: {
@@ -86200,6 +88940,13 @@ type Routes = {
     };
     Response: CheckRun;
   };
+
+  /** Updates a check run for a specific commit in a repository.
+
+> [!NOTE]
+> The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+
+OAuth apps and personal access tokens (classic) cannot use this endpoint. */
   ["PATCH /repos/${owner}/${repo}/check-runs/${checkRunId}"]: {
     Request: {
       params: {
@@ -86326,6 +89073,10 @@ type Routes = {
     };
     Response: CheckRun;
   };
+
+  /** Lists annotations for a check run using the annotation `id`.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository. */
   ["GET /repos/${owner}/${repo}/check-runs/${checkRunId}/annotations"]: {
     Request: {
       params: {
@@ -86353,6 +89104,10 @@ type Routes = {
     };
     Response: CheckAnnotation[];
   };
+
+  /** Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, the `status` of the check suite it belongs to is reset to `queued` and the `conclusion` is cleared. The check run itself is not updated. GitHub apps recieving the [`check_run` webhook](https://docs.github.com/webhooks/event-payloads/#check_run) with the `rerequested` action should then decide if the check run should be reset or updated and call the [update `check_run` endpoint](https://docs.github.com/rest/checks/runs#update-a-check-run) to update the check_run if desired.
+
+For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow run](https://docs.github.com/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)". */
   ["POST /repos/${owner}/${repo}/check-runs/${checkRunId}/rerequest"]: {
     Request: {
       params: {
@@ -86369,6 +89124,13 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Creates a check suite manually. By default, check suites are automatically created when you create a [check run](https://docs.github.com/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/rest/checks/suites#update-repository-preferences-for-check-suites)".
+
+> [!NOTE]
+> The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+
+OAuth apps and personal access tokens (classic) cannot use this endpoint. */
   ["POST /repos/${owner}/${repo}/check-suites"]: {
     Request: {
       params: {
@@ -86386,6 +89148,9 @@ type Routes = {
     };
     Response: CheckSuite;
   };
+
+  /** Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/rest/checks/suites#create-a-check-suite).
+You must have admin permissions in the repository to set preferences for check suites. */
   ["PATCH /repos/${owner}/${repo}/check-suites/preferences"]: {
     Request: {
       params: {
@@ -86411,6 +89176,13 @@ type Routes = {
     };
     Response: CheckSuitePreference;
   };
+
+  /** Gets a single check suite using its `id`.
+
+> [!NOTE]
+> The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository. */
   ["GET /repos/${owner}/${repo}/check-suites/${checkSuiteId}"]: {
     Request: {
       params: {
@@ -86427,6 +89199,13 @@ type Routes = {
     };
     Response: CheckSuite;
   };
+
+  /** Lists check runs for a check suite using its `id`.
+
+> [!NOTE]
+> The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository. */
   ["GET /repos/${owner}/${repo}/check-suites/${checkSuiteId}/check-runs"]: {
     Request: {
       params: {
@@ -86466,6 +89245,8 @@ type Routes = {
       check_runs: CheckRun[];
     };
   };
+
+  /** Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared. */
   ["POST /repos/${owner}/${repo}/check-suites/${checkSuiteId}/rerequest"]: {
     Request: {
       params: {
@@ -86482,6 +89263,14 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Lists code scanning alerts.
+
+The response includes a `most_recent_instance` object.
+This provides details of the most recent instance of this alert
+for the default branch (or for the specified Git reference if you used `ref` in the request).
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/alerts"]: {
     Request: {
       params: {
@@ -86533,6 +89322,10 @@ type Routes = {
     };
     Response: CodeScanningAlertItems[];
   };
+
+  /** Gets a single code scanning alert.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}"]: {
     Request: {
       params: {
@@ -86549,6 +89342,9 @@ type Routes = {
     };
     Response: CodeScanningAlert;
   };
+
+  /** Updates the status of a single code scanning alert.
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["PATCH /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}"]: {
     Request: {
       params: {
@@ -86574,6 +89370,10 @@ type Routes = {
     };
     Response: CodeScanningAlert;
   };
+
+  /** Gets the status and description of an autofix for a code scanning alert.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix"]: {
     Request: {
       params: {
@@ -86590,6 +89390,14 @@ type Routes = {
     };
     Response: CodeScanningAutofix;
   };
+
+  /** Creates an autofix for a code scanning alert.
+
+If a new autofix is to be created as a result of this request or is currently being generated, then this endpoint will return a 202 Accepted response.
+
+If an autofix already exists for a given alert, then this endpoint will return a 200 OK response.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["POST /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix"]: {
     Request: {
       params: {
@@ -86606,6 +89414,12 @@ type Routes = {
     };
     Response: CodeScanningAutofix;
   };
+
+  /** Commits an autofix for a code scanning alert.
+
+If an autofix is committed as a result of this request, then this endpoint will return a 201 Created response.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["POST /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/autofix/commits"]: {
     Request: {
       params: {
@@ -86622,6 +89436,10 @@ type Routes = {
     };
     Response: CodeScanningAutofixCommitsResponse;
   };
+
+  /** Lists all instances of the specified code scanning alert.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/alerts/${alertNumber}/instances"]: {
     Request: {
       params: {
@@ -86653,6 +89471,22 @@ type Routes = {
     };
     Response: CodeScanningAlertInstance[];
   };
+
+  /** Lists the details of all code scanning analyses for a repository,
+starting with the most recent.
+The response is paginated and you can use the `page` and `per_page` parameters
+to list the analyses you're interested in.
+By default 30 analyses are listed per page.
+
+The `rules_count` field in the response give the number of rules
+that were run in the analysis.
+For very old analyses this data is not available,
+and `0` is returned in this field.
+
+> [!WARNING]
+> **Closing down notice:** The `tool_name` field is closing down and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/analyses"]: {
     Request: {
       params: {
@@ -86698,6 +89532,24 @@ type Routes = {
     };
     Response: CodeScanningAnalysis[];
   };
+
+  /** Gets a specified code scanning analysis for a repository.
+
+The default JSON response contains fields that describe the analysis.
+This includes the Git reference and commit SHA to which the analysis relates,
+the datetime of the analysis, the name of the code scanning tool,
+and the number of alerts.
+
+The `rules_count` field in the default response give the number of rules
+that were run in the analysis.
+For very old analyses this data is not available,
+and `0` is returned in this field.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/sarif+json`**: Instead of returning a summary of the analysis, this endpoint returns a subset of the analysis data that was uploaded. The data is formatted as [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html). It also returns additional data such as the `github/alertNumber` and `github/alertUrl` properties.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/analyses/${analysisId}"]: {
     Request: {
       params: {
@@ -86714,6 +89566,71 @@ type Routes = {
     };
     Response: CodeScanningAnalysis;
   };
+
+  /** Deletes a specified code scanning analysis from a repository.
+
+You can delete one analysis at a time.
+To delete a series of analyses, start with the most recent analysis and work backwards.
+Conceptually, the process is similar to the undo function in a text editor.
+
+When you list the analyses for a repository,
+one or more will be identified as deletable in the response:
+
+```
+"deletable": true
+```
+
+An analysis is deletable when it's the most recent in a set of analyses.
+Typically, a repository will have multiple sets of analyses
+for each enabled code scanning tool,
+where a set is determined by a unique combination of analysis values:
+
+* `ref`
+* `tool`
+* `category`
+
+If you attempt to delete an analysis that is not the most recent in a set,
+you'll get a 400 response with the message:
+
+```
+Analysis specified is not deletable.
+```
+
+The response from a successful `DELETE` operation provides you with
+two alternative URLs for deleting the next analysis in the set:
+`next_analysis_url` and `confirm_delete_url`.
+Use the `next_analysis_url` URL if you want to avoid accidentally deleting the final analysis
+in a set. This is a useful option if you want to preserve at least one analysis
+for the specified tool in your repository.
+Use the `confirm_delete_url` URL if you are content to remove all analyses for a tool.
+When you delete the last analysis in a set, the value of `next_analysis_url` and `confirm_delete_url`
+in the 200 response is `null`.
+
+As an example of the deletion process,
+let's imagine that you added a workflow that configured a particular code scanning tool
+to analyze the code in a repository. This tool has added 15 analyses:
+10 on the default branch, and another 5 on a topic branch.
+You therefore have two separate sets of analyses for this tool.
+You've now decided that you want to remove all of the analyses for the tool.
+To do this you must make 15 separate deletion requests.
+To start, you must find an analysis that's identified as deletable.
+Each set of analyses always has one that's identified as deletable.
+Having found the deletable analysis for one of the two sets,
+delete this analysis and then continue deleting the next analysis in the set until they're all deleted.
+Then repeat the process for the second set.
+The procedure therefore consists of a nested loop:
+
+**Outer loop**:
+* List the analyses for the repository, filtered by tool.
+* Parse this list to find a deletable analysis. If found:
+
+  **Inner loop**:
+  * Delete the identified analysis.
+  * Parse the response for the value of `confirm_delete_url` and, if found, use this in the next iteration.
+
+The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `confirm_delete_url` value. Alternatively, you could use the `next_analysis_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["DELETE /repos/${owner}/${repo}/code-scanning/analyses/${analysisId}"]: {
     Request: {
       params: {
@@ -86733,6 +89650,10 @@ type Routes = {
     };
     Response: CodeScanningAnalysisDeletion;
   };
+
+  /** Lists the CodeQL databases that are available in a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/databases"]: {
     Request: {
       params: {
@@ -86747,6 +89668,16 @@ type Routes = {
     };
     Response: CodeScanningCodeqlDatabase[];
   };
+
+  /** Gets a CodeQL database for a language in a repository.
+
+By default this endpoint returns JSON metadata about the CodeQL database. To
+download the CodeQL database binary content, set the `Accept` header of the request
+to [`application/zip`](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types), and make sure
+your HTTP client is configured to follow redirects or use the `Location` header
+to make a second request to get the redirect URL.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/databases/${language}"]: {
     Request: {
       params: {
@@ -86763,6 +89694,10 @@ type Routes = {
     };
     Response: CodeScanningCodeqlDatabase;
   };
+
+  /** Deletes a CodeQL database for a language in a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["DELETE /repos/${owner}/${repo}/code-scanning/codeql/databases/${language}"]: {
     Request: {
       params: {
@@ -86779,6 +89714,15 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Creates a new CodeQL variant analysis, which will run a CodeQL query against one or more repositories.
+
+Get started by learning more about [running CodeQL queries at scale with Multi-Repository Variant Analysis](https://docs.github.com/code-security/codeql-for-vs-code/getting-started-with-codeql-for-vs-code/running-codeql-queries-at-scale-with-multi-repository-variant-analysis).
+
+Use the `owner` and `repo` parameters in the URL to specify the controller repository that
+will be used for running GitHub Actions workflows and storing the results of the CodeQL variant analysis.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/code-scanning/codeql/variant-analyses"]: {
     Request: {
       params: {
@@ -86810,6 +89754,10 @@ type Routes = {
     };
     Response: CodeScanningVariantAnalysis;
   };
+
+  /** Gets the summary of a CodeQL variant analysis.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}"]: {
     Request: {
       params: {
@@ -86826,6 +89774,10 @@ type Routes = {
     };
     Response: CodeScanningVariantAnalysis;
   };
+
+  /** Gets the analysis status of a repository in a CodeQL variant analysis.
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/codeql/variant-analyses/${codeqlVariantAnalysisId}/repos/${repoOwner}/${repoName}"]: {
     Request: {
       params: {
@@ -86846,6 +89798,10 @@ type Routes = {
     };
     Response: CodeScanningVariantAnalysisRepoTask;
   };
+
+  /** Gets a code scanning default setup configuration.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/default-setup"]: {
     Request: {
       params: {
@@ -86860,6 +89816,10 @@ type Routes = {
     };
     Response: CodeScanningDefaultSetup;
   };
+
+  /** Updates a code scanning default setup configuration.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["PATCH /repos/${owner}/${repo}/code-scanning/default-setup"]: {
     Request: {
       params: {
@@ -86874,6 +89834,41 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. For troubleshooting information, see "[Troubleshooting SARIF uploads](https://docs.github.com/code-security/code-scanning/troubleshooting-sarif)."
+
+There are two places where you can upload code scanning results.
+ - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests)."
+ - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
+
+You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
+
+```
+gzip -c analysis-data.sarif | base64 -w0
+```
+
+SARIF upload supports a maximum number of entries per the following data objects, and an analysis will be rejected if any of these objects is above its maximum value. For some objects, there are additional values over which the entries will be ignored while keeping the most important entries whenever applicable.
+To get the most out of your analysis when it includes data above the supported limits, try to optimize the analysis configuration. For example, for the CodeQL tool, identify and remove the most noisy queries. For more information, see "[SARIF results exceed one or more limits](https://docs.github.com/code-security/code-scanning/troubleshooting-sarif/results-exceed-limit)."
+
+
+| **SARIF data**                   | **Maximum values** | **Additional limits**                                                            |
+|----------------------------------|:------------------:|----------------------------------------------------------------------------------|
+| Runs per file                    |         20         |                                                                                  |
+| Results per run                  |       25,000       | Only the top 5,000 results will be included, prioritized by severity.            |
+| Rules per run                    |       25,000       |                                                                                  |
+| Tool extensions per run          |        100         |                                                                                  |
+| Thread Flow Locations per result |       10,000       | Only the top 1,000 Thread Flow Locations will be included, using prioritization. |
+| Location per result	             |       1,000        | Only 100 locations will be included.                                             |
+| Tags per rule	                   |         20         | Only 10 tags will be included.                                                   |
+
+
+The `202 Accepted` response includes an `id` value.
+You can use this ID to check the status of the upload by using it in the `/sarifs/{sarif_id}` endpoint.
+For more information, see "[Get information about a SARIF upload](/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload)."
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
+
+This endpoint is limited to 1,000 requests per hour for each user or app installation calling it. */
   ["POST /repos/${owner}/${repo}/code-scanning/sarifs"]: {
     Request: {
       params: {
@@ -86917,6 +89912,9 @@ type Routes = {
     };
     Response: CodeScanningSarifsReceipt;
   };
+
+  /** Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)."
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories. */
   ["GET /repos/${owner}/${repo}/code-scanning/sarifs/${sarifId}"]: {
     Request: {
       params: {
@@ -86933,6 +89931,12 @@ type Routes = {
     };
     Response: CodeScanningSarifsStatus;
   };
+
+  /** Get the code security configuration that manages a repository's code security settings.
+
+The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/code-security-configuration"]: {
     Request: {
       params: {
@@ -86947,6 +89951,12 @@ type Routes = {
     };
     Response: CodeSecurityConfigurationForRepository;
   };
+
+  /** List any syntax errors that are detected in the CODEOWNERS
+file.
+
+For more information about the correct CODEOWNERS syntax,
+see "[About code owners](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)." */
   ["GET /repos/${owner}/${repo}/codeowners/errors"]: {
     Request: {
       params: {
@@ -86964,6 +89974,10 @@ type Routes = {
     };
     Response: CodeownersErrors;
   };
+
+  /** Lists the codespaces associated to a specified repository and the authenticated user.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces"]: {
     Request: {
       params: {
@@ -86992,6 +90006,10 @@ type Routes = {
       codespaces: Codespace[];
     };
   };
+
+  /** Creates a codespace owned by the authenticated user in the specified repository.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/codespaces"]: {
     Request: {
       params: {
@@ -87029,6 +90047,11 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Lists the devcontainer.json files associated with a specified repository and the authenticated user. These files
+specify launchpoint configurations for codespaces created within the repository.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/devcontainers"]: {
     Request: {
       params: {
@@ -87061,6 +90084,10 @@ type Routes = {
       }[];
     };
   };
+
+  /** List the machine types available for a given repository based on its configuration.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/machines"]: {
     Request: {
       params: {
@@ -87091,6 +90118,10 @@ type Routes = {
       machines: CodespaceMachine[];
     };
   };
+
+  /** Gets the default attributes for codespaces created by the user with the repository.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/new"]: {
     Request: {
       params: {
@@ -87123,6 +90154,10 @@ type Routes = {
       };
     };
   };
+
+  /** Checks whether the permissions defined by a given devcontainer configuration have been accepted by the authenticated user.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/permissions_check"]: {
     Request: {
       params: {
@@ -87148,6 +90183,11 @@ type Routes = {
     };
     Response: CodespacesPermissionsCheckForDevcontainer;
   };
+
+  /** Lists all development environment secrets available in a repository without revealing their encrypted
+values.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/secrets"]: {
     Request: {
       params: {
@@ -87176,6 +90216,11 @@ type Routes = {
       secrets: RepoCodespacesSecret[];
     };
   };
+
+  /** Gets your public key, which you need to encrypt secrets. You need to
+encrypt a secret before you can create or update secrets.
+
+If the repository is private, OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/secrets/public-key"]: {
     Request: {
       params: {
@@ -87190,6 +90235,10 @@ type Routes = {
     };
     Response: CodespacesPublicKey;
   };
+
+  /** Gets a single repository development environment secret without revealing its encrypted value.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -87206,6 +90255,11 @@ type Routes = {
     };
     Response: RepoCodespacesSecret;
   };
+
+  /** Creates or updates a repository development environment secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. The associated user must be a repository admin. */
   ["PUT /repos/${owner}/${repo}/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -87230,6 +90284,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a development environment secret in a repository using the secret name.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. The associated user must be a repository admin. */
   ["DELETE /repos/${owner}/${repo}/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -87246,6 +90304,15 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners.
+The `permissions` hash returned in the response contains the base role permissions of the collaborator. The `role_name` is the highest role assigned to the collaborator after considering all sources of grants, including: repo, teams, organization, and enterprise.
+There is presently not a way to differentiate between an organization level grant and a repository level grant from this endpoint response.
+
+Team members will include the members of child teams.
+
+The authenticated user must have write, maintain, or admin privileges on the repository to use this endpoint. For organization-owned repositories, the authenticated user needs to be a member of the organization.
+OAuth app tokens and personal access tokens (classic) need the `read:org` and `repo` scopes to use this endpoint. */
   ["GET /repos/${owner}/${repo}/collaborators"]: {
     Request: {
       params: {
@@ -87278,6 +90345,14 @@ type Routes = {
     };
     Response: Collaborator[];
   };
+
+  /** For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners.
+
+Team members will include the members of child teams.
+
+The authenticated user must have push access to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `read:org` and `repo` scopes to use this endpoint. */
   ["GET /repos/${owner}/${repo}/collaborators/${username}"]: {
     Request: {
       params: {
@@ -87294,6 +90369,32 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Add a user to a repository with a specified level of access. If the repository is owned by an organization, this API does not add the user to the organization - a user that has repository access without being an organization member is called an "outside collaborator" (if they are not an Enterprise Managed User) or a "repository collaborator" if they are an Enterprise Managed User. These users are exempt from some organization policies - see "[Adding outside collaborators to repositories](https://docs.github.com/organizations/managing-user-access-to-your-organizations-repositories/managing-outside-collaborators/adding-outside-collaborators-to-repositories-in-your-organization)" to learn more about these collaborator types.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+
+Adding an outside collaborator may be restricted by enterprise and organization administrators. For more information, see "[Enforcing repository management policies in your enterprise](https://docs.github.com/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)" and "[Setting permissions for adding outside collaborators](https://docs.github.com/organizations/managing-organization-settings/setting-permissions-for-adding-outside-collaborators)" for organization settings.
+
+For more information on permission levels, see "[Repository permission levels for an organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)". There are restrictions on which permissions can be granted to organization members when an organization base role is in place. In this case, the role being given must be equal to or higher than the org base permission. Otherwise, the request will fail with:
+
+```
+Cannot assign {member} permission of {role name}
+```
+
+Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
+
+The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [API](https://docs.github.com/rest/collaborators/invitations).
+
+For Enterprise Managed Users, this endpoint does not send invitations - these users are automatically added to organizations and repositories. Enterprise Managed Users can only be added to organizations and repositories within their enterprise.
+
+**Updating an existing collaborator's permission level**
+
+The endpoint can also be used to change the permissions of an existing collaborator without first removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission` parameter. The response will be a `204`, with no other indication that the permission level changed.
+
+**Rate limits**
+
+You are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository. */
   ["PUT /repos/${owner}/${repo}/collaborators/${username}"]: {
     Request: {
       params: {
@@ -87316,6 +90417,29 @@ type Routes = {
     };
     Response: RepositoryInvitation;
   };
+
+  /** Removes a collaborator from a repository.
+
+To use this endpoint, the authenticated user must either be an administrator of the repository or target themselves for removal.
+
+This endpoint also:
+- Cancels any outstanding invitations sent by the collaborator
+- Unassigns the user from any issues
+- Removes access to organization projects if the user is not an organization member and is not a collaborator on any other organization repositories.
+- Unstars the repository
+- Updates access permissions to packages
+
+Removing a user as a collaborator has the following effects on forks:
+ - If the user had access to a fork through their membership to this repository, the user will also be removed from the fork.
+ - If the user had their own fork of the repository, the fork will be deleted.
+ - If the user still has read access to the repository, open pull requests by this user from a fork will be denied.
+
+> [!NOTE]
+> A user can still have access to the repository through organization permissions like base repository permissions.
+
+Although the API responds immediately, the additional permission updates might take some extra time to complete in the background.
+
+For more information on fork permissions, see "[About permissions and visibility of forks](https://docs.github.com/pull-requests/collaborating-with-pull-requests/working-with-forks/about-permissions-and-visibility-of-forks)". */
   ["DELETE /repos/${owner}/${repo}/collaborators/${username}"]: {
     Request: {
       params: {
@@ -87332,6 +90456,16 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Checks the repository permission and role of a collaborator.
+
+The `permission` attribute provides the legacy base roles of `admin`, `write`, `read`, and `none`, where the
+`maintain` role is mapped to `write` and the `triage` role is mapped to `read`.
+The `role_name` attribute provides the name of the assigned role, including custom roles. The
+`permission` can also be used to determine which base level of access the collaborator has to the repository.
+
+The calculated permissions are the highest role assigned to the collaborator after considering all sources of grants, including: repo, teams, organization, and enterprise.
+There is presently not a way to differentiate between an organization level grant and a repository level grant from this endpoint response. */
   ["GET /repos/${owner}/${repo}/collaborators/${username}/permission"]: {
     Request: {
       params: {
@@ -87348,6 +90482,15 @@ type Routes = {
     };
     Response: RepositoryCollaboratorPermission;
   };
+
+  /** Lists the commit comments for a specified repository. Comments are ordered by ascending ID.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/comments"]: {
     Request: {
       params: {
@@ -87373,6 +90516,15 @@ type Routes = {
     };
     Response: CommitComment[];
   };
+
+  /** Gets a specified commit comment.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/comments/${commentId}"]: {
     Request: {
       params: {
@@ -87392,6 +90544,15 @@ type Routes = {
     };
     Response: CommitComment;
   };
+
+  /** Updates the contents of a specified commit comment.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PATCH /repos/${owner}/${repo}/comments/${commentId}"]: {
     Request: {
       params: {
@@ -87414,6 +90575,7 @@ type Routes = {
     };
     Response: CommitComment;
   };
+
   ["DELETE /repos/${owner}/${repo}/comments/${commentId}"]: {
     Request: {
       params: {
@@ -87433,6 +90595,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the reactions to a [commit comment](https://docs.github.com/rest/commits/comments#get-a-commit-comment). */
   ["GET /repos/${owner}/${repo}/comments/${commentId}/reactions"]: {
     Request: {
       params: {
@@ -87465,6 +90629,8 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to a [commit comment](https://docs.github.com/rest/commits/comments#get-a-commit-comment). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
   ["POST /repos/${owner}/${repo}/comments/${commentId}/reactions"]: {
     Request: {
       params: {
@@ -87487,6 +90653,11 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
+
+Delete a reaction to a [commit comment](https://docs.github.com/rest/commits/comments#get-a-commit-comment). */
   ["DELETE /repos/${owner}/${repo}/comments/${commentId}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -87508,6 +90679,36 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** **Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["GET /repos/${owner}/${repo}/commits"]: {
     Request: {
       params: {
@@ -87551,6 +90752,10 @@ type Routes = {
     };
     Response: Commit[];
   };
+
+  /** Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Returns all branches where the given commit SHA is the HEAD, or latest commit for the branch. */
   ["GET /repos/${owner}/${repo}/commits/${commitSha}/branches-where-head"]: {
     Request: {
       params: {
@@ -87567,6 +90772,15 @@ type Routes = {
     };
     Response: BranchShort[];
   };
+
+  /** Lists the comments for a specified commit.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/commits/${commitSha}/comments"]: {
     Request: {
       params: {
@@ -87594,6 +90808,17 @@ type Routes = {
     };
     Response: CommitComment[];
   };
+
+  /** Create a comment for a commit using its `:commit_sha`.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/commits/${commitSha}/comments"]: {
     Request: {
       params: {
@@ -87619,6 +90844,10 @@ type Routes = {
     };
     Response: CommitComment;
   };
+
+  /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, it will return merged and open pull requests associated with the commit.
+
+To list the open or merged pull requests associated with a branch, you can set the `commit_sha` parameter to the branch name. */
   ["GET /repos/${owner}/${repo}/commits/${commitSha}/pulls"]: {
     Request: {
       params: {
@@ -87646,6 +90875,47 @@ type Routes = {
     };
     Response: PullRequestSimple[];
   };
+
+  /** Returns the contents of a single commit reference. You must have `read` access for the repository to use this endpoint.
+
+> [!NOTE]
+> If there are more than 300 files in the commit diff and the default JSON media type is requested, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)." Pagination query parameters are not supported for these media types.
+
+- **`application/vnd.github.diff`**: Returns the diff of the commit. Larger diffs may time out and return a 5xx status code.
+- **`application/vnd.github.patch`**: Returns the patch of the commit. Diffs with binary data will have no `patch` property. Larger diffs may time out and return a 5xx status code.
+- **`application/vnd.github.sha`**: Returns the commit's SHA-1 hash. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+
+**Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["GET /repos/${owner}/${repo}/commits/${ref}"]: {
     Request: {
       params: {
@@ -87673,6 +90943,15 @@ type Routes = {
     };
     Response: Commit;
   };
+
+  /** Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name.
+
+> [!NOTE]
+> The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+
+If there are more than 1000 check suites on a single git reference, this endpoint will limit check runs to the 1000 most recent check suites. To iterate over all possible check runs, use the [List check suites for a Git reference](https://docs.github.com/rest/reference/checks#list-check-suites-for-a-git-reference) endpoint and provide the `check_suite_id` parameter to the [List check runs in a check suite](https://docs.github.com/rest/reference/checks#list-check-runs-in-a-check-suite) endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository. */
   ["GET /repos/${owner}/${repo}/commits/${ref}/check-runs"]: {
     Request: {
       params: {
@@ -87713,6 +90992,13 @@ type Routes = {
       check_runs: CheckRun[];
     };
   };
+
+  /** Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name.
+
+> [!NOTE]
+> The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint on a private repository. */
   ["GET /repos/${owner}/${repo}/commits/${ref}/check-suites"]: {
     Request: {
       params: {
@@ -87750,6 +91036,15 @@ type Routes = {
       check_suites: CheckSuite[];
     };
   };
+
+  /** Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.
+
+
+Additionally, a combined `state` is returned. The `state` is one of:
+
+*   **failure** if any of the contexts report as `error` or `failure`
+*   **pending** if there are no statuses or a context is `pending`
+*   **success** if the latest status for all contexts is `success` */
   ["GET /repos/${owner}/${repo}/commits/${ref}/status"]: {
     Request: {
       params: {
@@ -87777,6 +91072,10 @@ type Routes = {
     };
     Response: CombinedCommitStatus;
   };
+
+  /** Users with pull access in a repository can view commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name. Statuses are returned in reverse chronological order. The first status in the list will be the latest one.
+
+This resource is also available via a legacy route: `GET /repos/:owner/:repo/statuses/:ref`. */
   ["GET /repos/${owner}/${repo}/commits/${ref}/statuses"]: {
     Request: {
       params: {
@@ -87804,6 +91103,18 @@ type Routes = {
     };
     Response: Status[];
   };
+
+  /** Returns all community profile metrics for a repository. The repository cannot be a fork.
+
+The returned metrics include an overall health score, the repository description, the presence of documentation, the
+detected code of conduct, the detected license, and the presence of ISSUE\_TEMPLATE, PULL\_REQUEST\_TEMPLATE,
+README, and CONTRIBUTING files.
+
+The `health_percentage` score is defined as a percentage of how many of
+the recommended community health files are present. For more information, see
+"[About community profiles for public repositories](https://docs.github.com/communities/setting-up-your-project-for-healthy-contributions/about-community-profiles-for-public-repositories)."
+
+`content_reports_enabled` is only returned for organization-owned repositories. */
   ["GET /repos/${owner}/${repo}/community/profile"]: {
     Request: {
       params: {
@@ -87818,6 +91129,58 @@ type Routes = {
     };
     Response: CommunityProfile;
   };
+
+  /** Compares two commits against one another. You can compare refs (branches or tags) and commit SHAs in the same repository, or you can compare refs and commit SHAs that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
+
+This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.diff`**: Returns the diff of the commit.
+- **`application/vnd.github.patch`**: Returns the patch of the commit. Diffs with binary data will have no `patch` property.
+
+The API response includes details about the files that were changed between the two commits. This includes the status of the change (if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
+
+When calling this endpoint without any paging parameter (`per_page` or `page`), the returned list is limited to 250 commits, and the last commit in the list is the most recent of the entire comparison.
+
+**Working with large comparisons**
+
+To process a response with a large number of commits, use a query parameter (`per_page` or `page`) to paginate the results. When using pagination:
+
+- The list of changed files is only shown on the first page of results, and it includes up to 300 changed files for the entire comparison.
+- The results are returned in chronological order, but the last commit in the returned list may not be the most recent one in the entire set if there are more pages of results.
+
+For more information on working with pagination, see "[Using pagination in the REST API](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api)."
+
+**Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The `verification` object includes the following fields:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["GET /repos/${owner}/${repo}/compare/${basehead}"]: {
     Request: {
       params: {
@@ -87845,6 +91208,32 @@ type Routes = {
     };
     Response: CommitComparison;
   };
+
+  /** Gets the contents of a file or directory in a repository. Specify the file path or directory with the `path` parameter. If you omit the `path` parameter, you will receive the contents of the repository's root directory.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw file contents for files and symlinks.
+- **`application/vnd.github.html+json`**: Returns the file contents in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
+- **`application/vnd.github.object+json`**: Returns the contents in a consistent object format regardless of the content type. For example, instead of an array of objects for a directory, the response will be an object with an `entries` attribute containing the array of objects.
+
+If the content is a directory, the response will be an array of objects, one object for each item in the directory. When listing the contents of a directory, submodules have their "type" specified as "file". Logically, the value _should_ be "submodule". This behavior exists [for backwards compatibility purposes](https://git.io/v1YCW). In the next major version of the API, the type will be returned as "submodule".
+
+If the content is a symlink and the symlink's target is a normal file in the repository, then the API responds with the content of the file. Otherwise, the API responds with an object describing the symlink itself.
+
+If the content is a submodule, the `submodule_git_url` field identifies the location of the submodule repository, and the `sha` identifies a specific commit within the submodule repository. Git uses the given URL when cloning the submodule repository, and checks out the submodule at that specific commit. If the submodule repository is not hosted on github.com, the Git URLs (`git_url` and `_links["git"]`) and the github.com URLs (`html_url` and `_links["html"]`) will have null values.
+
+**Notes**:
+
+- To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/rest/git/trees#get-a-tree).
+- This API has an upper limit of 1,000 files for a directory. If you need to retrieve
+more files, use the [Git Trees API](https://docs.github.com/rest/git/trees#get-a-tree).
+- Download URLs expire and are meant to be used just once. To ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each download.
+- If the requested file's size is:
+  - 1 MB or smaller: All features of this endpoint are supported.
+  - Between 1-100 MB: Only the `raw` or `object` custom media types are supported. Both will work as normal, except that when using the `object` media type, the `content` field will be an empty
+string and the `encoding` field will be `"none"`. To get the contents of these larger files, use the `raw` media type.
+  - Greater than 100 MB: This endpoint is not supported. */
   ["GET /repos/${owner}/${repo}/contents/${path}"]: {
     Request: {
       params: {
@@ -87864,6 +91253,13 @@ type Routes = {
     };
     Response: ContentTree;
   };
+
+  /** Creates a new file or replaces an existing file in a repository.
+
+> [!NOTE]
+> If you use this endpoint and the "[Delete a file](https://docs.github.com/rest/repos/contents/#delete-a-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. The `workflow` scope is also required in order to modify files in the `.github/workflows` directory. */
   ["PUT /repos/${owner}/${repo}/contents/${path}"]: {
     Request: {
       params: {
@@ -87907,6 +91303,17 @@ type Routes = {
     };
     Response: FileCommit;
   };
+
+  /** Deletes a file in a repository.
+
+You can provide an additional `committer` parameter, which is an object containing information about the committer. Or, you can provide an `author` parameter, which is an object containing information about the author.
+
+The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
+
+You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+
+> [!NOTE]
+> If you use this endpoint and the "[Create or update file contents](https://docs.github.com/rest/repos/contents/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead. */
   ["DELETE /repos/${owner}/${repo}/contents/${path}"]: {
     Request: {
       params: {
@@ -87944,6 +91351,10 @@ type Routes = {
     };
     Response: FileCommit;
   };
+
+  /** Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order. This endpoint may return information that is a few hours old because the GitHub REST API caches contributor data to improve performance.
+
+GitHub identifies contributors by author email address. This endpoint groups contribution counts by GitHub user, which includes all associated email addresses. To improve performance, only the first 500 author email addresses in the repository link to GitHub users. The rest will appear as anonymous contributors without associated GitHub user information. */
   ["GET /repos/${owner}/${repo}/contributors"]: {
     Request: {
       params: {
@@ -87971,6 +91382,8 @@ type Routes = {
     };
     Response: Contributor[];
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /repos/${owner}/${repo}/dependabot/alerts"]: {
     Request: {
       params: {
@@ -88070,6 +91483,8 @@ type Routes = {
     };
     Response: DependabotAlert[];
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /repos/${owner}/${repo}/dependabot/alerts/${alertNumber}"]: {
     Request: {
       params: {
@@ -88091,6 +91506,10 @@ type Routes = {
     };
     Response: DependabotAlert;
   };
+
+  /** The authenticated user must have access to security alerts for the repository to use this endpoint. For more information, see "[Granting access to security alerts](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository#granting-access-to-security-alerts)."
+
+OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["PATCH /repos/${owner}/${repo}/dependabot/alerts/${alertNumber}"]: {
     Request: {
       params: {
@@ -88125,6 +91544,11 @@ type Routes = {
     };
     Response: DependabotAlert;
   };
+
+  /** Lists all secrets available in a repository without revealing their encrypted
+values.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/dependabot/secrets"]: {
     Request: {
       params: {
@@ -88153,6 +91577,12 @@ type Routes = {
       secrets: DependabotSecret[];
     };
   };
+
+  /** Gets your public key, which you need to encrypt secrets. You need to
+encrypt a secret before you can create or update secrets. Anyone with read access
+to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint if the repository is private. */
   ["GET /repos/${owner}/${repo}/dependabot/secrets/public-key"]: {
     Request: {
       params: {
@@ -88167,6 +91597,10 @@ type Routes = {
     };
     Response: DependabotPublicKey;
   };
+
+  /** Gets a single repository secret without revealing its encrypted value.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/dependabot/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -88183,6 +91617,11 @@ type Routes = {
     };
     Response: DependabotSecret;
   };
+
+  /** Creates or updates a repository secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/dependabot/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -88207,6 +91646,10 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a secret in a repository using the secret name.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/dependabot/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -88223,6 +91666,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets the diff of the dependency changes between two commits of a repository, based on the changes to the dependency manifests made in those commits. */
   ["GET /repos/${owner}/${repo}/dependency-graph/compare/${basehead}"]: {
     Request: {
       params: {
@@ -88242,6 +91687,8 @@ type Routes = {
     };
     Response: DependencyGraphDiff;
   };
+
+  /** Exports the software bill of materials (SBOM) for a repository in SPDX JSON format. */
   ["GET /repos/${owner}/${repo}/dependency-graph/sbom"]: {
     Request: {
       params: {
@@ -88256,6 +91703,12 @@ type Routes = {
     };
     Response: DependencyGraphSpdxSbom;
   };
+
+  /** Create a new snapshot of a repository's dependencies.
+
+The authenticated user must have access to the repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/dependency-graph/snapshots"]: {
     Request: {
       params: {
@@ -88279,6 +91732,8 @@ type Routes = {
       message: string;
     };
   };
+
+  /** Simple filtering of deployments is available via query parameters: */
   ["GET /repos/${owner}/${repo}/deployments"]: {
     Request: {
       params: {
@@ -88324,6 +91779,55 @@ type Routes = {
     };
     Response: Deployment[];
   };
+
+  /** Deployments offer a few configurable parameters with certain defaults.
+
+The `ref` parameter can be any named branch, tag, or SHA. At GitHub we often deploy branches and verify them
+before we merge a pull request.
+
+The `environment` parameter allows deployments to be issued to different runtime environments. Teams often have
+multiple environments for verifying their applications, such as `production`, `staging`, and `qa`. This parameter
+makes it easier to track which environments have requested deployments. The default environment is `production`.
+
+The `auto_merge` parameter is used to ensure that the requested ref is not behind the repository's default branch. If
+the ref _is_ behind the default branch for the repository, we will attempt to merge it for you. If the merge succeeds,
+the API will return a successful merge commit. If merge conflicts prevent the merge from succeeding, the API will
+return a failure response.
+
+By default, [commit statuses](https://docs.github.com/rest/commits/statuses) for every submitted context must be in a `success`
+state. The `required_contexts` parameter allows you to specify a subset of contexts that must be `success`, or to
+specify contexts that have not yet been submitted. You are not required to use commit statuses to deploy. If you do
+not require any contexts or create any commit statuses, the deployment will always succeed.
+
+The `payload` parameter is available for any extra information that a deployment system might need. It is a JSON text
+field that will be passed on when a deployment event is dispatched.
+
+The `task` parameter is used by the deployment system to allow different execution paths. In the web world this might
+be `deploy:migrations` to run schema changes on the system. In the compiled world this could be a flag to compile an
+application with debugging enabled.
+
+Merged branch response:
+
+You will see this response when GitHub automatically merges the base branch into the topic branch instead of creating
+a deployment. This auto-merge happens when:
+*   Auto-merge option is enabled in the repository
+*   Topic branch does not include the latest changes on the base branch, which is `master` in the response example
+*   There are no merge conflicts
+
+If there are no new commits in the base branch, a new request to create a deployment should give a successful
+response.
+
+Merge conflict response:
+
+This error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`), can't
+be merged into the branch that's being deployed (in this case `topic-branch`), due to merge conflicts.
+
+Failed commit status checks:
+
+This error happens when the `required_contexts` parameter indicates that one or more contexts need to have a `success`
+status for the commit to be deployed, but one or more of the required contexts do not have a state of `success`.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repo_deployment` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/deployments"]: {
     Request: {
       params: {
@@ -88372,6 +91876,7 @@ type Routes = {
     };
     Response: Deployment;
   };
+
   ["GET /repos/${owner}/${repo}/deployments/${deploymentId}"]: {
     Request: {
       params: {
@@ -88388,6 +91893,17 @@ type Routes = {
     };
     Response: Deployment;
   };
+
+  /** If the repository only has one deployment, you can delete the deployment regardless of its status. If the repository has more than one deployment, you can only delete inactive deployments. This ensures that repositories with multiple deployments will always have an active deployment.
+
+To set a deployment as inactive, you must:
+
+*   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
+*   Mark the active deployment as inactive by adding any non-successful deployment status.
+
+For more information, see "[Create a deployment](https://docs.github.com/rest/deployments/deployments/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/rest/deployments/statuses#create-a-deployment-status)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repo_deployment` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/deployments/${deploymentId}"]: {
     Request: {
       params: {
@@ -88404,6 +91920,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Users with pull access can view deployment statuses for a deployment: */
   ["GET /repos/${owner}/${repo}/deployments/${deploymentId}/statuses"]: {
     Request: {
       params: {
@@ -88431,6 +91949,10 @@ type Routes = {
     };
     Response: DeploymentStatus[];
   };
+
+  /** Users with `push` access can create deployment statuses for a given deployment.
+
+OAuth app tokens and personal access tokens (classic) need the `repo_deployment` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/deployments/${deploymentId}/statuses"]: {
     Request: {
       params: {
@@ -88477,6 +91999,8 @@ type Routes = {
     };
     Response: DeploymentStatus;
   };
+
+  /** Users with pull access can view a deployment status for a deployment: */
   ["GET /repos/${owner}/${repo}/deployments/${deploymentId}/statuses/${statusId}"]: {
     Request: {
       params: {
@@ -88494,6 +92018,14 @@ type Routes = {
     };
     Response: DeploymentStatus;
   };
+
+  /** You can use this endpoint to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs. For an example `repository_dispatch` webhook payload, see "[RepositoryDispatchEvent](https://docs.github.com/webhooks/event-payloads/#repository_dispatch)."
+
+The `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test to debug your workflow.
+
+This input example shows how you can use the `client_payload` as a test to debug your workflow.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/dispatches"]: {
     Request: {
       params: {
@@ -88517,6 +92049,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the environments for a repository.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments"]: {
     Request: {
       params: {
@@ -88549,6 +92087,13 @@ type Routes = {
       environments?: Environment[];
     };
   };
+
+  /** > [!NOTE]
+> To get information about name patterns that branches must match in order to deploy to this environment, see "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}"]: {
     Request: {
       params: {
@@ -88565,6 +92110,16 @@ type Routes = {
     };
     Response: Environment;
   };
+
+  /** Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
+
+> [!NOTE]
+> To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
+
+> [!NOTE]
+> To create or update secrets for an environment, see "[GitHub Actions secrets](/rest/actions/secrets)."
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/environments/${environmentName}"]: {
     Request: {
       params: {
@@ -88600,6 +92155,8 @@ type Routes = {
     };
     Response: Environment;
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}"]: {
     Request: {
       params: {
@@ -88616,6 +92173,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the deployment branch policies for an environment.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies"]: {
     Request: {
       params: {
@@ -88650,6 +92213,10 @@ type Routes = {
       branch_policies: DeploymentBranchPolicy[];
     };
   };
+
+  /** Creates a deployment branch or tag policy for an environment.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies"]: {
     Request: {
       params: {
@@ -88666,6 +92233,12 @@ type Routes = {
     };
     Response: DeploymentBranchPolicy;
   };
+
+  /** Gets a deployment branch or tag policy for an environment.
+
+Anyone with read access to the repository can use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}"]: {
     Request: {
       params: {
@@ -88684,6 +92257,10 @@ type Routes = {
     };
     Response: DeploymentBranchPolicy;
   };
+
+  /** Updates a deployment branch or tag policy for an environment.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}"]: {
     Request: {
       params: {
@@ -88702,6 +92279,10 @@ type Routes = {
     };
     Response: DeploymentBranchPolicy;
   };
+
+  /** Deletes a deployment branch or tag policy for an environment.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/deployment-branch-policies/${branchPolicyId}"]: {
     Request: {
       params: {
@@ -88720,6 +92301,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets all custom deployment protection rules that are enabled for an environment. Anyone with read access to the repository can use this endpoint. For more information about environments, see "[Using environments for deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+
+For more information about the app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}` endpoint](https://docs.github.com/rest/apps/apps#get-an-app).
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules"]: {
     Request: {
       params: {
@@ -88743,6 +92330,14 @@ type Routes = {
       custom_deployment_protection_rules?: DeploymentProtectionRule[];
     };
   };
+
+  /** Enable a custom deployment protection rule for an environment.
+
+The authenticated user must have admin or owner permissions to the repository to use this endpoint.
+
+For more information about the app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}` endpoint](https://docs.github.com/rest/apps/apps#get-an-app), as well as the [guide to creating custom deployment protection rules](https://docs.github.com/actions/managing-workflow-runs-and-deployments/managing-deployments/creating-custom-deployment-protection-rules).
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules"]: {
     Request: {
       params: {
@@ -88762,6 +92357,16 @@ type Routes = {
     };
     Response: DeploymentProtectionRule;
   };
+
+  /** Gets all custom deployment protection rule integrations that are available for an environment.
+
+The authenticated user must have admin or owner permissions to the repository to use this endpoint.
+
+For more information about environments, see "[Using environments for deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+
+For more information about the app that is providing this custom deployment rule, see "[GET an app](https://docs.github.com/rest/apps/apps#get-an-app)".
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/apps"]: {
     Request: {
       params: {
@@ -88796,6 +92401,12 @@ type Routes = {
       available_custom_deployment_protection_rule_integrations?: CustomDeploymentRuleApp[];
     };
   };
+
+  /** Gets an enabled custom deployment protection rule for an environment. Anyone with read access to the repository can use this endpoint. For more information about environments, see "[Using environments for deployment](https://docs.github.com/actions/deployment/targeting-different-environments/using-environments-for-deployment)."
+
+For more information about the app that is providing this custom deployment rule, see [`GET /apps/{app_slug}`](https://docs.github.com/rest/apps/apps#get-an-app).
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}"]: {
     Request: {
       params: {
@@ -88814,6 +92425,12 @@ type Routes = {
     };
     Response: DeploymentProtectionRule;
   };
+
+  /** Disables a custom deployment protection rule for an environment.
+
+The authenticated user must have admin or owner permissions to the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/deployment_protection_rules/${protectionRuleId}"]: {
     Request: {
       params: {
@@ -88832,6 +92449,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all secrets available in an environment without revealing their
+encrypted values.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/secrets"]: {
     Request: {
       params: {
@@ -88862,6 +92486,13 @@ type Routes = {
       secrets: ActionsSecret[];
     };
   };
+
+  /** Get the public key for an environment, which you need to encrypt environment
+secrets. You need to encrypt a secret before you can create or update secrets.
+
+Anyone with read access to the repository can use this endpoint.
+
+If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/secrets/public-key"]: {
     Request: {
       params: {
@@ -88878,6 +92509,12 @@ type Routes = {
     };
     Response: ActionsPublicKey;
   };
+
+  /** Gets a single environment secret without revealing its encrypted value.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -88896,6 +92533,13 @@ type Routes = {
     };
     Response: ActionsSecret;
   };
+
+  /** Creates or updates an environment secret with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -88922,6 +92566,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a secret in an environment using the secret name.
+
+Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -88940,6 +92590,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all environment variables.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/variables"]: {
     Request: {
       params: {
@@ -88970,6 +92626,12 @@ type Routes = {
       variables: ActionsVariable[];
     };
   };
+
+  /** Create an environment variable that you can reference in a GitHub Actions workflow.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/environments/${environmentName}/variables"]: {
     Request: {
       params: {
@@ -88991,6 +92653,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Gets a specific variable in an environment.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/environments/${environmentName}/variables/${name}"]: {
     Request: {
       params: {
@@ -89009,6 +92677,12 @@ type Routes = {
     };
     Response: ActionsVariable;
   };
+
+  /** Updates an environment variable that you can reference in a GitHub Actions workflow.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PATCH /repos/${owner}/${repo}/environments/${environmentName}/variables/${name}"]: {
     Request: {
       params: {
@@ -89032,6 +92706,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Deletes an environment variable using the variable name.
+
+Authenticated users must have collaborator access to a repository to create, update, or read variables.
+
+OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/environments/${environmentName}/variables/${name}"]: {
     Request: {
       params: {
@@ -89050,6 +92730,9 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /repos/${owner}/${repo}/events"]: {
     Request: {
       params: {
@@ -89075,6 +92758,7 @@ type Routes = {
     };
     Response: Event[];
   };
+
   ["GET /repos/${owner}/${repo}/forks"]: {
     Request: {
       params: {
@@ -89105,6 +92789,14 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Create a fork for the authenticated user.
+
+> [!NOTE]
+> Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Support](https://support.github.com/contact?tags=dotcom-rest-api).
+
+> [!NOTE]
+> Although this endpoint works with GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the source account with access to the source repository. */
   ["POST /repos/${owner}/${repo}/forks"]: {
     Request: {
       params: {
@@ -89126,6 +92818,7 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
   ["POST /repos/${owner}/${repo}/git/blobs"]: {
     Request: {
       params: {
@@ -89148,6 +92841,15 @@ type Routes = {
     };
     Response: ShortBlob;
   };
+
+  /** The `content` in the response will always be Base64 encoded.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw blob data.
+- **`application/vnd.github+json`**: Returns a JSON representation of the blob with `content` as a base64 encoded string. This is the default if no media type is specified.
+
+**Note** This endpoint supports blobs up to 100 megabytes in size. */
   ["GET /repos/${owner}/${repo}/git/blobs/${fileSha}"]: {
     Request: {
       params: {
@@ -89163,6 +92865,38 @@ type Routes = {
     };
     Response: Blob;
   };
+
+  /** Creates a new Git [commit object](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
+
+**Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in the table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["POST /repos/${owner}/${repo}/git/commits"]: {
     Request: {
       params: {
@@ -89210,6 +92944,40 @@ type Routes = {
     };
     Response: GitCommit;
   };
+
+  /** Gets a Git [commit object](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
+
+To get the contents of a commit, see "[Get a commit](/rest/commits/commits#get-a-commit)."
+
+**Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in the table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["GET /repos/${owner}/${repo}/git/commits/${commitSha}"]: {
     Request: {
       params: {
@@ -89226,6 +92994,15 @@ type Routes = {
     };
     Response: GitCommit;
   };
+
+  /** Returns an array of references from your Git database that match the supplied name. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't exist in the repository, but existing refs start with `:ref`, they will be returned as an array.
+
+When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
+
+> [!NOTE]
+> You need to explicitly [request a pull request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+
+If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`. */
   ["GET /repos/${owner}/${repo}/git/matching-refs/${ref}"]: {
     Request: {
       params: {
@@ -89245,6 +93022,11 @@ type Routes = {
     };
     Response: GitRef[];
   };
+
+  /** Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
+
+> [!NOTE]
+> You need to explicitly [request a pull request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)". */
   ["GET /repos/${owner}/${repo}/git/ref/${ref}"]: {
     Request: {
       params: {
@@ -89264,6 +93046,8 @@ type Routes = {
     };
     Response: GitRef;
   };
+
+  /** Creates a reference for your repository. You are unable to create new references for empty repositories, even if the commit SHA-1 hash used exists. Empty repositories are repositories without branches. */
   ["POST /repos/${owner}/${repo}/git/refs"]: {
     Request: {
       params: {
@@ -89283,6 +93067,8 @@ type Routes = {
     };
     Response: GitRef;
   };
+
+  /** Updates the provided reference to point to a new SHA. For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
   ["PATCH /repos/${owner}/${repo}/git/refs/${ref}"]: {
     Request: {
       params: {
@@ -89310,6 +93096,8 @@ type Routes = {
     };
     Response: GitRef;
   };
+
+  /** Deletes the provided reference. */
   ["DELETE /repos/${owner}/${repo}/git/refs/${ref}"]: {
     Request: {
       params: {
@@ -89329,6 +93117,38 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/rest/git/refs#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/rest/git/refs#create-a-reference) the tag reference - this call would be unnecessary.
+
+**Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["POST /repos/${owner}/${repo}/git/tags"]: {
     Request: {
       params: {
@@ -89364,6 +93184,36 @@ type Routes = {
     };
     Response: GitTag;
   };
+
+  /** **Signature verification object**
+
+The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+| `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+| `signature` | `string` | The signature that was extracted from the commit. |
+| `payload` | `string` | The value that was signed. |
+| `verified_at` | `string` | The date the signature was verified by GitHub. |
+
+These are the possible values for `reason` in the `verification` object:
+
+| Value | Description |
+| ----- | ----------- |
+| `expired_key` | The key that made the signature is expired. |
+| `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+| `gpgverify_error` | There was an error communicating with the signature verification service. |
+| `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+| `unsigned` | The object does not include a signature. |
+| `unknown_signature_type` | A non-PGP signature was found in the commit. |
+| `no_user` | No user was associated with the `committer` email address in the commit. |
+| `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
+| `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+| `unknown_key` | The key that made the signature has not been registered with any user's account. |
+| `malformed_signature` | There was an error parsing the signature. |
+| `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+| `valid` | None of the above errors applied, so the signature is considered to be verified. | */
   ["GET /repos/${owner}/${repo}/git/tags/${tagSha}"]: {
     Request: {
       params: {
@@ -89379,6 +93229,12 @@ type Routes = {
     };
     Response: GitTag;
   };
+
+  /** The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
+
+If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/rest/git/commits#create-a-commit)" and "[Update a reference](https://docs.github.com/rest/git/refs#update-a-reference)."
+
+Returns an error if you try to delete a file that does not exist. */
   ["POST /repos/${owner}/${repo}/git/trees"]: {
     Request: {
       params: {
@@ -89420,6 +93276,13 @@ type Routes = {
     };
     Response: GitTree;
   };
+
+  /** Returns a single tree using the SHA1 value or ref name for that tree.
+
+If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
+
+> [!NOTE]
+> The limit for the `tree` array is 100,000 entries with a maximum size of 7 MB when using the `recursive` parameter. */
   ["GET /repos/${owner}/${repo}/git/trees/${treeSha}"]: {
     Request: {
       params: {
@@ -89439,6 +93302,8 @@ type Routes = {
     };
     Response: GitTree;
   };
+
+  /** Lists webhooks for a repository. `last response` may return null if there have not been any deliveries within 30 days. */
   ["GET /repos/${owner}/${repo}/hooks"]: {
     Request: {
       params: {
@@ -89464,6 +93329,9 @@ type Routes = {
     };
     Response: Hook[];
   };
+
+  /** Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks can
+share the same `config` as long as those webhooks do not have any `events` that overlap. */
   ["POST /repos/${owner}/${repo}/hooks"]: {
     Request: {
       params: {
@@ -89502,6 +93370,8 @@ type Routes = {
     };
     Response: Hook;
   };
+
+  /** Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/webhooks/repo-config#get-a-webhook-configuration-for-a-repository)." */
   ["GET /repos/${owner}/${repo}/hooks/${hookId}"]: {
     Request: {
       params: {
@@ -89518,6 +93388,8 @@ type Routes = {
     };
     Response: Hook;
   };
+
+  /** Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/webhooks/repo-config#update-a-webhook-configuration-for-a-repository)." */
   ["PATCH /repos/${owner}/${repo}/hooks/${hookId}"]: {
     Request: {
       params: {
@@ -89551,6 +93423,10 @@ type Routes = {
     };
     Response: Hook;
   };
+
+  /** Delete a webhook for an organization.
+
+The authenticated user must be a repository owner, or have admin access in the repository, to delete the webhook. */
   ["DELETE /repos/${owner}/${repo}/hooks/${hookId}"]: {
     Request: {
       params: {
@@ -89567,6 +93443,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/webhooks/repos#get-a-repository-webhook)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:repo_hook` or `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/hooks/${hookId}/config"]: {
     Request: {
       params: {
@@ -89583,6 +93463,10 @@ type Routes = {
     };
     Response: WebhookConfig;
   };
+
+  /** Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/webhooks/repos#update-a-repository-webhook)."
+
+OAuth app tokens and personal access tokens (classic) need the `write:repo_hook` or `repo` scope to use this endpoint. */
   ["PATCH /repos/${owner}/${repo}/hooks/${hookId}/config"]: {
     Request: {
       params: {
@@ -89608,6 +93492,8 @@ type Routes = {
     };
     Response: WebhookConfig;
   };
+
+  /** Returns a list of webhook deliveries for a webhook configured in a repository. */
   ["GET /repos/${owner}/${repo}/hooks/${hookId}/deliveries"]: {
     Request: {
       params: {
@@ -89632,6 +93518,8 @@ type Routes = {
     };
     Response: HookDeliveryItem[];
   };
+
+  /** Returns a delivery for a webhook configured in a repository. */
   ["GET /repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}"]: {
     Request: {
       params: {
@@ -89649,6 +93537,8 @@ type Routes = {
     };
     Response: HookDelivery;
   };
+
+  /** Redeliver a webhook delivery for a webhook configured in a repository. */
   ["POST /repos/${owner}/${repo}/hooks/${hookId}/deliveries/${deliveryId}/attempts"]: {
     Request: {
       params: {
@@ -89666,6 +93556,8 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** This will trigger a [ping event](https://docs.github.com/webhooks/#ping-event) to be sent to the hook. */
   ["POST /repos/${owner}/${repo}/hooks/${hookId}/pings"]: {
     Request: {
       params: {
@@ -89682,6 +93574,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** This will trigger the hook with the latest push to the current repository if the hook is subscribed to `push` events. If the hook is not subscribed to `push` events, the server will respond with 204 but no test POST will be generated.
+
+> [!NOTE]
+> Previously `/repos/:owner/:repo/hooks/:hook_id/test` */
   ["POST /repos/${owner}/${repo}/hooks/${hookId}/tests"]: {
     Request: {
       params: {
@@ -89698,6 +93595,44 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** View the progress of an import.
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation).
+
+**Import status**
+
+This section includes details about the possible values of the `status` field of the Import Progress response.
+
+An import that does not have errors will progress through these steps:
+
+*   `detecting` - the "detection" step of the import is in progress because the request did not include a `vcs` parameter. The import is identifying the type of source control present at the URL.
+*   `importing` - the "raw" step of the import is in progress. This is where commit data is fetched from the original repository. The import progress response will include `commit_count` (the total number of raw commits that will be imported) and `percent` (0 - 100, the current progress through the import).
+*   `mapping` - the "rewrite" step of the import is in progress. This is where SVN branches are converted to Git branches, and where author updates are applied. The import progress response does not include progress information.
+*   `pushing` - the "push" step of the import is in progress. This is where the importer updates the repository on GitHub. The import progress response will include `push_percent`, which is the percent value reported by `git push` when it is "Writing objects".
+*   `complete` - the import is complete, and the repository is ready on GitHub.
+
+If there are problems, you will see one of these in the `status` field:
+
+*   `auth_failed` - the import requires authentication in order to connect to the original repository. To update authentication for the import, please see the [Update an import](https://docs.github.com/rest/migrations/source-imports#update-an-import) section.
+*   `error` - the import encountered an error. The import progress response will include the `failed_step` and an error message. Contact [GitHub Support](https://support.github.com/contact?tags=dotcom-rest-api) for more information.
+*   `detection_needs_auth` - the importer requires authentication for the originating repository to continue detection. To update authentication for the import, please see the [Update an import](https://docs.github.com/rest/migrations/source-imports#update-an-import) section.
+*   `detection_found_nothing` - the importer didn't recognize any source control at the URL. To resolve, [Cancel the import](https://docs.github.com/rest/migrations/source-imports#cancel-an-import) and [retry](https://docs.github.com/rest/migrations/source-imports#start-an-import) with the correct URL.
+*   `detection_found_multiple` - the importer found several projects or repositories at the provided URL. When this is the case, the Import Progress response will also include a `project_choices` field with the possible project choices as values. To update project choice, please see the [Update an import](https://docs.github.com/rest/migrations/source-imports#update-an-import) section.
+
+**The project_choices field**
+
+When multiple projects are found at the provided URL, the response hash will include a `project_choices` field, the value of which is an array of hashes each representing a project choice. The exact key/value pairs of the project hashes will differ depending on the version control type.
+
+**Git LFS related fields**
+
+This section includes details about Git LFS related fields that may be present in the Import Progress response.
+
+*   `use_lfs` - describes whether the import has been opted in or out of using Git LFS. The value can be `opt_in`, `opt_out`, or `undecided` if no action has been taken.
+*   `has_large_files` - the boolean value describing whether files larger than 100MB were found during the `importing` step.
+*   `large_files_size` - the total size in gigabytes of files larger than 100MB found in the originating repository.
+*   `large_files_count` - the total number of files larger than 100MB found in the originating repository. To see a list of these files, make a "Get Large Files" request. */
   ["GET /repos/${owner}/${repo}/import"]: {
     Request: {
       params: {
@@ -89712,6 +93647,13 @@ type Routes = {
     };
     Response: Import;
   };
+
+  /** Start a source import to a GitHub repository using GitHub Importer.
+Importing into a GitHub repository with GitHub Actions enabled is not supported and will
+return a status `422 Unprocessable Entity` response.
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["PUT /repos/${owner}/${repo}/import"]: {
     Request: {
       params: {
@@ -89737,6 +93679,16 @@ type Routes = {
     };
     Response: Import;
   };
+
+  /** An import can be updated with credentials or a project choice by passing in the appropriate parameters in this API
+request. If no parameters are provided, the import will be restarted.
+
+Some servers (e.g. TFS servers) can have several projects at a single URL. In those cases the import progress will
+have the status `detection_found_multiple` and the Import Progress response will include a `project_choices` array.
+You can select the project to import by providing one of the objects in the `project_choices` array in the update request.
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["PATCH /repos/${owner}/${repo}/import"]: {
     Request: {
       params: {
@@ -89766,6 +93718,11 @@ type Routes = {
     };
     Response: Import;
   };
+
+  /** Stop an import for a repository.
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["DELETE /repos/${owner}/${repo}/import"]: {
     Request: {
       params: {
@@ -89780,6 +93737,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Each type of source control system represents authors in a different way. For example, a Git commit author has a display name and an email address, but a Subversion commit author just has a username. The GitHub Importer will make the author information valid, but the author might not be correct. For example, it will change the bare Subversion username `hubot` into something like `hubot <hubot@12341234-abab-fefe-8787-fedcba987654>`.
+
+This endpoint and the [Map a commit author](https://docs.github.com/rest/migrations/source-imports#map-a-commit-author) endpoint allow you to provide correct Git author information.
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["GET /repos/${owner}/${repo}/import/authors"]: {
     Request: {
       params: {
@@ -89797,6 +93761,12 @@ type Routes = {
     };
     Response: PorterAuthor[];
   };
+
+  /** Update an author's identity for the import. Your application can continue updating authors any time before you push
+new commits to the repository.
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["PATCH /repos/${owner}/${repo}/import/authors/${authorId}"]: {
     Request: {
       params: {
@@ -89817,6 +93787,11 @@ type Routes = {
     };
     Response: PorterAuthor;
   };
+
+  /** List files larger than 100MB found during the import
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["GET /repos/${owner}/${repo}/import/large_files"]: {
     Request: {
       params: {
@@ -89831,6 +93806,15 @@ type Routes = {
     };
     Response: PorterLargeFile[];
   };
+
+  /** You can import repositories from Subversion, Mercurial, and TFS that include files larger than 100MB. This ability
+is powered by [Git LFS](https://git-lfs.com).
+
+You can learn more about our LFS feature and working with large files [on our help
+site](https://docs.github.com/repositories/working-with-files/managing-large-files).
+
+> [!WARNING]
+> **Endpoint closing down notice:** Due to very low levels of usage and available alternatives, this endpoint is closing down and will no longer be available from 00:00 UTC on April 12, 2024. For more details and alternatives, see the [changelog](https://gh.io/source-imports-api-deprecation). */
   ["PATCH /repos/${owner}/${repo}/import/lfs"]: {
     Request: {
       params: {
@@ -89848,6 +93832,10 @@ type Routes = {
     };
     Response: Import;
   };
+
+  /** Enables an authenticated GitHub App to find the repository's installation information. The installation's account type will be either an organization or a user account, depending which account the repository belongs to.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /repos/${owner}/${repo}/installation"]: {
     Request: {
       params: {
@@ -89862,6 +93850,8 @@ type Routes = {
     };
     Response: Installation;
   };
+
+  /** Shows which type of GitHub user can interact with this repository and when the restriction expires. If there are no restrictions, you will see an empty response. */
   ["GET /repos/${owner}/${repo}/interaction-limits"]: {
     Request: {
       params: {
@@ -89876,6 +93866,8 @@ type Routes = {
     };
     Response: InteractionLimitResponse | object;
   };
+
+  /** Temporarily restricts interactions to a certain type of GitHub user within the given repository. You must have owner or admin access to set these restrictions. If an interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository. */
   ["PUT /repos/${owner}/${repo}/interaction-limits"]: {
     Request: {
       params: {
@@ -89890,6 +93882,8 @@ type Routes = {
     };
     Response: InteractionLimitResponse;
   };
+
+  /** Removes all interaction restrictions from the given repository. You must have owner or admin access to remove restrictions. If the interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository. */
   ["DELETE /repos/${owner}/${repo}/interaction-limits"]: {
     Request: {
       params: {
@@ -89904,6 +93898,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** When authenticating as a user with admin rights to a repository, this endpoint will list all currently open repository invitations. */
   ["GET /repos/${owner}/${repo}/invitations"]: {
     Request: {
       params: {
@@ -89929,6 +93925,7 @@ type Routes = {
     };
     Response: RepositoryInvitation[];
   };
+
   ["PATCH /repos/${owner}/${repo}/invitations/${invitationId}"]: {
     Request: {
       params: {
@@ -89948,6 +93945,7 @@ type Routes = {
     };
     Response: RepositoryInvitation;
   };
+
   ["DELETE /repos/${owner}/${repo}/invitations/${invitationId}"]: {
     Request: {
       params: {
@@ -89964,6 +93962,18 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List issues in a repository. Only open issues will be listed.
+
+> [!NOTE]
+> GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues"]: {
     Request: {
       params: {
@@ -90021,6 +94031,18 @@ type Routes = {
     };
     Response: Issue[];
   };
+
+  /** Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/issues"]: {
     Request: {
       params: {
@@ -90061,6 +94083,17 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** You can use the REST API to list comments on issues and pull requests for a repository. Every pull request is an issue, but not every issue is a pull request.
+
+By default, issue comments are ordered by ascending ID.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues/comments"]: {
     Request: {
       params: {
@@ -90098,6 +94131,15 @@ type Routes = {
     };
     Response: IssueComment[];
   };
+
+  /** You can use the REST API to get comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues/comments/${commentId}"]: {
     Request: {
       params: {
@@ -90117,6 +94159,15 @@ type Routes = {
     };
     Response: IssueComment;
   };
+
+  /** You can use the REST API to update comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PATCH /repos/${owner}/${repo}/issues/comments/${commentId}"]: {
     Request: {
       params: {
@@ -90139,6 +94190,8 @@ type Routes = {
     };
     Response: IssueComment;
   };
+
+  /** You can use the REST API to delete comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request. */
   ["DELETE /repos/${owner}/${repo}/issues/comments/${commentId}"]: {
     Request: {
       params: {
@@ -90158,6 +94211,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the reactions to an [issue comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment). */
   ["GET /repos/${owner}/${repo}/issues/comments/${commentId}/reactions"]: {
     Request: {
       params: {
@@ -90190,6 +94245,8 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to an [issue comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
   ["POST /repos/${owner}/${repo}/issues/comments/${commentId}/reactions"]: {
     Request: {
       params: {
@@ -90212,6 +94269,11 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
+
+Delete a reaction to an [issue comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment). */
   ["DELETE /repos/${owner}/${repo}/issues/comments/${commentId}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -90233,6 +94295,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists events for a repository. */
   ["GET /repos/${owner}/${repo}/issues/events"]: {
     Request: {
       params: {
@@ -90258,6 +94322,8 @@ type Routes = {
     };
     Response: IssueEvent[];
   };
+
+  /** Gets a single event by the event id. */
   ["GET /repos/${owner}/${repo}/issues/events/${eventId}"]: {
     Request: {
       params: {
@@ -90273,6 +94339,23 @@ type Routes = {
     };
     Response: IssueEvent;
   };
+
+  /** The API returns a [`301 Moved Permanently` status](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api#follow-redirects) if the issue was
+[transferred](https://docs.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If
+the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
+returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
+access, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe
+to the [`issues`](https://docs.github.com/webhooks/event-payloads/#issues) webhook.
+
+> [!NOTE]
+> GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}"]: {
     Request: {
       params: {
@@ -90289,6 +94372,15 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** Issue owners and users with push access or Triage role can edit an issue.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PATCH /repos/${owner}/${repo}/issues/${issueNumber}"]: {
     Request: {
       params: {
@@ -90338,6 +94430,8 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** Adds up to 10 assignees to an issue. Users already assigned to an issue are not replaced. */
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/assignees"]: {
     Request: {
       params: {
@@ -90357,6 +94451,8 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** Removes one or more assignees from an issue. */
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/assignees"]: {
     Request: {
       params: {
@@ -90376,6 +94472,12 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** Checks if a user has permission to be assigned to a specific issue.
+
+If the `assignee` can be assigned to this issue, a `204` status code with no content is returned.
+
+Otherwise a `404` status code is returned. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/assignees/${assignee}"]: {
     Request: {
       params: {
@@ -90393,6 +94495,17 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** You can use the REST API to list comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+
+Issue comments are ordered by ascending ID.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/comments"]: {
     Request: {
       params: {
@@ -90425,6 +94538,20 @@ type Routes = {
     };
     Response: IssueComment[];
   };
+
+  /** You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+Creating content too quickly using this endpoint may result in secondary rate limiting.
+For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/comments"]: {
     Request: {
       params: {
@@ -90444,6 +94571,8 @@ type Routes = {
     };
     Response: IssueComment;
   };
+
+  /** Lists all events for an issue. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/events"]: {
     Request: {
       params: {
@@ -90471,6 +94600,8 @@ type Routes = {
     };
     Response: IssueEventForIssue[];
   };
+
+  /** Lists all labels for an issue. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
       params: {
@@ -90498,6 +94629,8 @@ type Routes = {
     };
     Response: Label[];
   };
+
+  /** Adds labels to an issue. If you provide an empty array of labels, all labels are removed from the issue.  */
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
       params: {
@@ -90532,6 +94665,8 @@ type Routes = {
     };
     Response: Label[];
   };
+
+  /** Removes any previous labels and sets the new labels for an issue. */
   ["PUT /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
       params: {
@@ -90566,6 +94701,8 @@ type Routes = {
     };
     Response: Label[];
   };
+
+  /** Removes all labels from an issue. */
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/labels"]: {
     Request: {
       params: {
@@ -90582,6 +94719,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes the specified label from the issue, and returns the remaining labels on the issue. This endpoint returns a `404 Not Found` status if the label does not exist. */
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}"]: {
     Request: {
       params: {
@@ -90599,6 +94738,10 @@ type Routes = {
     };
     Response: Label[];
   };
+
+  /** Users with push access can lock an issue or pull request's conversation.
+
+Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
   ["PUT /repos/${owner}/${repo}/issues/${issueNumber}/lock"]: {
     Request: {
       params: {
@@ -90624,6 +94767,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Users with push access can unlock an issue's conversation. */
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/lock"]: {
     Request: {
       params: {
@@ -90640,6 +94785,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the reactions to an [issue](https://docs.github.com/rest/issues/issues#get-an-issue). */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/reactions"]: {
     Request: {
       params: {
@@ -90669,6 +94816,8 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to an [issue](https://docs.github.com/rest/issues/issues#get-an-issue). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/reactions"]: {
     Request: {
       params: {
@@ -90688,6 +94837,11 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
+
+Delete a reaction to an [issue](https://docs.github.com/rest/issues/issues#get-an-issue). */
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -90706,6 +94860,16 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** You can use the REST API to remove a sub-issue from an issue.
+Removing content too quickly using this endpoint may result in secondary rate limiting.
+For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass a specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/sub_issue"]: {
     Request: {
       params: {
@@ -90725,6 +94889,15 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** You can use the REST API to list the sub-issues on an issue.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues"]: {
     Request: {
       params: {
@@ -90752,6 +94925,19 @@ type Routes = {
     };
     Response: Issue[];
   };
+
+  /** You can use the REST API to add sub-issues to issues.
+
+Creating content too quickly using this endpoint may result in secondary rate limiting.
+For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues"]: {
     Request: {
       params: {
@@ -90773,6 +94959,8 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** You can use the REST API to reprioritize a sub-issue to a different position in the parent list. */
   ["PATCH /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues/priority"]: {
     Request: {
       params: {
@@ -90796,6 +94984,8 @@ type Routes = {
     };
     Response: Issue;
   };
+
+  /** List all timeline events for an issue. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/timeline"]: {
     Request: {
       params: {
@@ -90823,6 +95013,7 @@ type Routes = {
     };
     Response: TimelineIssueEvents[];
   };
+
   ["GET /repos/${owner}/${repo}/keys"]: {
     Request: {
       params: {
@@ -90848,6 +95039,8 @@ type Routes = {
     };
     Response: DeployKey[];
   };
+
+  /** You can create a read-only deploy key. */
   ["POST /repos/${owner}/${repo}/keys"]: {
     Request: {
       params: {
@@ -90873,6 +95066,7 @@ type Routes = {
     };
     Response: DeployKey;
   };
+
   ["GET /repos/${owner}/${repo}/keys/${keyId}"]: {
     Request: {
       params: {
@@ -90889,6 +95083,8 @@ type Routes = {
     };
     Response: DeployKey;
   };
+
+  /** Deploy keys are immutable. If you need to update a key, remove the key and create a new one instead. */
   ["DELETE /repos/${owner}/${repo}/keys/${keyId}"]: {
     Request: {
       params: {
@@ -90905,6 +95101,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all labels for a repository. */
   ["GET /repos/${owner}/${repo}/labels"]: {
     Request: {
       params: {
@@ -90930,6 +95128,8 @@ type Routes = {
     };
     Response: Label[];
   };
+
+  /** Creates a label for the specified repository with the given name and color. The name and color parameters are required. The color must be a valid [hexadecimal color code](http://www.color-hex.com/). */
   ["POST /repos/${owner}/${repo}/labels"]: {
     Request: {
       params: {
@@ -90951,6 +95151,8 @@ type Routes = {
     };
     Response: Label;
   };
+
+  /** Gets a label using the given name. */
   ["GET /repos/${owner}/${repo}/labels/${name}"]: {
     Request: {
       params: {
@@ -90966,6 +95168,8 @@ type Routes = {
     };
     Response: Label;
   };
+
+  /** Updates a label using the given label name. */
   ["PATCH /repos/${owner}/${repo}/labels/${name}"]: {
     Request: {
       params: {
@@ -90988,6 +95192,8 @@ type Routes = {
     };
     Response: Label;
   };
+
+  /** Deletes a label using the given label name. */
   ["DELETE /repos/${owner}/${repo}/labels/${name}"]: {
     Request: {
       params: {
@@ -91003,6 +95209,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists languages for the specified repository. The value shown for each language is the number of bytes of code written in that language. */
   ["GET /repos/${owner}/${repo}/languages"]: {
     Request: {
       params: {
@@ -91017,6 +95225,13 @@ type Routes = {
     };
     Response: Language;
   };
+
+  /** This method returns the contents of the repository's license file, if one is detected.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw contents of the license.
+- **`application/vnd.github.html+json`**: Returns the license contents in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup). */
   ["GET /repos/${owner}/${repo}/license"]: {
     Request: {
       params: {
@@ -91034,6 +95249,8 @@ type Routes = {
     };
     Response: LicenseContent;
   };
+
+  /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
   ["POST /repos/${owner}/${repo}/merge-upstream"]: {
     Request: {
       params: {
@@ -91051,6 +95268,7 @@ type Routes = {
     };
     Response: MergedUpstream;
   };
+
   ["POST /repos/${owner}/${repo}/merges"]: {
     Request: {
       params: {
@@ -91072,6 +95290,8 @@ type Routes = {
     };
     Response: Commit;
   };
+
+  /** Lists milestones for a repository. */
   ["GET /repos/${owner}/${repo}/milestones"]: {
     Request: {
       params: {
@@ -91112,6 +95332,8 @@ type Routes = {
     };
     Response: Milestone[];
   };
+
+  /** Creates a milestone. */
   ["POST /repos/${owner}/${repo}/milestones"]: {
     Request: {
       params: {
@@ -91141,6 +95363,8 @@ type Routes = {
     };
     Response: Milestone;
   };
+
+  /** Gets a milestone using the given milestone number. */
   ["GET /repos/${owner}/${repo}/milestones/${milestoneNumber}"]: {
     Request: {
       params: {
@@ -91157,6 +95381,7 @@ type Routes = {
     };
     Response: Milestone;
   };
+
   ["PATCH /repos/${owner}/${repo}/milestones/${milestoneNumber}"]: {
     Request: {
       params: {
@@ -91188,6 +95413,8 @@ type Routes = {
     };
     Response: Milestone;
   };
+
+  /** Deletes a milestone using the given milestone number. */
   ["DELETE /repos/${owner}/${repo}/milestones/${milestoneNumber}"]: {
     Request: {
       params: {
@@ -91204,6 +95431,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists labels for issues in a milestone. */
   ["GET /repos/${owner}/${repo}/milestones/${milestoneNumber}/labels"]: {
     Request: {
       params: {
@@ -91231,6 +95460,8 @@ type Routes = {
     };
     Response: Label[];
   };
+
+  /** Lists all notifications for the current user in the specified repository. */
   ["GET /repos/${owner}/${repo}/notifications"]: {
     Request: {
       params: {
@@ -91276,6 +95507,8 @@ type Routes = {
     };
     Response: Thread[];
   };
+
+  /** Marks all notifications in a repository as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/rest/activity/notifications#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
   ["PUT /repos/${owner}/${repo}/notifications"]: {
     Request: {
       params: {
@@ -91299,6 +95532,10 @@ type Routes = {
       url?: string;
     };
   };
+
+  /** Gets information about a GitHub Pages site.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/pages"]: {
     Request: {
       params: {
@@ -91313,6 +95550,12 @@ type Routes = {
     };
     Response: Page;
   };
+
+  /** Configures a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)."
+
+The authenticated user must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/pages"]: {
     Request: {
       params: {
@@ -91341,6 +95584,12 @@ type Routes = {
     };
     Response: Page;
   };
+
+  /** Updates information for a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
+
+The authenticated user must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["PUT /repos/${owner}/${repo}/pages"]: {
     Request: {
       params: {
@@ -91373,6 +95622,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Deletes a GitHub Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
+
+The authenticated user must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["DELETE /repos/${owner}/${repo}/pages"]: {
     Request: {
       params: {
@@ -91387,6 +95642,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists builts of a GitHub Pages site.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/pages/builds"]: {
     Request: {
       params: {
@@ -91412,6 +95671,10 @@ type Routes = {
     };
     Response: PageBuild[];
   };
+
+  /** You can request that your site be built from the latest revision on the default branch. This has the same effect as pushing a commit to your default branch, but does not require an additional commit. Manually triggering page builds can be helpful when diagnosing build warnings and failures.
+
+Build requests are limited to one concurrent build per repository and one concurrent build per requester. If you request a build while another is still in progress, the second request will be queued until the first completes. */
   ["POST /repos/${owner}/${repo}/pages/builds"]: {
     Request: {
       params: {
@@ -91426,6 +95689,10 @@ type Routes = {
     };
     Response: PageBuildStatus;
   };
+
+  /** Gets information about the single most recent build of a GitHub Pages site.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/pages/builds/latest"]: {
     Request: {
       params: {
@@ -91440,6 +95707,10 @@ type Routes = {
     };
     Response: PageBuild;
   };
+
+  /** Gets information about a GitHub Pages build.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/pages/builds/${buildId}"]: {
     Request: {
       params: {
@@ -91455,6 +95726,10 @@ type Routes = {
     };
     Response: PageBuild;
   };
+
+  /** Create a GitHub Pages deployment for a repository.
+
+The authenticated user must have write permission to the repository. */
   ["POST /repos/${owner}/${repo}/pages/deployments"]: {
     Request: {
       params: {
@@ -91486,6 +95761,10 @@ type Routes = {
     };
     Response: PageDeployment;
   };
+
+  /** Gets the current status of a GitHub Pages deployment.
+
+The authenticated user must have read permission for the GitHub Pages site. */
   ["GET /repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}"]: {
     Request: {
       params: {
@@ -91502,6 +95781,10 @@ type Routes = {
     };
     Response: PagesDeploymentStatus;
   };
+
+  /** Cancels a GitHub Pages deployment.
+
+The authenticated user must have write permissions for the GitHub Pages site. */
   ["POST /repos/${owner}/${repo}/pages/deployments/${pagesDeploymentId}/cancel"]: {
     Request: {
       params: {
@@ -91518,6 +95801,14 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Gets a health check of the DNS settings for the `CNAME` record configured for a repository's GitHub Pages.
+
+The first request to this endpoint returns a `202 Accepted` status and starts an asynchronous background task to get the results for the domain. After the background task completes, subsequent requests to this endpoint return a `200 OK` status with the health check results in the response.
+
+The authenticated user must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /repos/${owner}/${repo}/pages/health"]: {
     Request: {
       params: {
@@ -91532,6 +95823,8 @@ type Routes = {
     };
     Response: PagesHealthCheck;
   };
+
+  /** Returns a boolean indicating whether or not private vulnerability reporting is enabled for the repository. For more information, see "[Evaluating the security settings of a repository](https://docs.github.com/code-security/security-advisories/working-with-repository-security-advisories/evaluating-the-security-settings-of-a-repository)". */
   ["GET /repos/${owner}/${repo}/private-vulnerability-reporting"]: {
     Request: {
       params: {
@@ -91549,6 +95842,8 @@ type Routes = {
       enabled: boolean;
     };
   };
+
+  /** Enables private vulnerability reporting for a repository. The authenticated user must have admin access to the repository. For more information, see "[Privately reporting a security vulnerability](https://docs.github.com/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)." */
   ["PUT /repos/${owner}/${repo}/private-vulnerability-reporting"]: {
     Request: {
       params: {
@@ -91563,6 +95858,8 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Disables private vulnerability reporting for a repository. The authenticated user must have admin access to the repository. For more information, see "[Privately reporting a security vulnerability](https://docs.github.com/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)". */
   ["DELETE /repos/${owner}/${repo}/private-vulnerability-reporting"]: {
     Request: {
       params: {
@@ -91577,6 +95874,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /repos/${owner}/${repo}/projects"]: {
     Request: {
       params: {
@@ -91607,6 +95908,10 @@ type Routes = {
     };
     Response: Project[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /repos/${owner}/${repo}/projects"]: {
     Request: {
       params: {
@@ -91626,6 +95931,9 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** Gets all custom property values that are set for a repository.
+Users with read access to the repository can use this endpoint. */
   ["GET /repos/${owner}/${repo}/properties/values"]: {
     Request: {
       params: {
@@ -91640,6 +95948,11 @@ type Routes = {
     };
     Response: CustomPropertyValue[];
   };
+
+  /** Create new or update existing custom property values for a repository.
+Using a value of `null` for a custom property will remove or 'unset' the property value from the repository.
+
+Repository admins and other users with the repository-level "edit custom property values" fine-grained permission can use this endpoint. */
   ["PATCH /repos/${owner}/${repo}/properties/values"]: {
     Request: {
       params: {
@@ -91657,6 +95970,21 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists pull requests in a specified repository.
+
+Draft pull requests are available in public repositories with GitHub
+Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing
+plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)
+in the GitHub Help documentation.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls"]: {
     Request: {
       params: {
@@ -91698,6 +96026,19 @@ type Routes = {
     };
     Response: PullRequestSimple[];
   };
+
+  /** Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/pulls"]: {
     Request: {
       params: {
@@ -91737,6 +96078,16 @@ type Routes = {
     };
     Response: PullRequest;
   };
+
+  /** Lists review comments for all pull requests in a repository. By default,
+review comments are in ascending order by ID.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/comments"]: {
     Request: {
       params: {
@@ -91770,6 +96121,15 @@ type Routes = {
     };
     Response: PullRequestReviewComment[];
   };
+
+  /** Provides details for a specified review comment.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/comments/${commentId}"]: {
     Request: {
       params: {
@@ -91789,6 +96149,15 @@ type Routes = {
     };
     Response: PullRequestReviewComment;
   };
+
+  /** Edits the content of a specified review comment.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PATCH /repos/${owner}/${repo}/pulls/comments/${commentId}"]: {
     Request: {
       params: {
@@ -91811,6 +96180,8 @@ type Routes = {
     };
     Response: PullRequestReviewComment;
   };
+
+  /** Deletes a review comment. */
   ["DELETE /repos/${owner}/${repo}/pulls/comments/${commentId}"]: {
     Request: {
       params: {
@@ -91830,6 +96201,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the reactions to a [pull request review comment](https://docs.github.com/rest/pulls/comments#get-a-review-comment-for-a-pull-request). */
   ["GET /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions"]: {
     Request: {
       params: {
@@ -91862,6 +96235,8 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to a [pull request review comment](https://docs.github.com/rest/pulls/comments#get-a-review-comment-for-a-pull-request). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
   ["POST /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions"]: {
     Request: {
       params: {
@@ -91884,6 +96259,11 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
+
+Delete a reaction to a [pull request review comment](https://docs.github.com/rest/pulls/comments#get-a-review-comment-for-a-pull-request). */
   ["DELETE /repos/${owner}/${repo}/pulls/comments/${commentId}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -91905,6 +96285,30 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+Lists details of a pull request by providing its number.
+
+When you get, [create](https://docs.github.com/rest/pulls/pulls/#create-a-pull-request), or [edit](https://docs.github.com/rest/pulls/pulls#update-a-pull-request) a pull request, GitHub creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+
+The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
+
+The value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:
+
+*   If merged as a [merge commit](https://docs.github.com/articles/about-merge-methods-on-github/), `merge_commit_sha` represents the SHA of the merge commit.
+*   If merged via a [squash](https://docs.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.
+*   If [rebased](https://docs.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
+
+Pass the appropriate [media type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types) to fetch diff and patch formats.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+- **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}"]: {
     Request: {
       params: {
@@ -91921,6 +96325,17 @@ type Routes = {
     };
     Response: PullRequest;
   };
+
+  /** Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PATCH /repos/${owner}/${repo}/pulls/${pullNumber}"]: {
     Request: {
       params: {
@@ -91948,6 +96363,10 @@ type Routes = {
     };
     Response: PullRequest;
   };
+
+  /** Creates a codespace owned by the authenticated user for the specified pull request.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/codespaces"]: {
     Request: {
       params: {
@@ -91985,6 +96404,16 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Lists all review comments for a specified pull request. By default, review comments
+are in ascending order by ID.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/comments"]: {
     Request: {
       params: {
@@ -92024,6 +96453,22 @@ type Routes = {
     };
     Response: PullRequestReviewComment[];
   };
+
+  /** Creates a review comment on the diff of a specified pull request. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/rest/issues/comments#create-an-issue-comment)."
+
+If your comment applies to more than one line in the pull request diff, you should use the parameters `line`, `side`, and optionally `start_line` and `start_side` in your request.
+
+The `position` parameter is closing down. If you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/comments"]: {
     Request: {
       params: {
@@ -92067,6 +96512,18 @@ type Routes = {
     };
     Response: PullRequestReviewComment;
   };
+
+  /** Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/comments/${commentId}/replies"]: {
     Request: {
       params: {
@@ -92091,6 +96548,17 @@ type Routes = {
     };
     Response: PullRequestReviewComment;
   };
+
+  /** Lists a maximum of 250 commits for a pull request. To receive a complete
+commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/rest/commits/commits#list-commits)
+endpoint.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/commits"]: {
     Request: {
       params: {
@@ -92118,6 +96586,18 @@ type Routes = {
     };
     Response: Commit[];
   };
+
+  /** Lists the files in a specified pull request.
+
+> [!NOTE]
+> Responses include a maximum of 3000 files. The paginated response returns 30 files per page by default.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/files"]: {
     Request: {
       params: {
@@ -92145,6 +96625,8 @@ type Routes = {
     };
     Response: DiffEntry[];
   };
+
+  /** Checks if a pull request has been merged into the base branch. The HTTP status of the response indicates whether or not the pull request has been merged; the response body is empty. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/merge"]: {
     Request: {
       params: {
@@ -92161,6 +96643,9 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Merges a pull request into the base branch.
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)." */
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/merge"]: {
     Request: {
       params: {
@@ -92186,6 +96671,8 @@ type Routes = {
     };
     Response: PullRequestMergeResult;
   };
+
+  /** Gets the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers"]: {
     Request: {
       params: {
@@ -92202,6 +96689,9 @@ type Routes = {
     };
     Response: PullRequestReviewRequest;
   };
+
+  /** Requests reviews for a pull request from a given set of users and/or teams.
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)." */
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers"]: {
     Request: {
       params: {
@@ -92223,6 +96713,8 @@ type Routes = {
     };
     Response: PullRequestSimple;
   };
+
+  /** Removes review requests from a pull request for a given set of users and/or teams. */
   ["DELETE /repos/${owner}/${repo}/pulls/${pullNumber}/requested_reviewers"]: {
     Request: {
       params: {
@@ -92244,6 +96736,15 @@ type Routes = {
     };
     Response: PullRequestSimple;
   };
+
+  /** Lists all reviews for a specified pull request. The list of reviews returns in chronological order.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/reviews"]: {
     Request: {
       params: {
@@ -92271,6 +96772,24 @@ type Routes = {
     };
     Response: PullRequestReview[];
   };
+
+  /** Creates a review on a specified pull request.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
+
+> [!NOTE]
+> To comment on a specific line in a file, you need to first determine the position of that line in the diff. To see a pull request diff, add the `application/vnd.github.v3.diff` media type to the `Accept` header of a call to the [Get a pull request](https://docs.github.com/rest/pulls/pulls#get-a-pull-request) endpoint.
+
+The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/reviews"]: {
     Request: {
       params: {
@@ -92311,6 +96830,15 @@ type Routes = {
     };
     Response: PullRequestReview;
   };
+
+  /** Retrieves a pull request review by its ID.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}"]: {
     Request: {
       params: {
@@ -92329,6 +96857,15 @@ type Routes = {
     };
     Response: PullRequestReview;
   };
+
+  /** Updates the contents of a specified review summary comment.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}"]: {
     Request: {
       params: {
@@ -92350,6 +96887,15 @@ type Routes = {
     };
     Response: PullRequestReview;
   };
+
+  /** Deletes a pull request review that has not been submitted. Submitted reviews cannot be deleted.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["DELETE /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}"]: {
     Request: {
       params: {
@@ -92368,6 +96914,15 @@ type Routes = {
     };
     Response: PullRequestReview;
   };
+
+  /** Lists comments for a specific pull request review.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/comments"]: {
     Request: {
       params: {
@@ -92397,6 +96952,18 @@ type Routes = {
     };
     Response: ReviewComment[];
   };
+
+  /** Dismisses a specified review on a pull request.
+
+> [!NOTE]
+> To dismiss a pull request review on a [protected branch](https://docs.github.com/rest/branches/branch-protection), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/dismissals"]: {
     Request: {
       params: {
@@ -92420,6 +96987,15 @@ type Routes = {
     };
     Response: PullRequestReview;
   };
+
+  /** Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/rest/pulls/reviews#create-a-review-for-a-pull-request)."
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["POST /repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/events"]: {
     Request: {
       params: {
@@ -92443,6 +97019,9 @@ type Routes = {
     };
     Response: PullRequestReview;
   };
+
+  /** Updates the pull request branch with the latest upstream changes by merging HEAD from the base branch into the pull request branch.
+Note: If making a request on behalf of a GitHub App you must also have permissions to write the contents of the head repository. */
   ["PUT /repos/${owner}/${repo}/pulls/${pullNumber}/update-branch"]: {
     Request: {
       params: {
@@ -92465,6 +97044,13 @@ type Routes = {
       url?: string;
     };
   };
+
+  /** Gets the preferred README for a repository.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media type.
+- **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup). */
   ["GET /repos/${owner}/${repo}/readme"]: {
     Request: {
       params: {
@@ -92482,6 +97068,13 @@ type Routes = {
     };
     Response: ContentFile;
   };
+
+  /** Gets the README from a repository directory.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media type.
+- **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup). */
   ["GET /repos/${owner}/${repo}/readme/${dir}"]: {
     Request: {
       params: {
@@ -92501,6 +97094,10 @@ type Routes = {
     };
     Response: ContentFile;
   };
+
+  /** This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/rest/repos/repos#list-repository-tags).
+
+Information about published releases are available to everyone. Only users with push access will receive listings for draft releases. */
   ["GET /repos/${owner}/${repo}/releases"]: {
     Request: {
       params: {
@@ -92526,6 +97123,10 @@ type Routes = {
     };
     Response: Release[];
   };
+
+  /** Users with push access to the repository can create a release.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)." */
   ["POST /repos/${owner}/${repo}/releases"]: {
     Request: {
       params: {
@@ -92571,6 +97172,14 @@ type Routes = {
     };
     Response: Release;
   };
+
+  /** To download the asset's binary content:
+
+- If within a browser, fetch the location specified in the `browser_download_url` key provided in the response.
+- Alternatively, set the `Accept` header of the request to 
+  [`application/octet-stream`](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types). 
+  The API will either redirect the client to the location, or stream it directly if possible.
+  API clients should handle both a `200` or `302` response. */
   ["GET /repos/${owner}/${repo}/releases/assets/${assetId}"]: {
     Request: {
       params: {
@@ -92587,6 +97196,8 @@ type Routes = {
     };
     Response: ReleaseAsset;
   };
+
+  /** Users with push access to the repository can edit a release asset. */
   ["PATCH /repos/${owner}/${repo}/releases/assets/${assetId}"]: {
     Request: {
       params: {
@@ -92610,6 +97221,7 @@ type Routes = {
     };
     Response: ReleaseAsset;
   };
+
   ["DELETE /repos/${owner}/${repo}/releases/assets/${assetId}"]: {
     Request: {
       params: {
@@ -92626,6 +97238,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Generate a name and body describing a [release](https://docs.github.com/rest/releases/releases#get-a-release). The body content will be markdown formatted and contain information like the changes since last release and users who contributed. The generated release notes are not saved anywhere. They are intended to be generated and used when creating a new release. */
   ["POST /repos/${owner}/${repo}/releases/generate-notes"]: {
     Request: {
       params: {
@@ -92649,6 +97263,10 @@ type Routes = {
     };
     Response: ReleaseNotesContent;
   };
+
+  /** View the latest published full release for the repository.
+
+The latest release is the most recent non-prerelease, non-draft release, sorted by the `created_at` attribute. The `created_at` attribute is the date of the commit used for the release, and not the date when the release was drafted or published. */
   ["GET /repos/${owner}/${repo}/releases/latest"]: {
     Request: {
       params: {
@@ -92663,6 +97281,8 @@ type Routes = {
     };
     Response: Release;
   };
+
+  /** Get a published release with the specified tag. */
   ["GET /repos/${owner}/${repo}/releases/tags/${tag}"]: {
     Request: {
       params: {
@@ -92679,6 +97299,11 @@ type Routes = {
     };
     Response: Release;
   };
+
+  /** Gets a public release with the specified release ID.
+
+> [!NOTE]
+> This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a hypermedia resource. For more information, see "[Getting started with the REST API](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)." */
   ["GET /repos/${owner}/${repo}/releases/${releaseId}"]: {
     Request: {
       params: {
@@ -92695,6 +97320,8 @@ type Routes = {
     };
     Response: Release;
   };
+
+  /** Users with push access to the repository can edit a release. */
   ["PATCH /repos/${owner}/${repo}/releases/${releaseId}"]: {
     Request: {
       params: {
@@ -92731,6 +97358,8 @@ type Routes = {
     };
     Response: Release;
   };
+
+  /** Users with push access to the repository can delete a release. */
   ["DELETE /repos/${owner}/${repo}/releases/${releaseId}"]: {
     Request: {
       params: {
@@ -92747,6 +97376,7 @@ type Routes = {
     };
     Response: void;
   };
+
   ["GET /repos/${owner}/${repo}/releases/${releaseId}/assets"]: {
     Request: {
       params: {
@@ -92774,6 +97404,26 @@ type Routes = {
     };
     Response: ReleaseAsset[];
   };
+
+  /** This endpoint makes use of a [Hypermedia relation](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+the response of the [Create a release endpoint](https://docs.github.com/rest/releases/releases#create-a-release) to upload a release asset.
+
+You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
+
+Most libraries will set the required `Content-Length` header automatically. Use the required `Content-Type` header to provide the media type of the asset. For a list of media types, see [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml). For example: 
+
+`application/zip`
+
+GitHub expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
+you'll still need to pass your authentication to be able to upload an asset.
+
+When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
+
+**Notes:**
+*   GitHub renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List release assets](https://docs.github.com/rest/releases/assets#list-release-assets)"
+endpoint lists the renamed filenames. For more information and help, contact [GitHub Support](https://support.github.com/contact?tags=dotcom-rest-api).
+*   To find the `release_id` query the [`GET /repos/{owner}/{repo}/releases/latest` endpoint](https://docs.github.com/rest/releases/releases#get-the-latest-release). 
+*   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset. */
   ["POST /repos/${owner}/${repo}/releases/${releaseId}/assets"]: {
     Request: {
       params: {
@@ -92793,6 +97443,8 @@ type Routes = {
     };
     Response: ReleaseAsset;
   };
+
+  /** List the reactions to a [release](https://docs.github.com/rest/releases/releases#get-a-release). */
   ["GET /repos/${owner}/${repo}/releases/${releaseId}/reactions"]: {
     Request: {
       params: {
@@ -92822,6 +97474,8 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** Create a reaction to a [release](https://docs.github.com/rest/releases/releases#get-a-release). A response with a `Status: 200 OK` means that you already added the reaction type to this release. */
   ["POST /repos/${owner}/${repo}/releases/${releaseId}/reactions"]: {
     Request: {
       params: {
@@ -92841,6 +97495,11 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!NOTE]
+> You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`.
+
+Delete a reaction to a [release](https://docs.github.com/rest/releases/releases#get-a-release). */
   ["DELETE /repos/${owner}/${repo}/releases/${releaseId}/reactions/${reactionId}"]: {
     Request: {
       params: {
@@ -92859,6 +97518,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Returns all active rules that apply to the specified branch. The branch does not need to exist; rules that would apply
+to a branch with that name will be returned. All active rules that apply will be returned, regardless of the level
+at which they are configured (e.g. repository or organization). Rules in rulesets with "evaluate" or "disabled"
+enforcement statuses are not returned. */
   ["GET /repos/${owner}/${repo}/rules/branches/${branch}"]: {
     Request: {
       params: {
@@ -92886,6 +97550,8 @@ type Routes = {
     };
     Response: RepositoryRuleDetailed[];
   };
+
+  /** Get all the rulesets for a repository. */
   ["GET /repos/${owner}/${repo}/rulesets"]: {
     Request: {
       params: {
@@ -92923,6 +97589,8 @@ type Routes = {
     };
     Response: RepositoryRuleset[];
   };
+
+  /** Create a ruleset for a repository. */
   ["POST /repos/${owner}/${repo}/rulesets"]: {
     Request: {
       params: {
@@ -92953,6 +97621,9 @@ type Routes = {
     };
     Response: RepositoryRuleset;
   };
+
+  /** Lists suites of rule evaluations at the repository level.
+For more information, see "[Managing rulesets for a repository](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/managing-rulesets-for-a-repository#viewing-insights-for-rulesets)." */
   ["GET /repos/${owner}/${repo}/rulesets/rule-suites"]: {
     Request: {
       params: {
@@ -92994,6 +97665,9 @@ type Routes = {
     };
     Response: RuleSuites;
   };
+
+  /** Gets information about a suite of rule evaluations from within a repository.
+For more information, see "[Managing rulesets for a repository](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/managing-rulesets-for-a-repository#viewing-insights-for-rulesets)." */
   ["GET /repos/${owner}/${repo}/rulesets/rule-suites/${ruleSuiteId}"]: {
     Request: {
       params: {
@@ -93015,6 +97689,11 @@ type Routes = {
     };
     Response: RuleSuite;
   };
+
+  /** Get a ruleset for a repository.
+
+**Note:** To prevent leaking sensitive information, the `bypass_actors` property is only returned if the user
+making the API request has write access to the ruleset. */
   ["GET /repos/${owner}/${repo}/rulesets/${rulesetId}"]: {
     Request: {
       params: {
@@ -93037,6 +97716,8 @@ type Routes = {
     };
     Response: RepositoryRuleset;
   };
+
+  /** Update a ruleset for a repository. */
   ["PUT /repos/${owner}/${repo}/rulesets/${rulesetId}"]: {
     Request: {
       params: {
@@ -93066,6 +97747,8 @@ type Routes = {
     };
     Response: RepositoryRuleset;
   };
+
+  /** Delete a ruleset for a repository. */
   ["DELETE /repos/${owner}/${repo}/rulesets/${rulesetId}"]: {
     Request: {
       params: {
@@ -93082,6 +97765,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Get the history of a repository ruleset. */
   ["GET /repos/${owner}/${repo}/rulesets/${rulesetId}/history"]: {
     Request: {
       params: {
@@ -93109,6 +97794,8 @@ type Routes = {
     };
     Response: RulesetVersion[];
   };
+
+  /** Get a version of a repository ruleset. */
   ["GET /repos/${owner}/${repo}/rulesets/${rulesetId}/history/${versionId}"]: {
     Request: {
       params: {
@@ -93127,6 +97814,12 @@ type Routes = {
     };
     Response: RulesetVersionWithState;
   };
+
+  /** Lists secret scanning alerts for an eligible repository, from newest to oldest.
+
+The authenticated user must be an administrator for the repository or for the organization that owns the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /repos/${owner}/${repo}/secret-scanning/alerts"]: {
     Request: {
       params: {
@@ -93189,6 +97882,12 @@ type Routes = {
     };
     Response: SecretScanningAlert[];
   };
+
+  /** Gets a single secret scanning alert detected in an eligible repository.
+
+The authenticated user must be an administrator for the repository or for the organization that owns the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}"]: {
     Request: {
       params: {
@@ -93211,6 +97910,12 @@ type Routes = {
     };
     Response: SecretScanningAlert;
   };
+
+  /** Updates the status of a secret scanning alert in an eligible repository.
+
+The authenticated user must be an administrator for the repository or for the organization that owns the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["PATCH /repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}"]: {
     Request: {
       params: {
@@ -93234,6 +97939,12 @@ type Routes = {
     };
     Response: SecretScanningAlert;
   };
+
+  /** Lists all locations for a given secret scanning alert for an eligible repository.
+
+The authenticated user must be an administrator for the repository or for the organization that owns the repository to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /repos/${owner}/${repo}/secret-scanning/alerts/${alertNumber}/locations"]: {
     Request: {
       params: {
@@ -93261,6 +97972,12 @@ type Routes = {
     };
     Response: SecretScanningLocation[];
   };
+
+  /** Creates a bypass for a previously push protected secret.
+
+The authenticated user must be the original author of the committed secret.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/secret-scanning/push-protection-bypasses"]: {
     Request: {
       params: {
@@ -93280,6 +97997,10 @@ type Routes = {
     };
     Response: SecretScanningPushProtectionBypass;
   };
+
+  /** Lists the latest default incremental and backfill scans by type for a repository. Scans from Copilot Secret Scanning are not included.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead. */
   ["GET /repos/${owner}/${repo}/secret-scanning/scan-history"]: {
     Request: {
       params: {
@@ -93294,6 +98015,12 @@ type Routes = {
     };
     Response: SecretScanningScanHistory;
   };
+
+  /** Lists security advisories in a repository.
+
+The authenticated user can access unpublished security advisories from a repository if they are a security manager or administrator of that repository, or if they are a collaborator on any security advisory.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:read` scope to to get a published security advisory in a private repository, or any unpublished security advisory that the authenticated user has access to. */
   ["GET /repos/${owner}/${repo}/security-advisories"]: {
     Request: {
       params: {
@@ -93332,6 +98059,12 @@ type Routes = {
     };
     Response: RepositoryAdvisory[];
   };
+
+  /** Creates a new repository security advisory.
+
+In order to create a draft repository security advisory, the authenticated user must be a security manager or administrator of that repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:write` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/security-advisories"]: {
     Request: {
       params: {
@@ -93346,6 +98079,9 @@ type Routes = {
     };
     Response: RepositoryAdvisory;
   };
+
+  /** Report a security vulnerability to the maintainers of the repository.
+See "[Privately reporting a security vulnerability](https://docs.github.com/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)" for more information about private vulnerability reporting. */
   ["POST /repos/${owner}/${repo}/security-advisories/reports"]: {
     Request: {
       params: {
@@ -93360,6 +98096,15 @@ type Routes = {
     };
     Response: RepositoryAdvisory;
   };
+
+  /** Get a repository security advisory using its GitHub Security Advisory (GHSA) identifier.
+
+Anyone can access any published security advisory on a public repository.
+
+The authenticated user can access an unpublished security advisory from a repository if they are a security manager or administrator of that repository, or if they are a
+collaborator on the security advisory.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:read` scope to to get a published security advisory in a private repository, or any unpublished security advisory that the authenticated user has access to. */
   ["GET /repos/${owner}/${repo}/security-advisories/${ghsaId}"]: {
     Request: {
       params: {
@@ -93376,6 +98121,13 @@ type Routes = {
     };
     Response: RepositoryAdvisory;
   };
+
+  /** Update a repository security advisory using its GitHub Security Advisory (GHSA) identifier.
+
+In order to update any security advisory, the authenticated user must be a security manager or administrator of that repository,
+or a collaborator on the repository security advisory.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:write` scope to use this endpoint. */
   ["PATCH /repos/${owner}/${repo}/security-advisories/${ghsaId}"]: {
     Request: {
       params: {
@@ -93392,6 +98144,14 @@ type Routes = {
     };
     Response: RepositoryAdvisory;
   };
+
+  /** If you want a CVE identification number for the security vulnerability in your project, and don't already have one, you can request a CVE identification number from GitHub. For more information see "[Requesting a CVE identification number](https://docs.github.com/code-security/security-advisories/repository-security-advisories/publishing-a-repository-security-advisory#requesting-a-cve-identification-number-optional)."
+
+You may request a CVE for public repositories, but cannot do so for private repositories.
+
+In order to request a CVE for a repository security advisory, the authenticated user must be a security manager or administrator of that repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` or `repository_advisories:write` scope to use this endpoint. */
   ["POST /repos/${owner}/${repo}/security-advisories/${ghsaId}/cve"]: {
     Request: {
       params: {
@@ -93408,6 +98168,11 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Create a temporary private fork to collaborate on fixing a security vulnerability in your repository.
+
+> [!NOTE]
+> Forking a repository happens asynchronously. You may have to wait up to 5 minutes before you can access the fork. */
   ["POST /repos/${owner}/${repo}/security-advisories/${ghsaId}/forks"]: {
     Request: {
       params: {
@@ -93424,6 +98189,12 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
+  /** Lists the people that have starred the repository.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created. */
   ["GET /repos/${owner}/${repo}/stargazers"]: {
     Request: {
       params: {
@@ -93449,6 +98220,11 @@ type Routes = {
     };
     Response: SimpleUser[] | Stargazer[];
   };
+
+  /** Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+
+> [!NOTE]
+> This endpoint can only be used for repositories with fewer than 10,000 commits. If the repository contains 10,000 or more commits, a 422 status code will be returned. */
   ["GET /repos/${owner}/${repo}/stats/code_frequency"]: {
     Request: {
       params: {
@@ -93463,6 +98239,8 @@ type Routes = {
     };
     Response: CodeFrequencyStat[];
   };
+
+  /** Returns the last year of commit activity grouped by week. The `days` array is a group of commits per day, starting on `Sunday`. */
   ["GET /repos/${owner}/${repo}/stats/commit_activity"]: {
     Request: {
       params: {
@@ -93477,6 +98255,17 @@ type Routes = {
     };
     Response: CommitActivity[];
   };
+
+  /** 
+Returns the `total` number of commits authored by the contributor. In addition, the response includes a Weekly Hash (`weeks` array) with the following information:
+
+*   `w` - Start of the week, given as a [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time).
+*   `a` - Number of additions
+*   `d` - Number of deletions
+*   `c` - Number of commits
+
+> [!NOTE]
+> This endpoint will return `0` values for all addition and deletion counts in repositories with 10,000 or more commits. */
   ["GET /repos/${owner}/${repo}/stats/contributors"]: {
     Request: {
       params: {
@@ -93491,6 +98280,12 @@ type Routes = {
     };
     Response: ContributorActivity[];
   };
+
+  /** Returns the total commit counts for the `owner` and total commit counts in `all`. `all` is everyone combined, including the `owner` in the last 52 weeks. If you'd like to get the commit counts for non-owners, you can subtract `owner` from `all`.
+
+The array order is oldest week (index 0) to most recent week.
+
+The most recent week is seven days ago at UTC midnight to today at UTC midnight. */
   ["GET /repos/${owner}/${repo}/stats/participation"]: {
     Request: {
       params: {
@@ -93505,6 +98300,14 @@ type Routes = {
     };
     Response: ParticipationStats;
   };
+
+  /** Each array contains the day number, hour number, and number of commits:
+
+*   `0-6`: Sunday - Saturday
+*   `0-23`: Hour of day
+*   Number of commits
+
+For example, `[2, 14, 25]` indicates that there were 25 total commits, during the 2:00pm hour on Tuesdays. All times are based on the time zone of individual commits. */
   ["GET /repos/${owner}/${repo}/stats/punch_card"]: {
     Request: {
       params: {
@@ -93519,6 +98322,10 @@ type Routes = {
     };
     Response: CodeFrequencyStat[];
   };
+
+  /** Users with push access in a repository can create commit statuses for a given SHA.
+
+Note: there is a limit of 1000 statuses per `sha` and `context` within a repository. Attempts to create more than 1000 statuses will result in a validation error. */
   ["POST /repos/${owner}/${repo}/statuses/${sha}"]: {
     Request: {
       params: {
@@ -93550,6 +98357,8 @@ type Routes = {
     };
     Response: Status;
   };
+
+  /** Lists the people watching the specified repository. */
   ["GET /repos/${owner}/${repo}/subscribers"]: {
     Request: {
       params: {
@@ -93575,6 +98384,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Gets information about whether the authenticated user is subscribed to the repository. */
   ["GET /repos/${owner}/${repo}/subscription"]: {
     Request: {
       params: {
@@ -93589,6 +98400,8 @@ type Routes = {
     };
     Response: RepositorySubscription;
   };
+
+  /** If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/rest/activity/watching#delete-a-repository-subscription) completely. */
   ["PUT /repos/${owner}/${repo}/subscription"]: {
     Request: {
       params: {
@@ -93608,6 +98421,8 @@ type Routes = {
     };
     Response: RepositorySubscription;
   };
+
+  /** This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/rest/activity/watching#set-a-repository-subscription). */
   ["DELETE /repos/${owner}/${repo}/subscription"]: {
     Request: {
       params: {
@@ -93622,6 +98437,7 @@ type Routes = {
     };
     Response: void;
   };
+
   ["GET /repos/${owner}/${repo}/tags"]: {
     Request: {
       params: {
@@ -93647,6 +98463,13 @@ type Routes = {
     };
     Response: Tag[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** This operation is closing down and will be removed after August 30, 2024. Use the "[Repository Rulesets](https://docs.github.com/rest/repos/rules#get-all-repository-rulesets)" endpoint instead.
+
+This returns the tag protection states of a repository.
+
+This information is only available to repository administrators. */
   ["GET /repos/${owner}/${repo}/tags/protection"]: {
     Request: {
       params: {
@@ -93661,6 +98484,12 @@ type Routes = {
     };
     Response: TagProtection[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** This operation is closing down and will be removed after August 30, 2024. Use the "[Repository Rulesets](https://docs.github.com/rest/repos/rules#create-a-repository-ruleset)" endpoint instead.
+
+This creates a tag protection state for a repository.
+This endpoint is only available to repository administrators. */
   ["POST /repos/${owner}/${repo}/tags/protection"]: {
     Request: {
       params: {
@@ -93678,6 +98507,12 @@ type Routes = {
     };
     Response: TagProtection;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** This operation is closing down and will be removed after August 30, 2024. Use the "[Repository Rulesets](https://docs.github.com/rest/repos/rules#delete-a-repository-ruleset)" endpoint instead.
+
+This deletes a tag protection state for a repository.
+This endpoint is only available to repository administrators. */
   ["DELETE /repos/${owner}/${repo}/tags/protection/${tagProtectionId}"]: {
     Request: {
       params: {
@@ -93694,6 +98529,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a redirect URL to download a tar archive for a repository. If you omit `:ref`, the repository’s default branch (usually
+`main`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
+the `Location` header to make a second `GET` request.
+
+> [!NOTE]
+> For private repositories, these links are temporary and expire after five minutes. */
   ["GET /repos/${owner}/${repo}/tarball/${ref}"]: {
     Request: {
       params: {
@@ -93709,6 +98551,12 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Lists the teams that have access to the specified repository and that are also visible to the authenticated user.
+
+For a public repository, a team is listed only if that team added the public repository explicitly.
+
+OAuth app tokens and personal access tokens (classic) need the `public_repo` or `repo` scope to use this endpoint with a public repository, and `repo` scope to use this endpoint with a private repository. */
   ["GET /repos/${owner}/${repo}/teams"]: {
     Request: {
       params: {
@@ -93734,6 +98582,7 @@ type Routes = {
     };
     Response: Team[];
   };
+
   ["GET /repos/${owner}/${repo}/topics"]: {
     Request: {
       params: {
@@ -93759,6 +98608,7 @@ type Routes = {
     };
     Response: Topic;
   };
+
   ["PUT /repos/${owner}/${repo}/topics"]: {
     Request: {
       params: {
@@ -93776,6 +98626,8 @@ type Routes = {
     };
     Response: Topic;
   };
+
+  /** Get the total number of clones and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight of the beginning of the day or week. Week begins on Monday. */
   ["GET /repos/${owner}/${repo}/traffic/clones"]: {
     Request: {
       params: {
@@ -93796,6 +98648,8 @@ type Routes = {
     };
     Response: CloneTraffic;
   };
+
+  /** Get the top 10 popular contents over the last 14 days. */
   ["GET /repos/${owner}/${repo}/traffic/popular/paths"]: {
     Request: {
       params: {
@@ -93810,6 +98664,8 @@ type Routes = {
     };
     Response: ContentTraffic[];
   };
+
+  /** Get the top 10 referrers over the last 14 days. */
   ["GET /repos/${owner}/${repo}/traffic/popular/referrers"]: {
     Request: {
       params: {
@@ -93824,6 +98680,8 @@ type Routes = {
     };
     Response: ReferrerTraffic[];
   };
+
+  /** Get the total number of views and breakdown per day or week for the last 14 days. Timestamps are aligned to UTC midnight of the beginning of the day or week. Week begins on Monday. */
   ["GET /repos/${owner}/${repo}/traffic/views"]: {
     Request: {
       params: {
@@ -93844,6 +98702,8 @@ type Routes = {
     };
     Response: ViewTraffic;
   };
+
+  /** A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/articles/about-repository-transfers/). */
   ["POST /repos/${owner}/${repo}/transfer"]: {
     Request: {
       params: {
@@ -93865,6 +98725,8 @@ type Routes = {
     };
     Response: MinimalRepository;
   };
+
+  /** Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin read access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/articles/about-security-alerts-for-vulnerable-dependencies)". */
   ["GET /repos/${owner}/${repo}/vulnerability-alerts"]: {
     Request: {
       params: {
@@ -93879,6 +98741,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Enables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/articles/about-security-alerts-for-vulnerable-dependencies)". */
   ["PUT /repos/${owner}/${repo}/vulnerability-alerts"]: {
     Request: {
       params: {
@@ -93893,6 +98757,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Disables dependency alerts and the dependency graph for a repository.
+The authenticated user must have admin access to the repository. For more information,
+see "[About security alerts for vulnerable dependencies](https://docs.github.com/articles/about-security-alerts-for-vulnerable-dependencies)". */
   ["DELETE /repos/${owner}/${repo}/vulnerability-alerts"]: {
     Request: {
       params: {
@@ -93907,6 +98775,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
+`main`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
+the `Location` header to make a second `GET` request.
+
+> [!NOTE]
+> For private repositories, these links are temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the redirect. */
   ["GET /repos/${owner}/${repo}/zipball/${ref}"]: {
     Request: {
       params: {
@@ -93922,6 +98797,10 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/rest/repos/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+
+OAuth app tokens and personal access tokens (classic) need the `public_repo` or `repo` scope to create a public repository, and `repo` scope to create a private repository. */
   ["POST /repos/${templateOwner}/${templateRepo}/generate"]: {
     Request: {
       params: {
@@ -93953,6 +98832,12 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
+  /** Lists all public repositories in the order that they were created.
+
+Note:
+- For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.
+- Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of repositories. */
   ["GET /repositories"]: {
     Request: {
       params?: never;
@@ -93965,6 +98850,27 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
+
+When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/search/search#text-match-metadata).
+
+For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
+
+`q=addClass+in:file+language:js+repo:jquery/jquery`
+
+This query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.
+
+Considerations for code search:
+
+Due to the complexity of searching code, there are a few restrictions on how searches are performed:
+
+*   Only the _default branch_ is considered. In most cases, this will be the `master` branch.
+*   Only files smaller than 384 KB are searchable.
+*   You must always include at least one search term when searching source code. For example, searching for [`language:go`](https://github.com/search?utf8=%E2%9C%93&q=language%3Ago&type=Code) is not valid, while [`amazing
+language:go`](https://github.com/search?utf8=%E2%9C%93&q=amazing+language%3Ago&type=Code) is.
+
+This endpoint requires you to authenticate and limits you to 10 requests per minute. */
   ["GET /search/code"]: {
     Request: {
       params?: never;
@@ -94002,6 +98908,15 @@ type Routes = {
       items: CodeSearchResultItem[];
     };
   };
+
+  /** Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
+
+When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
+metadata](https://docs.github.com/rest/search/search#text-match-metadata).
+
+For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
+
+`q=repo:octocat/Spoon-Knife+css` */
   ["GET /search/commits"]: {
     Request: {
       params?: never;
@@ -94035,6 +98950,10 @@ type Routes = {
       items: CommitSearchResultItem[];
     };
   };
+
+  /** > [!WARNING]
+> **Notice:** Search for issues and pull requests will be overridden by advanced search on September 4, 2025.
+> You can read more about this change on [the GitHub blog](https://github.blog/changelog/2025-03-06-github-issues-projects-api-support-for-issues-advanced-search-and-more/). */
   ["GET /search/issues"]: {
     Request: {
       params?: never;
@@ -94084,6 +99003,16 @@ type Routes = {
       items: IssueSearchResultItem[];
     };
   };
+
+  /** Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
+
+When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/search/search#text-match-metadata).
+
+For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
+
+`q=bug+defect+enhancement&repository_id=64778136`
+
+The labels that best match the query appear first in the search results. */
   ["GET /search/labels"]: {
     Request: {
       params?: never;
@@ -94119,6 +99048,16 @@ type Routes = {
       items: LabelSearchResultItem[];
     };
   };
+
+  /** Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
+
+When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/search/search#text-match-metadata).
+
+For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
+
+`q=tetris+language:assembly&sort=stars&order=desc`
+
+This query searches for repositories with the word `tetris` in the name, the description, or the README. The results are limited to repositories where the primary language is assembly. The results are sorted by stars in descending order, so that the most popular repositories appear first in the search results. */
   ["GET /search/repositories"]: {
     Request: {
       params?: never;
@@ -94152,6 +99091,16 @@ type Routes = {
       items: RepoSearchResultItem[];
     };
   };
+
+  /** Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api). See "[Searching topics](https://docs.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
+
+When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/search/search#text-match-metadata).
+
+For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
+
+`q=ruby+is:featured`
+
+This query searches for topics with the keyword `ruby` and limits the results to find only topics that are featured. The topics that are the best match for the query appear first in the search results. */
   ["GET /search/topics"]: {
     Request: {
       params?: never;
@@ -94178,6 +99127,18 @@ type Routes = {
       items: TopicSearchResultItem[];
     };
   };
+
+  /** Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api).
+
+When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/search/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/search/search#text-match-metadata).
+
+For example, if you're looking for a list of popular users, you might try this query:
+
+`q=tom+repos:%3E42+followers:%3E1000`
+
+This query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.
+
+This endpoint does not accept authentication and will only include publicly visible users. As an alternative, you can use the GraphQL API. The GraphQL API requires authentication and will return private users, including Enterprise Managed Users (EMUs), that you are authorized to view. For more information, see "[GraphQL Queries](https://docs.github.com/graphql/reference/queries#search)." */
   ["GET /search/users"]: {
     Request: {
       params?: never;
@@ -94211,6 +99172,9 @@ type Routes = {
       items: UserSearchResultItem[];
     };
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/rest/teams/teams#get-a-team-by-name) endpoint. */
   ["GET /teams/${teamId}"]: {
     Request: {
       params: {
@@ -94223,6 +99187,14 @@ type Routes = {
     };
     Response: TeamFull;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/rest/teams/teams#update-a-team) endpoint.
+
+To edit a team, the authenticated user must either be an organization owner or a team maintainer.
+
+> [!NOTE]
+> With nested teams, the `privacy` for parent teams cannot be `secret`. */
   ["PATCH /teams/${teamId}"]: {
     Request: {
       params: {
@@ -94262,6 +99234,13 @@ type Routes = {
     };
     Response: TeamFull;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/rest/teams/teams#delete-a-team) endpoint.
+
+To delete a team, the authenticated user must be an organization owner or team maintainer.
+
+If you are an organization owner, deleting a parent team will delete all of its child teams as well. */
   ["DELETE /teams/${teamId}"]: {
     Request: {
       params: {
@@ -94274,6 +99253,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/rest/teams/discussions#list-discussions) endpoint.
+
+List all discussions on a team's page.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /teams/${teamId}/discussions"]: {
     Request: {
       params: {
@@ -94302,6 +99288,15 @@ type Routes = {
     };
     Response: TeamDiscussion[];
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/rest/teams/discussions#create-a-discussion) endpoint.
+
+Creates a new discussion post on a team's page.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /teams/${teamId}/discussions"]: {
     Request: {
       params: {
@@ -94324,6 +99319,13 @@ type Routes = {
     };
     Response: TeamDiscussion;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion) endpoint.
+
+Get a specific discussion on a team's page.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /teams/${teamId}/discussions/${discussionNumber}"]: {
     Request: {
       params: {
@@ -94338,6 +99340,13 @@ type Routes = {
     };
     Response: TeamDiscussion;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/rest/teams/discussions#update-a-discussion) endpoint.
+
+Edits the title and body text of a discussion post. Only the parameters you provide are updated.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["PATCH /teams/${teamId}/discussions/${discussionNumber}"]: {
     Request: {
       params: {
@@ -94357,6 +99366,13 @@ type Routes = {
     };
     Response: TeamDiscussion;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/rest/teams/discussions#delete-a-discussion) endpoint.
+
+Delete a discussion from a team's page.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["DELETE /teams/${teamId}/discussions/${discussionNumber}"]: {
     Request: {
       params: {
@@ -94371,6 +99387,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/rest/teams/discussion-comments#list-discussion-comments) endpoint.
+
+List all comments on a team discussion.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /teams/${teamId}/discussions/${discussionNumber}/comments"]: {
     Request: {
       params: {
@@ -94401,6 +99424,15 @@ type Routes = {
     };
     Response: TeamDiscussionComment[];
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
+
+Creates a new comment on a team discussion.
+
+This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /teams/${teamId}/discussions/${discussionNumber}/comments"]: {
     Request: {
       params: {
@@ -94418,6 +99450,13 @@ type Routes = {
     };
     Response: TeamDiscussionComment;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
+
+Get a specific comment on a team discussion.
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
       params: {
@@ -94434,6 +99473,13 @@ type Routes = {
     };
     Response: TeamDiscussionComment;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
+
+Edits the body text of a discussion comment.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["PATCH /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
       params: {
@@ -94453,6 +99499,13 @@ type Routes = {
     };
     Response: TeamDiscussionComment;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
+
+Deletes a comment on a team discussion.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["DELETE /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}"]: {
     Request: {
       params: {
@@ -94469,6 +99522,13 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+
+List the reactions to a [team discussion comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
       params: {
@@ -94498,6 +99558,15 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+
+Create a reaction to a [team discussion comment](https://docs.github.com/rest/teams/discussion-comments#get-a-discussion-comment).
+
+A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /teams/${teamId}/discussions/${discussionNumber}/comments/${commentNumber}/reactions"]: {
     Request: {
       params: {
@@ -94517,6 +99586,13 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
+
+List the reactions to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+
+OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint. */
   ["GET /teams/${teamId}/discussions/${discussionNumber}/reactions"]: {
     Request: {
       params: {
@@ -94544,6 +99620,15 @@ type Routes = {
     };
     Response: Reaction[];
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
+
+Create a reaction to a [team discussion](https://docs.github.com/rest/teams/discussions#get-a-discussion).
+
+A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+
+OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint. */
   ["POST /teams/${teamId}/discussions/${discussionNumber}/reactions"]: {
     Request: {
       params: {
@@ -94561,6 +99646,11 @@ type Routes = {
     };
     Response: Reaction;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List pending team invitations`](https://docs.github.com/rest/teams/members#list-pending-team-invitations) endpoint.
+
+The return hash contains a `role` field which refers to the Organization Invitation role and will be one of the following values: `direct_member`, `admin`, `billing_manager`, `hiring_manager`, or `reinstate`. If the invitee is not a GitHub member, the `login` field in the return hash will be `null`. */
   ["GET /teams/${teamId}/invitations"]: {
     Request: {
       params: {
@@ -94584,6 +99674,11 @@ type Routes = {
     };
     Response: OrganizationInvitation[];
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/rest/teams/members#list-team-members) endpoint.
+
+Team members will include the members of child teams. */
   ["GET /teams/${teamId}/members"]: {
     Request: {
       params: {
@@ -94612,6 +99707,12 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** The "Get team member" endpoint (described below) is closing down.
+
+We recommend using the [Get team membership for a user](https://docs.github.com/rest/teams/members#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+
+To list members in a team, the team must be visible to the authenticated user. */
   ["GET /teams/${teamId}/members/${username}"]: {
     Request: {
       params: {
@@ -94626,6 +99727,19 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** The "Add team member" endpoint (described below) is closing down.
+
+We recommend using the [Add or update team membership for a user](https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+
+Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+To add someone to a team, the authenticated user must be an organization owner or a team maintainer in the team they're changing. The person being added to the team must be a member of the team's organization.
+
+> [!NOTE]
+> When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+
+Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
   ["PUT /teams/${teamId}/members/${username}"]: {
     Request: {
       params: {
@@ -94640,6 +99754,17 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** The "Remove team member" endpoint (described below) is closing down.
+
+We recommend using the [Remove team membership for a user](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+
+Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+To remove a team member, the authenticated user must have 'admin' permissions to the team or be an owner of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from the team.
+
+> [!NOTE]
+> When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)." */
   ["DELETE /teams/${teamId}/members/${username}"]: {
     Request: {
       params: {
@@ -94654,6 +99779,18 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/rest/teams/members#get-team-membership-for-a-user) endpoint.
+
+Team members will include the members of child teams.
+
+To get a user's membership with a team, the team must be visible to the authenticated user.
+
+**Note:**
+The response contains the `state` of the membership and the member's `role`.
+
+The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/teams/teams#create-a-team). */
   ["GET /teams/${teamId}/memberships/${username}"]: {
     Request: {
       params: {
@@ -94668,6 +99805,20 @@ type Routes = {
     };
     Response: TeamMembership;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint.
+
+Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+If the user is already a member of the team's organization, this endpoint will add the user to the team. To add a membership between an organization member and a team, the authenticated user must be an organization owner or a team maintainer.
+
+> [!NOTE]
+> When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+
+If the user is unaffiliated with the team's organization, this endpoint will send an invitation to the user via email. This newly-created membership will be in the "pending" state until the user accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team. To add a membership between an unaffiliated user and a team, the authenticated user must be an organization owner.
+
+If the user is already a member of the team, this endpoint will update the role of the team member's role. To update the membership of a team member, the authenticated user must be an organization owner or a team maintainer. */
   ["PUT /teams/${teamId}/memberships/${username}"]: {
     Request: {
       params: {
@@ -94688,6 +99839,16 @@ type Routes = {
     };
     Response: TeamMembership;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/rest/teams/members#remove-team-membership-for-a-user) endpoint.
+
+Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+
+To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
+
+> [!NOTE]
+> When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub](https://docs.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)." */
   ["DELETE /teams/${teamId}/memberships/${username}"]: {
     Request: {
       params: {
@@ -94702,6 +99863,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /teams/${teamId}/projects"]: {
     Request: {
       params: {
@@ -94725,6 +99890,10 @@ type Routes = {
     };
     Response: TeamProject[];
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /teams/${teamId}/projects/${projectId}"]: {
     Request: {
       params: {
@@ -94739,6 +99908,10 @@ type Routes = {
     };
     Response: TeamProject;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["PUT /teams/${teamId}/projects/${projectId}"]: {
     Request: {
       params: {
@@ -94756,6 +99929,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["DELETE /teams/${teamId}/projects/${projectId}"]: {
     Request: {
       params: {
@@ -94770,6 +99947,9 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/rest/teams/teams#list-team-repositories) endpoint. */
   ["GET /teams/${teamId}/repos"]: {
     Request: {
       params: {
@@ -94793,6 +99973,14 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/rest/teams/teams#check-team-permissions-for-a-repository) endpoint.
+
+> [!NOTE]
+> Repositories inherited through a parent team will also be checked.
+
+You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types/) via the `Accept` header: */
   ["GET /teams/${teamId}/repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -94809,6 +99997,13 @@ type Routes = {
     };
     Response: TeamRepository;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/rest/teams/teams#add-or-update-team-repository-permissions)" endpoint.
+
+To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
+
+Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
   ["PUT /teams/${teamId}/repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -94828,6 +100023,11 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/rest/teams/teams#remove-a-repository-from-a-team) endpoint.
+
+If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team. */
   ["DELETE /teams/${teamId}/repos/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -94844,6 +100044,9 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/rest/teams/teams#list-child-teams) endpoint. */
   ["GET /teams/${teamId}/teams"]: {
     Request: {
       params: {
@@ -94867,6 +100070,8 @@ type Routes = {
     };
     Response: Team[];
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private profile information. */
   ["GET /user"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response:
@@ -94877,6 +100082,8 @@ type Routes = {
           user_view_type: "private";
         } & PrivateUser);
   };
+
+  /** **Note:** If your email is set to private and you send an `email` parameter as part of this request to update your profile, your privacy settings are still enforced: the email address will not be displayed on your public profile or via the API. */
   ["PATCH /user"]: {
     Request: {
       params?: never;
@@ -94921,6 +100128,8 @@ type Routes = {
     };
     Response: PrivateUser;
   };
+
+  /** List the users you've blocked on your personal account. */
   ["GET /user/blocks"]: {
     Request: {
       params?: never;
@@ -94941,6 +100150,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Returns a 204 if the given user is blocked by the authenticated user. Returns a 404 if the given user is not blocked by the authenticated user, or if the given user account has been identified as spam by GitHub. */
   ["GET /user/blocks/${username}"]: {
     Request: {
       params: {
@@ -94953,6 +100164,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Blocks the given user and returns a 204. If the authenticated user cannot block the given user a 422 is returned. */
   ["PUT /user/blocks/${username}"]: {
     Request: {
       params: {
@@ -94965,6 +100178,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Unblocks the given user and returns a 204. */
   ["DELETE /user/blocks/${username}"]: {
     Request: {
       params: {
@@ -94977,6 +100192,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the authenticated user's codespaces.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /user/codespaces"]: {
     Request: {
       params?: never;
@@ -95002,6 +100221,12 @@ type Routes = {
       codespaces: Codespace[];
     };
   };
+
+  /** Creates a new codespace, owned by the authenticated user.
+
+This endpoint requires either a `repository_id` OR a `pull_request` but not both.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /user/codespaces"]: {
     Request: {
       params?: never;
@@ -95058,6 +100283,13 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Lists all development environment secrets available for a user's codespaces without revealing their
+encrypted values.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["GET /user/codespaces/secrets"]: {
     Request: {
       params?: never;
@@ -95081,10 +100313,22 @@ type Routes = {
       secrets: CodespacesSecret[];
     };
   };
+
+  /** Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["GET /user/codespaces/secrets/public-key"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: CodespacesUserPublicKey;
   };
+
+  /** Gets a development environment secret available to a user's codespaces without revealing its encrypted value.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["GET /user/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -95097,6 +100341,13 @@ type Routes = {
     };
     Response: CodespacesSecret;
   };
+
+  /** Creates or updates a development environment secret for a user's codespace with an encrypted value. Encrypt your secret using
+[LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/rest/guides/encrypting-secrets-for-the-rest-api)."
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["PUT /user/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -95119,6 +100370,12 @@ type Routes = {
     };
     Response: EmptyObject;
   };
+
+  /** Deletes a development environment secret from a user's codespaces using the secret name. Deleting the secret will remove access from all codespaces that were allowed to access the secret.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["DELETE /user/codespaces/secrets/${secretName}"]: {
     Request: {
       params: {
@@ -95131,6 +100388,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List the repositories that have been granted the ability to use a user's development environment secret.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["GET /user/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -95146,6 +100409,12 @@ type Routes = {
       repositories: MinimalRepository[];
     };
   };
+
+  /** Select the repositories that will use a user's development environment secret.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["PUT /user/codespaces/secrets/${secretName}/repositories"]: {
     Request: {
       params: {
@@ -95161,6 +100430,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Adds a repository to the selected repositories for a user's development environment secret.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["PUT /user/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -95174,6 +100449,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Removes a repository from the selected repositories for a user's development environment secret.
+
+The authenticated user must have Codespaces access to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` or `codespace:secrets` scope to use this endpoint. */
   ["DELETE /user/codespaces/secrets/${secretName}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -95187,6 +100468,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Gets information about a user's codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /user/codespaces/${codespaceName}"]: {
     Request: {
       params: {
@@ -95199,6 +100484,12 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Updates a codespace owned by the authenticated user. Currently only the codespace's machine type and recent folders can be modified using this endpoint.
+
+If you specify a new machine type it will be applied the next time your codespace is started.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["PATCH /user/codespaces/${codespaceName}"]: {
     Request: {
       params: {
@@ -95218,6 +100509,10 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Deletes a user's codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["DELETE /user/codespaces/${codespaceName}"]: {
     Request: {
       params: {
@@ -95230,6 +100525,12 @@ type Routes = {
     };
     Response: object;
   };
+
+  /** Triggers an export of the specified codespace and returns a URL and ID where the status of the export can be monitored.
+
+If changes cannot be pushed to the codespace's repository, they will be pushed to a new or previously-existing fork instead.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /user/codespaces/${codespaceName}/exports"]: {
     Request: {
       params: {
@@ -95242,6 +100543,10 @@ type Routes = {
     };
     Response: CodespaceExportDetails;
   };
+
+  /** Gets information about an export of a codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /user/codespaces/${codespaceName}/exports/${exportId}"]: {
     Request: {
       params: {
@@ -95256,6 +100561,10 @@ type Routes = {
     };
     Response: CodespaceExportDetails;
   };
+
+  /** List the machine types a codespace can transition to use.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["GET /user/codespaces/${codespaceName}/machines"]: {
     Request: {
       params: {
@@ -95271,6 +100580,14 @@ type Routes = {
       machines: CodespaceMachine[];
     };
   };
+
+  /** Publishes an unpublished codespace, creating a new repository and assigning it to the codespace.
+
+The codespace's token is granted write permissions to the repository, allowing the user to push their changes.
+
+This will fail for a codespace that is already published, meaning it has an associated repository.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /user/codespaces/${codespaceName}/publish"]: {
     Request: {
       params: {
@@ -95291,6 +100608,10 @@ type Routes = {
     };
     Response: CodespaceWithFullRepository;
   };
+
+  /** Starts a user's codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /user/codespaces/${codespaceName}/start"]: {
     Request: {
       params: {
@@ -95303,6 +100624,10 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Stops a user's codespace.
+
+OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint. */
   ["POST /user/codespaces/${codespaceName}/stop"]: {
     Request: {
       params: {
@@ -95315,10 +100640,16 @@ type Routes = {
     };
     Response: Codespace;
   };
+
+  /** Lists all packages that are owned by the authenticated user within the user's namespace, and that encountered a conflict during a Docker migration.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. */
   ["GET /user/docker/conflicts"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: Package[];
   };
+
+  /** Sets the visibility for your primary email addresses. */
   ["PATCH /user/email/visibility"]: {
     Request: {
       params?: never;
@@ -95331,6 +100662,11 @@ type Routes = {
     };
     Response: Email[];
   };
+
+  /** Lists all of your email addresses, and specifies which one is visible
+to the public.
+
+OAuth app tokens and personal access tokens (classic) need the `user:email` scope to use this endpoint. */
   ["GET /user/emails"]: {
     Request: {
       params?: never;
@@ -95351,6 +100687,8 @@ type Routes = {
     };
     Response: Email[];
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["POST /user/emails"]: {
     Request: {
       params?: never;
@@ -95370,6 +100708,8 @@ type Routes = {
     };
     Response: Email[];
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["DELETE /user/emails"]: {
     Request: {
       params?: never;
@@ -95388,6 +100728,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the people following the authenticated user. */
   ["GET /user/followers"]: {
     Request: {
       params?: never;
@@ -95408,6 +100750,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Lists the people who the authenticated user follows. */
   ["GET /user/following"]: {
     Request: {
       params?: never;
@@ -95428,6 +100772,7 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
   ["GET /user/following/${username}"]: {
     Request: {
       params: {
@@ -95440,6 +100785,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)."
+
+OAuth app tokens and personal access tokens (classic) need the `user:follow` scope to use this endpoint. */
   ["PUT /user/following/${username}"]: {
     Request: {
       params: {
@@ -95452,6 +100801,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** OAuth app tokens and personal access tokens (classic) need the `user:follow` scope to use this endpoint. */
   ["DELETE /user/following/${username}"]: {
     Request: {
       params: {
@@ -95464,6 +100815,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the current user's GPG keys.
+
+OAuth app tokens and personal access tokens (classic) need the `read:gpg_key` scope to use this endpoint. */
   ["GET /user/gpg_keys"]: {
     Request: {
       params?: never;
@@ -95484,6 +100839,10 @@ type Routes = {
     };
     Response: GpgKey[];
   };
+
+  /** Adds a GPG key to the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `write:gpg_key` scope to use this endpoint. */
   ["POST /user/gpg_keys"]: {
     Request: {
       params?: never;
@@ -95498,6 +100857,10 @@ type Routes = {
     };
     Response: GpgKey;
   };
+
+  /** View extended details for a single GPG key.
+
+OAuth app tokens and personal access tokens (classic) need the `read:gpg_key` scope to use this endpoint. */
   ["GET /user/gpg_keys/${gpgKeyId}"]: {
     Request: {
       params: {
@@ -95510,6 +100873,10 @@ type Routes = {
     };
     Response: GpgKey;
   };
+
+  /** Removes a GPG key from the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:gpg_key` scope to use this endpoint. */
   ["DELETE /user/gpg_keys/${gpgKeyId}"]: {
     Request: {
       params: {
@@ -95522,6 +100889,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
+
+The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+
+You can find the permissions for the installation under the `permissions` key. */
   ["GET /user/installations"]: {
     Request: {
       params?: never;
@@ -95545,6 +100918,12 @@ type Routes = {
       installations: Installation[];
     };
   };
+
+  /** List repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access for an installation.
+
+The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
+
+The access the user has to each repository is included in the hash under the `permissions` key. */
   ["GET /user/installations/${installationId}/repositories"]: {
     Request: {
       params: {
@@ -95572,6 +100951,10 @@ type Routes = {
       repositories: Repository[];
     };
   };
+
+  /** Add a single repository to an installation. The authenticated user must have admin access to the repository.    
+
+This endpoint only works for PATs (classic) with the `repo` scope. */
   ["PUT /user/installations/${installationId}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -95586,6 +100969,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`. 
+
+This endpoint only works for PATs (classic) with the `repo` scope. */
   ["DELETE /user/installations/${installationId}/repositories/${repositoryId}"]: {
     Request: {
       params: {
@@ -95600,18 +100987,36 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. */
   ["GET /user/interaction-limits"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: InteractionLimitResponse | object;
   };
+
+  /** Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user. */
   ["PUT /user/interaction-limits"]: {
     Request: { params?: never; headers?: never; query?: never; body: InteractionLimit };
     Response: InteractionLimitResponse;
   };
+
+  /** Removes any interaction restrictions from your public repositories. */
   ["DELETE /user/interaction-limits"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: void;
   };
+
+  /** List issues across owned and member repositories assigned to the authenticated user.
+
+> [!NOTE]
+> GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull request id, use the "[List pull requests](https://docs.github.com/rest/pulls/pulls#list-pull-requests)" endpoint.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /user/issues"]: {
     Request: {
       params?: never;
@@ -95659,6 +101064,10 @@ type Routes = {
     };
     Response: Issue[];
   };
+
+  /** Lists the public SSH keys for the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `read:public_key` scope to use this endpoint. */
   ["GET /user/keys"]: {
     Request: {
       params?: never;
@@ -95679,6 +101088,10 @@ type Routes = {
     };
     Response: Key[];
   };
+
+  /** Adds a public SSH key to the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `write:gpg_key` scope to use this endpoint. */
   ["POST /user/keys"]: {
     Request: {
       params?: never;
@@ -95699,6 +101112,10 @@ type Routes = {
     };
     Response: Key;
   };
+
+  /** View extended details for a single public SSH key.
+
+OAuth app tokens and personal access tokens (classic) need the `read:public_key` scope to use this endpoint. */
   ["GET /user/keys/${keyId}"]: {
     Request: {
       params: {
@@ -95711,6 +101128,10 @@ type Routes = {
     };
     Response: Key;
   };
+
+  /** Removes a public SSH key from the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:public_key` scope to use this endpoint. */
   ["DELETE /user/keys/${keyId}"]: {
     Request: {
       params: {
@@ -95723,6 +101144,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the active subscriptions for the authenticated user. */
   ["GET /user/marketplace_purchases"]: {
     Request: {
       params?: never;
@@ -95743,6 +101166,8 @@ type Routes = {
     };
     Response: UserMarketplacePurchase[];
   };
+
+  /** Lists the active subscriptions for the authenticated user. */
   ["GET /user/marketplace_purchases/stubbed"]: {
     Request: {
       params?: never;
@@ -95763,6 +101188,8 @@ type Routes = {
     };
     Response: UserMarketplacePurchase[];
   };
+
+  /** Lists all of the authenticated user's organization memberships. */
   ["GET /user/memberships/orgs"]: {
     Request: {
       params?: never;
@@ -95785,6 +101212,8 @@ type Routes = {
     };
     Response: OrgMembership[];
   };
+
+  /** If the authenticated user is an active or pending member of the organization, this endpoint will return the user's membership. If the authenticated user is not affiliated with the organization, a `404` is returned. This endpoint will return a `403` if the request is made by a GitHub App that is blocked by the organization. */
   ["GET /user/memberships/orgs/${org}"]: {
     Request: {
       params: {
@@ -95797,6 +101226,8 @@ type Routes = {
     };
     Response: OrgMembership;
   };
+
+  /** Converts the authenticated user to an active member of the organization, if that user has a pending invitation from the organization. */
   ["PATCH /user/memberships/orgs/${org}"]: {
     Request: {
       params: {
@@ -95812,6 +101243,8 @@ type Routes = {
     };
     Response: OrgMembership;
   };
+
+  /** Lists all migrations a user has started. */
   ["GET /user/migrations"]: {
     Request: {
       params?: never;
@@ -95832,6 +101265,8 @@ type Routes = {
     };
     Response: Migration[];
   };
+
+  /** Initiates the generation of a user migration archive. */
   ["POST /user/migrations"]: {
     Request: {
       params?: never;
@@ -95884,6 +101319,15 @@ type Routes = {
     };
     Response: Migration;
   };
+
+  /** Fetches a single user migration. The response includes the `state` of the migration, which can be one of the following values:
+
+*   `pending` - the migration hasn't started yet.
+*   `exporting` - the migration is in progress.
+*   `exported` - the migration finished successfully.
+*   `failed` - the migration failed.
+
+Once the migration has been `exported` you can [download the migration archive](https://docs.github.com/rest/migrations/users#download-a-user-migration-archive). */
   ["GET /user/migrations/${migrationId}"]: {
     Request: {
       params: {
@@ -95898,6 +101342,28 @@ type Routes = {
     };
     Response: Migration;
   };
+
+  /** Fetches the URL to download the migration archive as a `tar.gz` file. Depending on the resources your repository uses, the migration archive can contain JSON files with data for these objects:
+
+*   attachments
+*   bases
+*   commit\_comments
+*   issue\_comments
+*   issue\_events
+*   issues
+*   milestones
+*   organizations
+*   projects
+*   protected\_branches
+*   pull\_request\_reviews
+*   pull\_requests
+*   releases
+*   repositories
+*   review\_comments
+*   schema
+*   users
+
+The archive will also contain an `attachments` directory that includes all attachment files uploaded to GitHub.com and a `repositories` directory that contains the repository's Git data. */
   ["GET /user/migrations/${migrationId}/archive"]: {
     Request: {
       params: {
@@ -95910,6 +101376,8 @@ type Routes = {
     };
     Response: any;
   };
+
+  /** Deletes a previous migration archive. Downloadable migration archives are automatically deleted after seven days. Migration metadata, which is returned in the [List user migrations](https://docs.github.com/rest/migrations/users#list-user-migrations) and [Get a user migration status](https://docs.github.com/rest/migrations/users#get-a-user-migration-status) endpoints, will continue to be available even after an archive is deleted. */
   ["DELETE /user/migrations/${migrationId}/archive"]: {
     Request: {
       params: {
@@ -95922,6 +101390,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Unlocks a repository. You can lock repositories when you [start a user migration](https://docs.github.com/rest/migrations/users#start-a-user-migration). Once the migration is complete you can unlock each repository to begin using it again or [delete the repository](https://docs.github.com/rest/repos/repos#delete-a-repository) if you no longer need the source data. Returns a status of `404 Not Found` if the repository is not locked. */
   ["DELETE /user/migrations/${migrationId}/repos/${repoName}/lock"]: {
     Request: {
       params: {
@@ -95936,6 +101406,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all the repositories for this user migration. */
   ["GET /user/migrations/${migrationId}/repositories"]: {
     Request: {
       params: {
@@ -95959,6 +101431,13 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** List organizations for the authenticated user.
+
+For OAuth app tokens and personal access tokens (classic), this endpoint only lists organizations that your authorization allows you to operate on in some way (e.g., you can list teams with `read:org` scope, you can publicize your organization membership with `user` scope, etc.). Therefore, this API requires at least `user` or `read:org` scope for OAuth app tokens and personal access tokens (classic). Requests with insufficient scope will receive a `403 Forbidden` response.
+
+> [!NOTE]
+> Requests using a fine-grained access token will receive a `200 Success` response with an empty list. */
   ["GET /user/orgs"]: {
     Request: {
       params?: never;
@@ -95979,6 +101458,10 @@ type Routes = {
     };
     Response: OrganizationSimple[];
   };
+
+  /** Lists packages owned by the authenticated user within the user's namespace.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /user/packages"]: {
     Request: {
       params?: never;
@@ -96008,6 +101491,10 @@ type Routes = {
     };
     Response: Package[];
   };
+
+  /** Gets a specific package for a package owned by the authenticated user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /user/packages/${packageType}/${packageName}"]: {
     Request: {
       params: {
@@ -96022,6 +101509,10 @@ type Routes = {
     };
     Response: Package;
   };
+
+  /** Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["DELETE /user/packages/${packageType}/${packageName}"]: {
     Request: {
       params: {
@@ -96036,6 +101527,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Restores a package owned by the authenticated user.
+
+You can restore a deleted package under the following conditions:
+  - The package was deleted within the last 30 days.
+  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["POST /user/packages/${packageType}/${packageName}/restore"]: {
     Request: {
       params: {
@@ -96053,6 +101552,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists package versions for a package owned by the authenticated user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /user/packages/${packageType}/${packageName}/versions"]: {
     Request: {
       params: {
@@ -96083,6 +101586,10 @@ type Routes = {
     };
     Response: PackageVersion[];
   };
+
+  /** Gets a specific package version for a package owned by the authenticated user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /user/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
       params: {
@@ -96099,6 +101606,12 @@ type Routes = {
     };
     Response: PackageVersion;
   };
+
+  /** Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+
+The authenticated user must have admin permissions in the organization to use this endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["DELETE /user/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
       params: {
@@ -96115,6 +101628,14 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Restores a package version owned by the authenticated user.
+
+You can restore a deleted package version under the following conditions:
+  - The package was deleted within the last 30 days.
+  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["POST /user/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore"]: {
     Request: {
       params: {
@@ -96131,6 +101652,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["POST /user/projects"]: {
     Request: {
       params?: never;
@@ -96151,6 +101676,12 @@ type Routes = {
     };
     Response: Project;
   };
+
+  /** Lists your publicly visible email address, which you can set with the
+[Set primary email visibility for the authenticated user](https://docs.github.com/rest/users/emails#set-primary-email-visibility-for-the-authenticated-user)
+endpoint.
+
+OAuth app tokens and personal access tokens (classic) need the `user:email` scope to use this endpoint. */
   ["GET /user/public_emails"]: {
     Request: {
       params?: never;
@@ -96171,6 +101702,10 @@ type Routes = {
     };
     Response: Email[];
   };
+
+  /** Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
+
+The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership. */
   ["GET /user/repos"]: {
     Request: {
       params?: never;
@@ -96226,6 +101761,10 @@ type Routes = {
     };
     Response: Repository[];
   };
+
+  /** Creates a new repository for the authenticated user.
+
+OAuth app tokens and personal access tokens (classic) need the `public_repo` or `repo` scope to create a public repository, and `repo` scope to create a private repository. */
   ["POST /user/repos"]: {
     Request: {
       params?: never;
@@ -96367,6 +101906,8 @@ type Routes = {
     };
     Response: FullRepository;
   };
+
+  /** When authenticating as a user, this endpoint will list all currently open repository invitations for that user. */
   ["GET /user/repository_invitations"]: {
     Request: {
       params?: never;
@@ -96387,6 +101928,7 @@ type Routes = {
     };
     Response: RepositoryInvitation[];
   };
+
   ["PATCH /user/repository_invitations/${invitationId}"]: {
     Request: {
       params: {
@@ -96399,6 +101941,7 @@ type Routes = {
     };
     Response: void;
   };
+
   ["DELETE /user/repository_invitations/${invitationId}"]: {
     Request: {
       params: {
@@ -96411,6 +101954,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists all of your social accounts. */
   ["GET /user/social_accounts"]: {
     Request: {
       params?: never;
@@ -96431,6 +101976,10 @@ type Routes = {
     };
     Response: SocialAccount[];
   };
+
+  /** Add one or more social accounts to the authenticated user's profile.
+
+OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["POST /user/social_accounts"]: {
     Request: {
       params?: never;
@@ -96446,6 +101995,10 @@ type Routes = {
     };
     Response: SocialAccount[];
   };
+
+  /** Deletes one or more social accounts from the authenticated user's profile.
+
+OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["DELETE /user/social_accounts"]: {
     Request: {
       params?: never;
@@ -96461,6 +102014,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists the SSH signing keys for the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `read:ssh_signing_key` scope to use this endpoint. */
   ["GET /user/ssh_signing_keys"]: {
     Request: {
       params?: never;
@@ -96481,6 +102038,10 @@ type Routes = {
     };
     Response: SshSigningKey[];
   };
+
+  /** Creates an SSH signing key for the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `write:ssh_signing_key` scope to use this endpoint. */
   ["POST /user/ssh_signing_keys"]: {
     Request: {
       params?: never;
@@ -96501,6 +102062,10 @@ type Routes = {
     };
     Response: SshSigningKey;
   };
+
+  /** Gets extended details for an SSH signing key.
+
+OAuth app tokens and personal access tokens (classic) need the `read:ssh_signing_key` scope to use this endpoint. */
   ["GET /user/ssh_signing_keys/${sshSigningKeyId}"]: {
     Request: {
       params: {
@@ -96513,6 +102078,10 @@ type Routes = {
     };
     Response: SshSigningKey;
   };
+
+  /** Deletes an SSH signing key from the authenticated user's GitHub account.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:ssh_signing_key` scope to use this endpoint. */
   ["DELETE /user/ssh_signing_keys/${sshSigningKeyId}"]: {
     Request: {
       params: {
@@ -96525,6 +102094,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists repositories the authenticated user has starred.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created. */
   ["GET /user/starred"]: {
     Request: {
       params?: never;
@@ -96555,6 +102130,8 @@ type Routes = {
     };
     Response: Repository[];
   };
+
+  /** Whether the authenticated user has starred the repository. */
   ["GET /user/starred/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -96569,6 +102146,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#http-method)." */
   ["PUT /user/starred/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -96583,6 +102162,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Unstar a repository that the authenticated user has previously starred. */
   ["DELETE /user/starred/${owner}/${repo}"]: {
     Request: {
       params: {
@@ -96597,6 +102178,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists repositories the authenticated user is watching. */
   ["GET /user/subscriptions"]: {
     Request: {
       params?: never;
@@ -96617,6 +102200,13 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** List all of the teams across all of the organizations to which the authenticated
+user belongs.
+
+OAuth app tokens and personal access tokens (classic) need the `user`, `repo`, or `read:org` scope to use this endpoint.
+
+When using a fine-grained personal access token, the resource owner of the token must be a single organization, and the response will only include the teams from that organization. */
   ["GET /user/teams"]: {
     Request: {
       params?: never;
@@ -96637,6 +102227,14 @@ type Routes = {
     };
     Response: TeamFull[];
   };
+
+  /** Provides publicly available information about someone with a GitHub account. This method takes their durable user `ID` instead of their `login`, which can change over time.
+
+If you are requesting information about an [Enterprise Managed User](https://docs.github.com/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/about-enterprise-managed-users), or a GitHub App bot that is installed in an organization that uses Enterprise Managed Users, your requests must be authenticated as a user or GitHub App that has access to the organization to view that account's information. If you are not authorized, the request will return a `404 Not Found` status.
+
+The `email` key in the following response is the publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more information, see [Authentication](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#authentication).
+
+The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/rest/users/emails). */
   ["GET /user/${accountId}"]: {
     Request: {
       params: {
@@ -96655,6 +102253,10 @@ type Routes = {
           user_view_type: "private";
         } & PrivateUser);
   };
+
+  /** Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization accounts.
+
+Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of users. */
   ["GET /users"]: {
     Request: {
       params?: never;
@@ -96672,6 +102274,14 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Provides publicly available information about someone with a GitHub account.
+
+If you are requesting information about an [Enterprise Managed User](https://docs.github.com/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/about-enterprise-managed-users), or a GitHub App bot that is installed in an organization that uses Enterprise Managed Users, your requests must be authenticated as a user or GitHub App that has access to the organization to view that account's information. If you are not authorized, the request will return a `404 Not Found` status.
+
+The `email` key in the following response is the publicly visible email address from your GitHub [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub. For more information, see [Authentication](https://docs.github.com/rest/guides/getting-started-with-the-rest-api#authentication).
+
+The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/rest/users/emails). */
   ["GET /users/${username}"]: {
     Request: {
       params: {
@@ -96690,6 +102300,12 @@ type Routes = {
           user_view_type: "private";
         } & PrivateUser);
   };
+
+  /** List a collection of artifact attestations associated with any entry in a list of subject digests owned by a user.
+
+The collection of attestations returned by this endpoint is filtered according to the authenticated user's permissions; if the authenticated user cannot read a repository, the attestations associated with that repository will not be included in the response. In addition, when using a fine-grained access token the `attestations:read` permission is required.
+
+**Please note:** in order to offer meaningful security benefits, an attestation's signature and timestamps **must** be cryptographically verified, and the identity of the attestation signer **must** be validated. Attestations can be verified using the [GitHub CLI `attestation verify` command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use artifact attestations to establish a build's provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). */
   ["POST /users/${username}/attestations/bulk-list"]: {
     Request: {
       params: {
@@ -96751,6 +102367,8 @@ type Routes = {
       };
     };
   };
+
+  /** Delete artifact attestations in bulk by either subject digests or unique ID. */
   ["POST /users/${username}/attestations/delete-request"]: {
     Request: {
       params: {
@@ -96779,6 +102397,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Delete an artifact attestation by subject digest. */
   ["DELETE /users/${username}/attestations/digest/${subjectDigest}"]: {
     Request: {
       params: {
@@ -96793,6 +102413,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Delete an artifact attestation by unique ID that is associated with a repository owned by a user. */
   ["DELETE /users/${username}/attestations/${attestationId}"]: {
     Request: {
       params: {
@@ -96807,6 +102429,12 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** List a collection of artifact attestations with a given subject digest that are associated with repositories owned by a user.
+
+The collection of attestations returned by this endpoint is filtered according to the authenticated user's permissions; if the authenticated user cannot read a repository, the attestations associated with that repository will not be included in the response. In addition, when using a fine-grained access token the `attestations:read` permission is required.
+
+**Please note:** in order to offer meaningful security benefits, an attestation's signature and timestamps **must** be cryptographically verified, and the identity of the attestation signer **must** be validated. Attestations can be verified using the [GitHub CLI `attestation verify` command](https://cli.github.com/manual/gh_attestation_verify). For more information, see [our guide on how to use artifact attestations to establish a build's provenance](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). */
   ["GET /users/${username}/attestations/${subjectDigest}"]: {
     Request: {
       params: {
@@ -96850,6 +102478,10 @@ type Routes = {
       }[];
     };
   };
+
+  /** Lists all packages that are in a specific user's namespace, that the requesting user has access to, and that encountered a conflict during Docker migration.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. */
   ["GET /users/${username}/docker/conflicts"]: {
     Request: {
       params: {
@@ -96862,6 +102494,11 @@ type Routes = {
     };
     Response: Package[];
   };
+
+  /** If you are authenticated as the given user, you will see your private events. Otherwise, you'll only see public events. _Optional_: use the fine-grained token with following permission set to view private events: "Events" user permissions (read).
+
+> [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /users/${username}/events"]: {
     Request: {
       params: {
@@ -96885,6 +102522,11 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** This is the user's organization dashboard. You must be authenticated as the user to view this.
+
+> [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /users/${username}/events/orgs/${org}"]: {
     Request: {
       params: {
@@ -96910,6 +102552,9 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** > [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /users/${username}/events/public"]: {
     Request: {
       params: {
@@ -96933,6 +102578,8 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** Lists the people following the specified user. */
   ["GET /users/${username}/followers"]: {
     Request: {
       params: {
@@ -96956,6 +102603,8 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
+  /** Lists the people who the specified user follows. */
   ["GET /users/${username}/following"]: {
     Request: {
       params: {
@@ -96979,6 +102628,7 @@ type Routes = {
     };
     Response: SimpleUser[];
   };
+
   ["GET /users/${username}/following/${targetUser}"]: {
     Request: {
       params: {
@@ -96992,6 +102642,8 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists public gists for the specified user: */
   ["GET /users/${username}/gists"]: {
     Request: {
       params: {
@@ -97020,6 +102672,8 @@ type Routes = {
     };
     Response: BaseGist[];
   };
+
+  /** Lists the GPG keys for a user. This information is accessible by anyone. */
   ["GET /users/${username}/gpg_keys"]: {
     Request: {
       params: {
@@ -97043,6 +102697,12 @@ type Routes = {
     };
     Response: GpgKey[];
   };
+
+  /** Provides hovercard information. You can find out more about someone in relation to their pull requests, issues, repositories, and organizations.
+
+  The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository, you would use a `subject_type` value of `repository` and a `subject_id` value of `1300192` (the ID of the `Spoon-Knife` repository).
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
   ["GET /users/${username}/hovercard"]: {
     Request: {
       params: {
@@ -97060,6 +102720,10 @@ type Routes = {
     };
     Response: Hovercard;
   };
+
+  /** Enables an authenticated GitHub App to find the user’s installation information.
+
+You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint. */
   ["GET /users/${username}/installation"]: {
     Request: {
       params: {
@@ -97072,6 +102736,8 @@ type Routes = {
     };
     Response: Installation;
   };
+
+  /** Lists the _verified_ public SSH keys for a user. This is accessible by anyone. */
   ["GET /users/${username}/keys"]: {
     Request: {
       params: {
@@ -97095,6 +102761,10 @@ type Routes = {
     };
     Response: KeySimple[];
   };
+
+  /** List [public organization memberships](https://docs.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.
+
+This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/orgs/orgs#list-organizations-for-the-authenticated-user) API instead. */
   ["GET /users/${username}/orgs"]: {
     Request: {
       params: {
@@ -97118,6 +102788,10 @@ type Routes = {
     };
     Response: OrganizationSimple[];
   };
+
+  /** Lists all packages in a user's namespace for which the requesting user has access.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /users/${username}/packages"]: {
     Request: {
       params: {
@@ -97150,6 +102824,10 @@ type Routes = {
     };
     Response: Package[];
   };
+
+  /** Gets a specific package metadata for a public package owned by a user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /users/${username}/packages/${packageType}/${packageName}"]: {
     Request: {
       params: {
@@ -97166,6 +102844,12 @@ type Routes = {
     };
     Response: Package;
   };
+
+  /** Deletes an entire package for a user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+
+If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["DELETE /users/${username}/packages/${packageType}/${packageName}"]: {
     Request: {
       params: {
@@ -97182,6 +102866,16 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Restores an entire package for a user.
+
+You can restore a deleted package under the following conditions:
+  - The package was deleted within the last 30 days.
+  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+
+If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["POST /users/${username}/packages/${packageType}/${packageName}/restore"]: {
     Request: {
       params: {
@@ -97201,6 +102895,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Lists package versions for a public package owned by a specified user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /users/${username}/packages/${packageType}/${packageName}/versions"]: {
     Request: {
       params: {
@@ -97217,6 +102915,10 @@ type Routes = {
     };
     Response: PackageVersion[];
   };
+
+  /** Gets a specific package version for a public package owned by a specified user.
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["GET /users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
       params: {
@@ -97235,6 +102937,12 @@ type Routes = {
     };
     Response: PackageVersion;
   };
+
+  /** Deletes a specific package version for a user. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+
+If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["DELETE /users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}"]: {
     Request: {
       params: {
@@ -97253,6 +102961,16 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** Restores a specific package version for a user.
+
+You can restore a deleted package under the following conditions:
+  - The package was deleted within the last 30 days.
+  - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+
+If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)." */
   ["POST /users/${username}/packages/${packageType}/${packageName}/versions/${packageVersionId}/restore"]: {
     Request: {
       params: {
@@ -97271,6 +102989,10 @@ type Routes = {
     };
     Response: void;
   };
+
+  /** > [!WARNING]
+> **Closing down notice:** Projects (classic) is being deprecated in favor of the new Projects experience.
+> See the [changelog](https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/) for more information. */
   ["GET /users/${username}/projects"]: {
     Request: {
       params: {
@@ -97299,6 +103021,12 @@ type Routes = {
     };
     Response: Project[];
   };
+
+  /** These are events that you've received by watching repositories and following users. If you are authenticated as the
+given user, you will see private events. Otherwise, you'll only see public events.
+
+> [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /users/${username}/received_events"]: {
     Request: {
       params: {
@@ -97322,6 +103050,9 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** > [!NOTE]
+> This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h. */
   ["GET /users/${username}/received_events/public"]: {
     Request: {
       params: {
@@ -97345,6 +103076,8 @@ type Routes = {
     };
     Response: Event[];
   };
+
+  /** Lists public repositories for the specified user. */
   ["GET /users/${username}/repos"]: {
     Request: {
       params: {
@@ -97380,6 +103113,12 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Gets the summary of the free and paid GitHub Actions minutes used.
+
+Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+
+OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["GET /users/${username}/settings/billing/actions"]: {
     Request: {
       params: {
@@ -97392,6 +103131,12 @@ type Routes = {
     };
     Response: ActionsBillingUsage;
   };
+
+  /** Gets the free and paid storage used for GitHub Packages in gigabytes.
+
+Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["GET /users/${username}/settings/billing/packages"]: {
     Request: {
       params: {
@@ -97404,6 +103149,12 @@ type Routes = {
     };
     Response: PackagesBillingUsage;
   };
+
+  /** Gets the estimated paid and estimated total storage used for GitHub Actions and GitHub Packages.
+
+Paid minutes only apply to packages stored for private repositories. For more information, see "[Managing billing for GitHub Packages](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-packages)."
+
+OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint. */
   ["GET /users/${username}/settings/billing/shared-storage"]: {
     Request: {
       params: {
@@ -97416,6 +103167,10 @@ type Routes = {
     };
     Response: CombinedBillingUsage;
   };
+
+  /** Gets a report of the total usage for a user.
+
+**Note:** This endpoint is only available to users with access to the enhanced billing platform. */
   ["GET /users/${username}/settings/billing/usage"]: {
     Request: {
       params: {
@@ -97437,6 +103192,8 @@ type Routes = {
     };
     Response: BillingUsageReportUser;
   };
+
+  /** Lists social media accounts for a user. This endpoint is accessible by anyone. */
   ["GET /users/${username}/social_accounts"]: {
     Request: {
       params: {
@@ -97460,6 +103217,8 @@ type Routes = {
     };
     Response: SocialAccount[];
   };
+
+  /** Lists the SSH signing keys for a user. This operation is accessible by anyone. */
   ["GET /users/${username}/ssh_signing_keys"]: {
     Request: {
       params: {
@@ -97483,6 +103242,12 @@ type Routes = {
     };
     Response: SshSigningKey[];
   };
+
+  /** Lists repositories a user has starred.
+
+This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+
+- **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created. */
   ["GET /users/${username}/starred"]: {
     Request: {
       params: {
@@ -97516,6 +103281,8 @@ type Routes = {
     };
     Response: StarredRepository[] | Repository[];
   };
+
+  /** Lists repositories a user is watching. */
   ["GET /users/${username}/subscriptions"]: {
     Request: {
       params: {
@@ -97539,7 +103306,11 @@ type Routes = {
     };
     Response: MinimalRepository[];
   };
+
+  /** Get all supported GitHub API versions. */
   ["GET /versions"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: string[] };
+
+  /** Get a random sentence from the Zen of GitHub */
   ["GET /zen"]: {
     Request: { params?: never; headers?: never; query?: never; body?: never };
     Response: WebhookConfigUrl;
