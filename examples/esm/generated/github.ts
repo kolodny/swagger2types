@@ -1913,7 +1913,10 @@ interface CodeSecurityConfiguration {
   /** The enablement status of Dependabot security updates */
   dependabot_security_updates?: "enabled" | "disabled" | "not_set";
   /** Feature options for code scanning */
-  code_scanning_options?: object | null;
+  code_scanning_options?: {
+    /** Whether to allow repos which use advanced setup */
+    allow_advanced?: boolean | null;
+  };
   /** The enablement status of code scanning default setup */
   code_scanning_default_setup?: "enabled" | "disabled" | "not_set";
   /** Feature options for code scanning default setup */
@@ -1968,6 +1971,12 @@ interface CodeSecurityConfiguration {
   /** @format date-time */
   updated_at?: string;
 }
+
+/** Security Configuration feature options for code scanning */
+type CodeScanningOptions = {
+  /** Whether to allow repos which use advanced setup */
+  allow_advanced?: boolean | null;
+};
 
 /** Feature options for code scanning default setup */
 type CodeScanningDefaultSetupOptions = {
@@ -2948,6 +2957,14 @@ interface SubIssuesSummary {
   percent_completed: number;
 }
 
+/** Issue Dependencies Summary */
+interface IssueDependenciesSummary {
+  blocked_by: number;
+  blocking: number;
+  total_blocked_by: number;
+  total_blocking: number;
+}
+
 /**
  * Issue
  * Issues are a great way to keep track of tasks, enhancements, and bugs for your projects.
@@ -2985,7 +3002,7 @@ interface Issue {
    * The reason for the current state
    * @example "not_planned"
    */
-  state_reason?: "completed" | "reopened" | "not_planned" | null;
+  state_reason?: "completed" | "reopened" | "not_planned" | "duplicate" | null;
   /**
    * Title of the issue
    * @example "Widget creation fails in Safari on OS X 10.8"
@@ -3059,6 +3076,7 @@ interface Issue {
   author_association: AuthorAssociation;
   reactions?: ReactionRollup;
   sub_issues_summary?: SubIssuesSummary;
+  issue_dependencies_summary?: IssueDependenciesSummary;
 }
 
 /**
@@ -3765,6 +3783,11 @@ interface ApiOverview {
 }
 
 type SecurityAndAnalysis = {
+  /**
+   * Enable or disable GitHub Advanced Security for the repository.
+   *
+   * For standalone Code Scanning or Secret Protection products, this parameter cannot be used.
+   */
   advanced_security?: {
     status?: "enabled" | "disabled";
   };
@@ -4101,6 +4124,52 @@ interface OrganizationSimple {
   avatar_url: string;
   /** @example "A great organization" */
   description: string | null;
+}
+
+interface ActionsArtifactAndLogRetentionResponse {
+  /** The number of days artifacts and logs are retained */
+  days: number;
+  /** The maximum number of days that can be configured */
+  maximum_allowed_days: number;
+}
+
+interface ActionsArtifactAndLogRetention {
+  /** The number of days to retain artifacts and logs */
+  days: number;
+}
+
+interface ActionsForkPrContributorApproval {
+  /** The policy that controls when fork PR workflows require approval from a maintainer. */
+  approval_policy: "first_time_contributors_new_to_github" | "first_time_contributors" | "all_external_contributors";
+}
+
+interface ActionsForkPrWorkflowsPrivateRepos {
+  /** Whether workflows triggered by pull requests from forks are allowed to run on private repositories. */
+  run_workflows_from_fork_pull_requests: boolean;
+  /** Whether GitHub Actions can create pull requests or submit approving pull request reviews from a workflow triggered by a fork pull request. */
+  send_write_tokens_to_workflows: boolean;
+  /** Whether to make secrets and variables available to workflows triggered by pull requests from forks. */
+  send_secrets_and_variables: boolean;
+  /** Whether workflows triggered by pull requests from forks require approval from a repository administrator to run. */
+  require_approval_for_fork_pr_workflows: boolean;
+}
+
+interface ActionsForkPrWorkflowsPrivateReposRequest {
+  /** Whether workflows triggered by pull requests from forks are allowed to run on private repositories. */
+  run_workflows_from_fork_pull_requests: boolean;
+  /** Whether GitHub Actions can create pull requests or submit approving pull request reviews from a workflow triggered by a fork pull request. */
+  send_write_tokens_to_workflows?: boolean;
+  /** Whether to make secrets and variables available to workflows triggered by pull requests from forks. */
+  send_secrets_and_variables?: boolean;
+  /** Whether workflows triggered by pull requests from forks require approval from a repository administrator to run. */
+  require_approval_for_fork_pr_workflows?: boolean;
+}
+
+interface SelfHostedRunnersSettings {
+  /** The policy that controls whether self-hosted runners can be used by repositories in the organization */
+  enabled_repositories: "all" | "selected" | "none";
+  /** The URL to the endpoint for managing selected repositories for self-hosted runners in the organization */
+  selected_repositories_url?: string;
 }
 
 /**
@@ -5859,6 +5928,11 @@ interface CopilotSeatDetails {
   /** Last editor that was used by the user for a GitHub Copilot completion. */
   last_activity_editor?: string | null;
   /**
+   * Timestamp of the last time the user authenticated with GitHub Copilot, in ISO 8601 format.
+   * @format date-time
+   */
+  last_authenticated_at?: string | null;
+  /**
    * Timestamp of when the assignee was last granted access to GitHub Copilot, in ISO 8601 format.
    * @format date-time
    */
@@ -6572,6 +6646,18 @@ interface OrgMembership {
    */
   role: "admin" | "member" | "billing_manager";
   /**
+   * Whether the user has direct membership in the organization.
+   * @example true
+   */
+  direct_membership?: boolean;
+  /**
+   * The slugs of the enterprise teams providing the user with indirect membership in the organization.
+   * A limit of 100 enterprise team slugs is returned.
+   * @maxItems 100
+   * @example ["ent:team-one","ent:team-two"]
+   */
+  enterprise_teams_providing_indirect_membership?: string[];
+  /**
    * @format uri
    * @example "https://api.github.com/orgs/octocat"
    */
@@ -6982,7 +7068,22 @@ interface OrgPrivateRegistryConfiguration {
    */
   name: string;
   /** The registry type. */
-  registry_type: "maven_repository" | "nuget_feed" | "goproxy_server";
+  registry_type:
+    | "maven_repository"
+    | "nuget_feed"
+    | "goproxy_server"
+    | "npm_registry"
+    | "rubygems_server"
+    | "cargo_registry"
+    | "composer_repository"
+    | "docker_registry"
+    | "git_source"
+    | "helm_registry"
+    | "hex_organization"
+    | "hex_repository"
+    | "pub_repository"
+    | "python_index"
+    | "terraform_registry";
   /**
    * The username to use when authenticating with the private registry.
    * @example "monalisa"
@@ -7007,7 +7108,22 @@ interface OrgPrivateRegistryConfigurationWithSelectedRepositories {
    */
   name: string;
   /** The registry type. */
-  registry_type: "maven_repository" | "nuget_feed" | "goproxy_server";
+  registry_type:
+    | "maven_repository"
+    | "nuget_feed"
+    | "goproxy_server"
+    | "npm_registry"
+    | "rubygems_server"
+    | "cargo_registry"
+    | "composer_repository"
+    | "docker_registry"
+    | "git_source"
+    | "helm_registry"
+    | "hex_organization"
+    | "hex_repository"
+    | "pub_repository"
+    | "python_index"
+    | "terraform_registry";
   /**
    * The username to use when authenticating with the private registry.
    * @example "monalisa"
@@ -8106,7 +8222,7 @@ interface RepositoryRulePullRequest {
   parameters?: {
     /** Array of allowed merge methods. Allowed values include `merge`, `squash`, and `rebase`. At least one option must be enabled. */
     allowed_merge_methods?: ("merge" | "squash" | "rebase")[];
-    /** Automatically request review from Copilot for new pull requests, if the author has access to Copilot code review. */
+    /** Request Copilot code review for new pull requests automatically if the author has access to Copilot code review. */
     automatic_copilot_code_review_enabled?: boolean;
     /** New, reviewable commits pushed will dismiss previous pull request review approvals. */
     dismiss_stale_reviews_on_push: boolean;
@@ -8442,6 +8558,32 @@ interface RepositoryRuleset {
 }
 
 /**
+ * Repository Rule
+ * A repository rule.
+ */
+type OrgRules =
+  | RepositoryRuleCreation
+  | RepositoryRuleUpdate
+  | RepositoryRuleDeletion
+  | RepositoryRuleRequiredLinearHistory
+  | RepositoryRuleRequiredDeployments
+  | RepositoryRuleRequiredSignatures
+  | RepositoryRulePullRequest
+  | RepositoryRuleRequiredStatusChecks
+  | RepositoryRuleNonFastForward
+  | RepositoryRuleCommitMessagePattern
+  | RepositoryRuleCommitAuthorEmailPattern
+  | RepositoryRuleCommitterEmailPattern
+  | RepositoryRuleBranchNamePattern
+  | RepositoryRuleTagNamePattern
+  | RepositoryRuleFilePathRestriction
+  | RepositoryRuleMaxFilePathLength
+  | RepositoryRuleFileExtensionRestriction
+  | RepositoryRuleMaxFileSize
+  | RepositoryRuleWorkflows
+  | RepositoryRuleCodeScanning;
+
+/**
  * Rule Suites
  * Response
  */
@@ -8544,6 +8686,49 @@ type RulesetVersionWithState = RulesetVersion & {
   /** The state of the ruleset version */
   state: object;
 };
+
+/** The version of the entity. This is used to confirm you're updating the current version of the entity and mitigate unintentionally overriding someone else's update. */
+type SecretScanningRowVersion = string | null;
+
+interface SecretScanningPatternOverride {
+  /** The ID of the pattern. */
+  token_type?: string;
+  /** The version of this pattern if it's a custom pattern. */
+  custom_pattern_version?: string | null;
+  /** The slug of the pattern. */
+  slug?: string;
+  /** The user-friendly name for the pattern. */
+  display_name?: string;
+  /** The total number of alerts generated by this pattern. */
+  alert_total?: number;
+  /** The percentage of all alerts that this pattern represents, rounded to the nearest integer. */
+  alert_total_percentage?: number;
+  /** The number of false positive alerts generated by this pattern. */
+  false_positives?: number;
+  /** The percentage of alerts from this pattern that are false positives, rounded to the nearest integer. */
+  false_positive_rate?: number;
+  /** The percentage of blocks for this pattern that were bypassed, rounded to the nearest integer. */
+  bypass_rate?: number;
+  /** The default push protection setting for this pattern. */
+  default_setting?: "disabled" | "enabled";
+  /** The push protection setting for this pattern set at the enterprise level. Only present for partner patterns when the organization has a parent enterprise. */
+  enterprise_setting?: "not-set" | "disabled" | "enabled" | null;
+  /** The current push protection setting for this pattern. If this is `not-set`, then it inherits either the enterprise setting if it exists or the default setting. */
+  setting?: "not-set" | "disabled" | "enabled";
+}
+
+/**
+ * Secret scanning pattern configuration
+ * A collection of secret scanning patterns and their settings related to push protection.
+ */
+interface SecretScanningPatternConfiguration {
+  /** The version of the entity. This is used to confirm you're updating the current version of the entity and mitigate unintentionally overriding someone else's update. */
+  pattern_config_version?: SecretScanningRowVersion;
+  /** Overrides for partner patterns. */
+  provider_pattern_overrides?: SecretScanningPatternOverride[];
+  /** Overrides for custom patterns defined by the organization. */
+  custom_pattern_overrides?: SecretScanningPatternOverride[];
+}
 
 /** A product affected by the vulnerability detailed in a repository security advisory. */
 interface RepositoryAdvisoryVulnerability {
@@ -13922,7 +14107,7 @@ type NullableIssue = {
    * The reason for the current state
    * @example "not_planned"
    */
-  state_reason?: "completed" | "reopened" | "not_planned" | null;
+  state_reason?: "completed" | "reopened" | "not_planned" | "duplicate" | null;
   /**
    * Title of the issue
    * @example "Widget creation fails in Safari on OS X 10.8"
@@ -13996,6 +14181,7 @@ type NullableIssue = {
   author_association: AuthorAssociation;
   reactions?: ReactionRollup;
   sub_issues_summary?: SubIssuesSummary;
+  issue_dependencies_summary?: IssueDependenciesSummary;
 };
 
 /**
@@ -15009,6 +15195,7 @@ interface DeployKey {
   created_at: string;
   read_only: boolean;
   added_by?: string | null;
+  /** @format date-time */
   last_used?: string | null;
   enabled?: boolean;
 }
@@ -15816,6 +16003,11 @@ interface Release {
    * @example false
    */
   prerelease: boolean;
+  /**
+   * Whether or not the release is immutable.
+   * @example false
+   */
+  immutable?: boolean;
   /** @format date-time */
   created_at: string;
   /** @format date-time */
@@ -16506,12 +16698,8 @@ interface IssueSearchResultItem {
     default?: boolean;
     description?: string | null;
   }[];
-  /** Sub-issues Summary */
-  sub_issues_summary?: {
-    total: number;
-    completed: number;
-    percent_completed: number;
-  };
+  sub_issues_summary?: SubIssuesSummary;
+  issue_dependencies_summary?: IssueDependenciesSummary;
   state: string;
   state_reason?: string | null;
   /** A GitHub user. */
@@ -17286,6 +17474,8 @@ interface Key {
   created_at: string;
   verified: boolean;
   read_only: boolean;
+  /** @format date-time */
+  last_used?: string | null;
 }
 
 /** Marketplace Account */
@@ -17386,6 +17576,8 @@ interface KeySimple {
   key: string;
   /** @format date-time */
   created_at?: string;
+  /** @format date-time */
+  last_used?: string | null;
 }
 
 interface BillingUsageReportUser {
@@ -19173,12 +19365,8 @@ interface WebhooksIssue {
   };
   /** @format uri */
   repository_url: string;
-  /** Sub-issues Summary */
-  sub_issues_summary?: {
-    total: number;
-    completed: number;
-    percent_completed: number;
-  };
+  sub_issues_summary?: SubIssuesSummary;
+  issue_dependencies_summary?: IssueDependenciesSummary;
   /** State of the issue; either 'open' or 'closed' */
   state?: "open" | "closed";
   state_reason?: string | null;
@@ -19673,12 +19861,8 @@ interface WebhooksIssue2 {
   };
   /** @format uri */
   repository_url: string;
-  /** Sub-issues Summary */
-  sub_issues_summary?: {
-    total: number;
-    completed: number;
-    percent_completed: number;
-  };
+  sub_issues_summary?: SubIssuesSummary;
+  issue_dependencies_summary?: IssueDependenciesSummary;
   /** State of the issue; either 'open' or 'closed' */
   state?: "open" | "closed";
   state_reason?: string | null;
@@ -20480,6 +20664,18 @@ interface WebhooksMembership {
   /** @format uri */
   organization_url: string;
   role: string;
+  /**
+   * Whether the user has direct membership in the organization.
+   * @example true
+   */
+  direct_membership?: boolean;
+  /**
+   * The slugs of the enterprise teams providing the user with indirect membership in the organization.
+   * A limit of 100 enterprise team slugs is returned.
+   * @maxItems 100
+   * @example ["ent:team-one","ent:team-two"]
+   */
+  enterprise_teams_providing_indirect_membership?: string[];
   state: string;
   /** @format uri */
   url: string;
@@ -20725,6 +20921,44 @@ interface WebhooksProjectColumn {
 }
 
 /**
+ * Projects v2 Status Update
+ * An status update belonging to a project
+ */
+type NullableProjectsV2StatusUpdate = {
+  id: number;
+  node_id: string;
+  project_node_id?: string;
+  /** A GitHub user. */
+  creator?: SimpleUser;
+  /**
+   * @format date-time
+   * @example "2022-04-28T12:00:00Z"
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   * @example "2022-04-28T12:00:00Z"
+   */
+  updated_at: string;
+  status?: "INACTIVE" | "ON_TRACK" | "AT_RISK" | "OFF_TRACK" | "COMPLETE" | null;
+  /**
+   * @format date
+   * @example "2022-04-28"
+   */
+  start_date?: string;
+  /**
+   * @format date
+   * @example "2022-04-28"
+   */
+  target_date?: string;
+  /**
+   * Body of the status update
+   * @example "The project is off to a great start!"
+   */
+  body?: string | null;
+};
+
+/**
  * Projects v2 Project
  * A projects v2 project
  */
@@ -20762,6 +20996,11 @@ interface ProjectsV2 {
   deleted_at: string | null;
   /** A GitHub user. */
   deleted_by: NullableSimpleUser;
+  state?: "open" | "closed";
+  /** An status update belonging to a project */
+  latest_status_update?: NullableProjectsV2StatusUpdate;
+  /** Whether this project is a template */
+  is_template?: boolean;
 }
 
 interface WebhooksProjectChanges {
@@ -22434,6 +22673,8 @@ interface WebhooksRelease {
   /** @format uri */
   html_url: string;
   id: number;
+  /** Whether or not the release is immutable. */
+  immutable: boolean;
   name: string | null;
   node_id: string;
   /** Whether the release is identified as a prerelease or a full release. */
@@ -22579,6 +22820,8 @@ interface WebhooksRelease1 {
   /** @format uri */
   html_url: string;
   id: number;
+  /** Whether or not the release is immutable. */
+  immutable: boolean;
   name: string | null;
   node_id: string;
   /** Whether the release is identified as a prerelease or a full release. */
@@ -29672,12 +29915,8 @@ interface WebhookIssueCommentCreated {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -30240,12 +30479,8 @@ interface WebhookIssueCommentDeleted {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -30813,12 +31048,8 @@ interface WebhookIssueCommentEdited {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -30989,6 +31220,138 @@ interface WebhookIssueCommentEdited {
    * organization, or when the event occurs from activity in a repository owned by an organization.
    */
   organization?: OrganizationSimpleWebhooks;
+  /**
+   * The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
+   * when the event occurs from activity in a repository.
+   */
+  repository: RepositoryWebhooks;
+  /** A GitHub user. */
+  sender: SimpleUser;
+}
+
+/** blocked by issue added event */
+interface WebhookIssueDependenciesBlockedByAdded {
+  action: "blocked_by_added";
+  /** The ID of the blocked issue. */
+  blocked_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocked_issue: Issue;
+  /** The ID of the blocking issue. */
+  blocking_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocking_issue: Issue;
+  /** A repository on GitHub. */
+  blocking_issue_repo: Repository;
+  /**
+   * The GitHub App installation. Webhook payloads contain the `installation` property when the event is configured
+   * for and sent to a GitHub App. For more information,
+   * see "[Using webhooks with GitHub Apps](https://docs.github.com/apps/creating-github-apps/registering-a-github-app/using-webhooks-with-github-apps)."
+   */
+  installation?: SimpleInstallation;
+  /**
+   * A GitHub organization. Webhook payloads contain the `organization` property when the webhook is configured for an
+   * organization, or when the event occurs from activity in a repository owned by an organization.
+   */
+  organization: OrganizationSimpleWebhooks;
+  /**
+   * The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
+   * when the event occurs from activity in a repository.
+   */
+  repository: RepositoryWebhooks;
+  /** A GitHub user. */
+  sender: SimpleUser;
+}
+
+/** blocked by issue removed event */
+interface WebhookIssueDependenciesBlockedByRemoved {
+  action: "blocked_by_removed";
+  /** The ID of the blocked issue. */
+  blocked_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocked_issue: Issue;
+  /** The ID of the blocking issue. */
+  blocking_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocking_issue: Issue;
+  /** A repository on GitHub. */
+  blocking_issue_repo: Repository;
+  /**
+   * The GitHub App installation. Webhook payloads contain the `installation` property when the event is configured
+   * for and sent to a GitHub App. For more information,
+   * see "[Using webhooks with GitHub Apps](https://docs.github.com/apps/creating-github-apps/registering-a-github-app/using-webhooks-with-github-apps)."
+   */
+  installation?: SimpleInstallation;
+  /**
+   * A GitHub organization. Webhook payloads contain the `organization` property when the webhook is configured for an
+   * organization, or when the event occurs from activity in a repository owned by an organization.
+   */
+  organization: OrganizationSimpleWebhooks;
+  /**
+   * The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
+   * when the event occurs from activity in a repository.
+   */
+  repository: RepositoryWebhooks;
+  /** A GitHub user. */
+  sender: SimpleUser;
+}
+
+/** blocking issue added event */
+interface WebhookIssueDependenciesBlockingAdded {
+  action: "blocking_added";
+  /** The ID of the blocked issue. */
+  blocked_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocked_issue: Issue;
+  /** A repository on GitHub. */
+  blocked_issue_repo: Repository;
+  /** The ID of the blocking issue. */
+  blocking_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocking_issue: Issue;
+  /**
+   * The GitHub App installation. Webhook payloads contain the `installation` property when the event is configured
+   * for and sent to a GitHub App. For more information,
+   * see "[Using webhooks with GitHub Apps](https://docs.github.com/apps/creating-github-apps/registering-a-github-app/using-webhooks-with-github-apps)."
+   */
+  installation?: SimpleInstallation;
+  /**
+   * A GitHub organization. Webhook payloads contain the `organization` property when the webhook is configured for an
+   * organization, or when the event occurs from activity in a repository owned by an organization.
+   */
+  organization: OrganizationSimpleWebhooks;
+  /**
+   * The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
+   * when the event occurs from activity in a repository.
+   */
+  repository: RepositoryWebhooks;
+  /** A GitHub user. */
+  sender: SimpleUser;
+}
+
+/** blocking issue removed event */
+interface WebhookIssueDependenciesBlockingRemoved {
+  action: "blocking_removed";
+  /** The ID of the blocked issue. */
+  blocked_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocked_issue: Issue;
+  /** A repository on GitHub. */
+  blocked_issue_repo: Repository;
+  /** The ID of the blocking issue. */
+  blocking_issue_id: number;
+  /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+  blocking_issue: Issue;
+  /**
+   * The GitHub App installation. Webhook payloads contain the `installation` property when the event is configured
+   * for and sent to a GitHub App. For more information,
+   * see "[Using webhooks with GitHub Apps](https://docs.github.com/apps/creating-github-apps/registering-a-github-app/using-webhooks-with-github-apps)."
+   */
+  installation?: SimpleInstallation;
+  /**
+   * A GitHub organization. Webhook payloads contain the `organization` property when the webhook is configured for an
+   * organization, or when the event occurs from activity in a repository owned by an organization.
+   */
+  organization: OrganizationSimpleWebhooks;
   /**
    * The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
    * when the event occurs from activity in a repository.
@@ -31416,12 +31779,8 @@ interface WebhookIssuesClosed {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -31936,12 +32295,8 @@ interface WebhookIssuesDeleted {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -32393,12 +32748,8 @@ interface WebhookIssuesDemilestoned {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -32867,12 +33218,8 @@ interface WebhookIssuesEdited {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -33328,12 +33675,8 @@ interface WebhookIssuesLabeled {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -33790,12 +34133,8 @@ interface WebhookIssuesLocked {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -34248,12 +34587,8 @@ interface WebhookIssuesMilestoned {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -34698,12 +35033,8 @@ interface WebhookIssuesOpened {
       };
       /** @format uri */
       repository_url?: string;
-      /** Sub-issues Summary */
-      sub_issues_summary?: {
-        total: number;
-        completed: number;
-        percent_completed: number;
-      };
+      sub_issues_summary?: SubIssuesSummary;
+      issue_dependencies_summary?: IssueDependenciesSummary;
       /** State of the issue; either 'open' or 'closed' */
       state?: "open" | "closed";
       state_reason?: string | null;
@@ -35387,12 +35718,8 @@ interface WebhookIssuesOpened {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -35877,12 +36204,8 @@ interface WebhookIssuesReopened {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state: "open" | "closed";
     state_reason?: string | null;
@@ -36325,12 +36648,8 @@ interface WebhookIssuesTransferred {
       };
       /** @format uri */
       repository_url: string;
-      /** Sub-issues Summary */
-      sub_issues_summary?: {
-        total: number;
-        completed: number;
-        percent_completed: number;
-      };
+      sub_issues_summary?: SubIssuesSummary;
+      issue_dependencies_summary?: IssueDependenciesSummary;
       /** State of the issue; either 'open' or 'closed' */
       state?: "open" | "closed";
       state_reason?: string | null;
@@ -37143,12 +37462,8 @@ interface WebhookIssuesUnlocked {
     };
     /** @format uri */
     repository_url: string;
-    /** Sub-issues Summary */
-    sub_issues_summary?: {
-      total: number;
-      completed: number;
-      percent_completed: number;
-    };
+    sub_issues_summary?: SubIssuesSummary;
+    issue_dependencies_summary?: IssueDependenciesSummary;
     /** State of the issue; either 'open' or 'closed' */
     state?: "open" | "closed";
     state_reason?: string | null;
@@ -69160,6 +69475,8 @@ interface WebhookReleasePrereleased {
     /** @format uri */
     html_url: string;
     id: number;
+    /** Whether or not the release is immutable. */
+    immutable: boolean;
     name: string | null;
     node_id: string;
     /** Whether the release is identified as a prerelease or a full release. */
@@ -74368,7 +74685,7 @@ interface WebhookWorkflowRunRequested {
   };
 }
 
-type Routes = {
+type $_Routes = {
   /** Get Hypermedia links to resources accessible in GitHub's REST API */
   ["GET /"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Root };
 
@@ -75074,9 +75391,14 @@ OAuth app tokens and personal access tokens (classic) need the `admin:enterprise
         description: string;
         /**
          * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
+         *
+         * > [!WARNING]
+         * > `code_security` and `secret_protection` are deprecated values for this field. Prefer the individual `code_security` and `secret_protection` fields to set the status of these features.
          * @default "disabled"
          */
         advanced_security?: "enabled" | "disabled" | "code_security" | "secret_protection";
+        /** The enablement status of GitHub Code Security features. */
+        code_security?: "enabled" | "disabled" | "not_set";
         /**
          * The enablement status of Dependency Graph
          * @default "enabled"
@@ -75105,6 +75427,8 @@ OAuth app tokens and personal access tokens (classic) need the `admin:enterprise
          * @default "disabled"
          */
         dependabot_security_updates?: "enabled" | "disabled" | "not_set";
+        /** Security Configuration feature options for code scanning */
+        code_scanning_options?: CodeScanningOptions;
         /**
          * The enablement status of code scanning default setup
          * @default "disabled"
@@ -75117,6 +75441,8 @@ OAuth app tokens and personal access tokens (classic) need the `admin:enterprise
          * @default "disabled"
          */
         code_scanning_delegated_alert_dismissal?: "enabled" | "disabled" | "not_set";
+        /** The enablement status of GitHub Secret Protection features. */
+        secret_protection?: "enabled" | "disabled" | "not_set";
         /**
          * The enablement status of secret scanning
          * @default "disabled"
@@ -75223,8 +75549,15 @@ OAuth app tokens and personal access tokens (classic) need the `admin:enterprise
          * @maxLength 255
          */
         description?: string;
-        /** The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features. */
+        /**
+         * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
+         *
+         * > [!WARNING]
+         * > `code_security` and `secret_protection` are deprecated values for this field. Prefer the individual `code_security` and `secret_protection` fields to set the status of these features.
+         */
         advanced_security?: "enabled" | "disabled" | "code_security" | "secret_protection";
+        /** The enablement status of GitHub Code Security features. */
+        code_security?: "enabled" | "disabled" | "not_set";
         /** The enablement status of Dependency Graph */
         dependency_graph?: "enabled" | "disabled" | "not_set";
         /** The enablement status of Automatic dependency submission */
@@ -75247,6 +75580,8 @@ OAuth app tokens and personal access tokens (classic) need the `admin:enterprise
          * @default "disabled"
          */
         code_scanning_delegated_alert_dismissal?: "enabled" | "disabled" | "not_set";
+        /** The enablement status of GitHub Secret Protection features. */
+        secret_protection?: "enabled" | "disabled" | "not_set";
         /** The enablement status of secret scanning */
         secret_scanning?: "enabled" | "disabled" | "not_set";
         /** The enablement status of secret scanning push protection */
@@ -76596,6 +76931,218 @@ Unsubscribing from a conversation in a repository that you are not watching is f
       body?: never;
     };
     Response: OrganizationSimple[];
+  };
+
+  /** Gets artifact and log retention settings for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["GET /organizations/${org}/actions/permissions/artifact-and-log-retention"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ActionsArtifactAndLogRetentionResponse;
+  };
+
+  /** Sets artifact and log retention settings for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["PUT /organizations/${org}/actions/permissions/artifact-and-log-retention"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body: ActionsArtifactAndLogRetention;
+    };
+    Response: void;
+  };
+
+  /** Gets the fork PR contributor approval policy for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["GET /organizations/${org}/actions/permissions/fork-pr-contributor-approval"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ActionsForkPrContributorApproval;
+  };
+
+  /** Sets the fork PR contributor approval policy for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint. */
+  ["PUT /organizations/${org}/actions/permissions/fork-pr-contributor-approval"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body: ActionsForkPrContributorApproval;
+    };
+    Response: void;
+  };
+
+  /** Gets the settings for whether workflows from fork pull requests can run on private repositories in an organization. */
+  ["GET /organizations/${org}/actions/permissions/fork-pr-workflows-private-repos"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ActionsForkPrWorkflowsPrivateRepos;
+  };
+
+  /** Sets the settings for whether workflows from fork pull requests can run on private repositories in an organization. */
+  ["PUT /organizations/${org}/actions/permissions/fork-pr-workflows-private-repos"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body: ActionsForkPrWorkflowsPrivateReposRequest;
+    };
+    Response: void;
+  };
+
+  /** Gets the settings for self-hosted runners for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["GET /organizations/${org}/actions/permissions/self-hosted-runners"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: SelfHostedRunnersSettings;
+  };
+
+  /** Sets the settings for self-hosted runners for an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["PUT /organizations/${org}/actions/permissions/self-hosted-runners"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body: {
+        /** The policy that controls whether self-hosted runners can be used in the organization */
+        enabled_repositories: "all" | "selected" | "none";
+      };
+    };
+    Response: void;
+  };
+
+  /** Lists repositories that are allowed to use self-hosted runners in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["GET /organizations/${org}/actions/permissions/self-hosted-runners/repositories"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query: {
+        /**
+         * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+         * @default 30
+         */
+        per_page?: number;
+        /**
+         * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+         * @default 1
+         */
+        page?: number;
+      };
+      body?: never;
+    };
+    Response: {
+      total_count?: number;
+      repositories?: Repository[];
+    };
+  };
+
+  /** Sets repositories that are allowed to use self-hosted runners in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["PUT /organizations/${org}/actions/permissions/self-hosted-runners/repositories"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body: {
+        /** IDs of repositories that can use repository-level self-hosted runners */
+        selected_repository_ids: number[];
+      };
+    };
+    Response: void;
+  };
+
+  /** Adds a repository to the list of repositories that are allowed to use self-hosted runners in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["PUT /organizations/${org}/actions/permissions/self-hosted-runners/repositories/${repositoryId}"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+        /** The unique identifier of the repository. */
+        repositoryId: number;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: void;
+  };
+
+  /** Removes a repository from the list of repositories that are allowed to use self-hosted runners in an organization.
+
+OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint. */
+  ["DELETE /organizations/${org}/actions/permissions/self-hosted-runners/repositories/${repositoryId}"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+        /** The unique identifier of the repository. */
+        repositoryId: number;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: void;
   };
 
   /** Lists repositories that organization admins have allowed Dependabot to access when updating dependencies.
@@ -79051,7 +79598,7 @@ OAuth app tokens and personal access tokens (classic) need the `security_events`
 
 The authenticated user must be an administrator or security manager for the organization to use this endpoint.
 
-OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
+OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations"]: {
     Request: {
       params: {
@@ -79103,9 +79650,14 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
         description: string;
         /**
          * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
+         *
+         * > [!WARNING]
+         * > `code_security` and `secret_protection` are deprecated values for this field. Prefer the individual `code_security` and `secret_protection` fields to set the status of these features.
          * @default "disabled"
          */
         advanced_security?: "enabled" | "disabled" | "code_security" | "secret_protection";
+        /** The enablement status of GitHub Code Security features. */
+        code_security?: "enabled" | "disabled" | "not_set";
         /**
          * The enablement status of Dependency Graph
          * @default "enabled"
@@ -79134,6 +79686,8 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
          * @default "disabled"
          */
         dependabot_security_updates?: "enabled" | "disabled" | "not_set";
+        /** Security Configuration feature options for code scanning */
+        code_scanning_options?: CodeScanningOptions;
         /**
          * The enablement status of code scanning default setup
          * @default "disabled"
@@ -79146,6 +79700,8 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
          * @default "not_set"
          */
         code_scanning_delegated_alert_dismissal?: "enabled" | "disabled" | "not_set";
+        /** The enablement status of GitHub Secret Protection features. */
+        secret_protection?: "enabled" | "disabled" | "not_set";
         /**
          * The enablement status of secret scanning
          * @default "disabled"
@@ -79207,7 +79763,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
 
 The authenticated user must be an administrator or security manager for the organization to use this endpoint.
 
-OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
+OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations/defaults"]: {
     Request: {
       params: {
@@ -79290,8 +79846,15 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
          * @maxLength 255
          */
         description?: string;
-        /** The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features. */
+        /**
+         * The enablement status of GitHub Advanced Security features. `enabled` will enable both Code Security and Secret Protection features.
+         *
+         * > [!WARNING]
+         * > `code_security` and `secret_protection` are deprecated values for this field. Prefer the individual `code_security` and `secret_protection` fields to set the status of these features.
+         */
         advanced_security?: "enabled" | "disabled" | "code_security" | "secret_protection";
+        /** The enablement status of GitHub Code Security features. */
+        code_security?: "enabled" | "disabled" | "not_set";
         /** The enablement status of Dependency Graph */
         dependency_graph?: "enabled" | "disabled" | "not_set";
         /** The enablement status of Automatic dependency submission */
@@ -79314,6 +79877,8 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
          * @default "disabled"
          */
         code_scanning_delegated_alert_dismissal?: "enabled" | "disabled" | "not_set";
+        /** The enablement status of GitHub Secret Protection features. */
+        secret_protection?: "enabled" | "disabled" | "not_set";
         /** The enablement status of secret scanning */
         secret_scanning?: "enabled" | "disabled" | "not_set";
         /** The enablement status of secret scanning push protection */
@@ -79430,7 +79995,7 @@ OAuth app tokens and personal access tokens (classic) need the `write:org` scope
 
 The authenticated user must be an administrator or security manager for the organization to use this endpoint.
 
-OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. */
+OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. */
   ["GET /orgs/${org}/code-security/configurations/${configurationId}/repositories"]: {
     Request: {
       params: {
@@ -79804,7 +80369,7 @@ Lists all Copilot seats for which an organization with a Copilot Business or Cop
 Only organization owners can view assigned seats.
 
 Each seat object contains information about the assigned user's most recent Copilot activity. Users must have telemetry enabled in their IDE for Copilot in the IDE activity to be reflected in `last_activity_at`.
-For more information about activity data, see "[Reviewing user activity data for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-user-activity-data-for-copilot-in-your-organization)."
+For more information about activity data, see [Metrics data properties for GitHub Copilot](https://docs.github.com/copilot/reference/metrics-data).
 
 OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use this endpoint. */
   ["GET /orgs/${org}/copilot/billing/seats"]: {
@@ -81464,7 +82029,7 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
 Gets the GitHub Copilot seat details for a member of an organization who currently has access to GitHub Copilot.
 
 The seat object contains information about the user's most recent Copilot activity. Users must have telemetry enabled in their IDE for Copilot in the IDE activity to be reflected in `last_activity_at`.
-For more information about activity data, see "[Reviewing user activity data for Copilot in your organization](https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-user-activity-data-for-copilot-in-your-organization)."
+For more information about activity data, see [Metrics data properties for GitHub Copilot](https://docs.github.com/copilot/reference/metrics-data).
 
 Only organization owners can view Copilot seat assignment details for members of their organization.
 
@@ -82612,7 +83177,22 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
       query?: never;
       body: {
         /** The registry type. */
-        registry_type: "maven_repository" | "nuget_feed" | "goproxy_server";
+        registry_type:
+          | "maven_repository"
+          | "nuget_feed"
+          | "goproxy_server"
+          | "npm_registry"
+          | "rubygems_server"
+          | "cargo_registry"
+          | "composer_repository"
+          | "docker_registry"
+          | "git_source"
+          | "helm_registry"
+          | "hex_organization"
+          | "hex_repository"
+          | "pub_repository"
+          | "python_index"
+          | "terraform_registry";
         /**
          * The URL of the private registry.
          * @format uri
@@ -82699,7 +83279,22 @@ OAuth app tokens and personal access tokens (classic) need the `admin:org` scope
       query?: never;
       body: {
         /** The registry type. */
-        registry_type?: "maven_repository" | "nuget_feed" | "goproxy_server";
+        registry_type?:
+          | "maven_repository"
+          | "nuget_feed"
+          | "goproxy_server"
+          | "npm_registry"
+          | "rubygems_server"
+          | "cargo_registry"
+          | "composer_repository"
+          | "docker_registry"
+          | "git_source"
+          | "helm_registry"
+          | "hex_organization"
+          | "hex_repository"
+          | "pub_repository"
+          | "python_index"
+          | "terraform_registry";
         /**
          * The URL of the private registry.
          * @format uri
@@ -83266,7 +83861,7 @@ OAuth app tokens and personal access tokens (classic) need the `public_repo` or 
          */
         conditions?: OrgRulesetConditions;
         /** An array of rules within the ruleset. */
-        rules?: RepositoryRule[];
+        rules?: OrgRules[];
       };
     };
     Response: RepositoryRuleset;
@@ -83385,7 +83980,7 @@ making the API request has write access to the ruleset. */
          */
         conditions?: OrgRulesetConditions;
         /** An array of rules within the ruleset. */
-        rules?: RepositoryRule[];
+        rules?: OrgRules[];
       };
     };
     Response: RepositoryRuleset;
@@ -83516,6 +84111,60 @@ OAuth app tokens and personal access tokens (classic) need the `repo` or `securi
       body?: never;
     };
     Response: OrganizationSecretScanningAlert[];
+  };
+
+  /** Lists the secret scanning pattern configurations for an organization.
+
+Personal access tokens (classic) need the `write:org` scope to use this endpoint. */
+  ["GET /orgs/${org}/secret-scanning/pattern-configurations"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: SecretScanningPatternConfiguration;
+  };
+
+  /** Updates the secret scanning pattern configurations for an organization.
+
+Personal access tokens (classic) need the `write:org` scope to use this endpoint. */
+  ["PATCH /orgs/${org}/secret-scanning/pattern-configurations"]: {
+    Request: {
+      params: {
+        /** The organization name. The name is not case sensitive. */
+        org: string;
+      };
+      headers?: never;
+      query?: never;
+      body: {
+        /** The version of the entity. This is used to confirm you're updating the current version of the entity and mitigate unintentionally overriding someone else's update. */
+        pattern_config_version?: SecretScanningRowVersion;
+        /** Pattern settings for provider patterns. */
+        provider_pattern_settings?: {
+          /** The ID of the pattern to configure. */
+          token_type?: string;
+          /** Push protection setting to set for the pattern. */
+          push_protection_setting?: "not-set" | "disabled" | "enabled";
+        }[];
+        /** Pattern settings for custom patterns. */
+        custom_pattern_settings?: {
+          /** The ID of the pattern to configure. */
+          token_type?: string;
+          /** The version of the entity. This is used to confirm you're updating the current version of the entity and mitigate unintentionally overriding someone else's update. */
+          custom_pattern_version?: SecretScanningRowVersion;
+          /** Push protection setting to set for the pattern. */
+          push_protection_setting?: "disabled" | "enabled";
+        }[];
+      };
+    };
+    Response: {
+      /** The updated pattern configuration version. */
+      pattern_config_version?: string;
+    };
   };
 
   /** Lists repository security advisories for an organization.
@@ -85430,7 +86079,13 @@ Some categories of endpoints have custom rate limits that are separate from the 
          * You can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.
          */
         security_and_analysis?: {
-          /** Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see "[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security)." */
+          /**
+           * Use the `status` property to enable or disable GitHub Advanced Security for this repository.
+           * For more information, see "[About GitHub Advanced
+           * Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security)."
+           *
+           * For standalone Code Scanning or Secret Protection products, this parameter cannot be used.
+           */
           advanced_security?: {
             /** Can be `enabled` or `disabled`. */
             status?: string;
@@ -86058,6 +86713,114 @@ OAuth app tokens and personal access tokens (classic) need the `repo` scope to u
       headers?: never;
       query?: never;
       body: ActionsWorkflowAccessToRepository;
+    };
+    Response: void;
+  };
+
+  /** Gets artifact and log retention settings for a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
+  ["GET /repos/${owner}/${repo}/actions/permissions/artifact-and-log-retention"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ActionsArtifactAndLogRetentionResponse;
+  };
+
+  /** Sets artifact and log retention settings for a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
+  ["PUT /repos/${owner}/${repo}/actions/permissions/artifact-and-log-retention"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+      };
+      headers?: never;
+      query?: never;
+      body: ActionsArtifactAndLogRetention;
+    };
+    Response: void;
+  };
+
+  /** Gets the fork PR contributor approval policy for a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
+  ["GET /repos/${owner}/${repo}/actions/permissions/fork-pr-contributor-approval"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ActionsForkPrContributorApproval;
+  };
+
+  /** Sets the fork PR contributor approval policy for a repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
+  ["PUT /repos/${owner}/${repo}/actions/permissions/fork-pr-contributor-approval"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+      };
+      headers?: never;
+      query?: never;
+      body: ActionsForkPrContributorApproval;
+    };
+    Response: void;
+  };
+
+  /** Gets the settings for whether workflows from fork pull requests can run on a private repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
+  ["GET /repos/${owner}/${repo}/actions/permissions/fork-pr-workflows-private-repos"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: ActionsForkPrWorkflowsPrivateRepos;
+  };
+
+  /** Sets the settings for whether workflows from fork pull requests can run on a private repository.
+
+OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. */
+  ["PUT /repos/${owner}/${repo}/actions/permissions/fork-pr-workflows-private-repos"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+      };
+      headers?: never;
+      query?: never;
+      body: ActionsForkPrWorkflowsPrivateReposRequest;
     };
     Response: void;
   };
@@ -94406,7 +95169,7 @@ This endpoint supports the following custom media types. For more information, s
          * The reason for the state change. Ignored unless `state` is changed.
          * @example "not_planned"
          */
-        state_reason?: "completed" | "not_planned" | "reopened" | null;
+        state_reason?: "completed" | "not_planned" | "duplicate" | "reopened" | null;
         /** The `number` of the milestone to associate this issue with or use `null` to remove the current milestone. Only users with push access can set the milestone for issues. Without push access to the repository, milestone changes are silently dropped. */
         milestone?: string | number | null;
         /** Labels to associate with this issue. Pass one or more labels to _replace_ the set of labels on this issue. Send an empty array (`[]`) to clear all labels from the issue. Only users with push access can set labels for issues. Without push access to the repository, label changes are silently dropped. */
@@ -94570,6 +95333,140 @@ This endpoint supports the following custom media types. For more information, s
       };
     };
     Response: IssueComment;
+  };
+
+  /** You can use the REST API to list the dependencies an issue is blocked by.
+
+This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+
+- **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
+  ["GET /repos/${owner}/${repo}/issues/${issueNumber}/dependencies/blocked_by"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+        /** The number that identifies the issue. */
+        issueNumber: number;
+      };
+      headers?: never;
+      query: {
+        /**
+         * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+         * @default 30
+         */
+        per_page?: number;
+        /**
+         * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+         * @default 1
+         */
+        page?: number;
+      };
+      body?: never;
+    };
+    Response: Issue[];
+  };
+
+  /** You can use the REST API to add a 'blocked by' relationship to an issue.
+
+Creating content too quickly using this endpoint may result in secondary rate limiting.
+For more information, see [Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)
+and [Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api).
+
+This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+
+- **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
+  ["POST /repos/${owner}/${repo}/issues/${issueNumber}/dependencies/blocked_by"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+        /** The number that identifies the issue. */
+        issueNumber: number;
+      };
+      headers?: never;
+      query?: never;
+      body: {
+        /** The id of the issue that blocks the current issue */
+        issue_id: number;
+      };
+    };
+    Response: Issue;
+  };
+
+  /** You can use the REST API to remove a dependency that an issue is blocked by.
+
+Removing content too quickly using this endpoint may result in secondary rate limiting.
+For more information, see [Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)
+and [Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api).
+
+This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+- **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass a specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
+  ["DELETE /repos/${owner}/${repo}/issues/${issueNumber}/dependencies/blocked_by/${issueId}"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+        /** The number that identifies the issue. */
+        issueNumber: number;
+        /** The id of the blocking issue to remove as a dependency */
+        issueId: number;
+      };
+      headers?: never;
+      query?: never;
+      body?: never;
+    };
+    Response: Issue;
+  };
+
+  /** You can use the REST API to list the dependencies an issue is blocking.
+
+This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+
+- **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
+  ["GET /repos/${owner}/${repo}/issues/${issueNumber}/dependencies/blocking"]: {
+    Request: {
+      params: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: string;
+        /** The name of the repository without the `.git` extension. The name is not case sensitive. */
+        repo: string;
+        /** The number that identifies the issue. */
+        issueNumber: number;
+      };
+      headers?: never;
+      query: {
+        /**
+         * The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+         * @default 30
+         */
+        per_page?: number;
+        /**
+         * The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+         * @default 1
+         */
+        page?: number;
+      };
+      body?: never;
+    };
+    Response: Issue[];
   };
 
   /** Lists all events for an issue. */
@@ -94892,11 +95789,11 @@ This endpoint supports the following custom media types. For more information, s
 
   /** You can use the REST API to list the sub-issues on an issue.
 
-This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
 
-- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
-- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
-- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+- **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+- **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
 - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`. */
   ["GET /repos/${owner}/${repo}/issues/${issueNumber}/sub_issues"]: {
     Request: {
@@ -103317,4 +104214,863 @@ This endpoint supports the following custom media types. For more information, s
   };
 };
 
-export type { Routes };
+export type {
+  $_Routes as Routes,
+
+  // The following are only exported to avoid the error: Exported variable 'X' has or is using name 'Y' from external module "Z" but cannot be named.ts(4023)
+
+  Root as ಠ_ಠ_Root,
+  SecurityAdvisoryEcosystems as ಠ_ಠ_SecurityAdvisoryEcosystems,
+  Vulnerability as ಠ_ಠ_Vulnerability,
+  CvssSeverities as ಠ_ಠ_CvssSeverities,
+  SecurityAdvisoryEpss as ಠ_ಠ_SecurityAdvisoryEpss,
+  SimpleUser as ಠ_ಠ_SimpleUser,
+  SecurityAdvisoryCreditTypes as ಠ_ಠ_SecurityAdvisoryCreditTypes,
+  GlobalAdvisory as ಠ_ಠ_GlobalAdvisory,
+  BasicError as ಠ_ಠ_BasicError,
+  ValidationErrorSimple as ಠ_ಠ_ValidationErrorSimple,
+  Enterprise as ಠ_ಠ_Enterprise,
+  Integration as ಠ_ಠ_Integration,
+  WebhookConfigUrl as ಠ_ಠ_WebhookConfigUrl,
+  WebhookConfigContentType as ಠ_ಠ_WebhookConfigContentType,
+  WebhookConfigSecret as ಠ_ಠ_WebhookConfigSecret,
+  WebhookConfigInsecureSsl as ಠ_ಠ_WebhookConfigInsecureSsl,
+  WebhookConfig as ಠ_ಠ_WebhookConfig,
+  HookDeliveryItem as ಠ_ಠ_HookDeliveryItem,
+  ScimError as ಠ_ಠ_ScimError,
+  ValidationError as ಠ_ಠ_ValidationError,
+  HookDelivery as ಠ_ಠ_HookDelivery,
+  IntegrationInstallationRequest as ಠ_ಠ_IntegrationInstallationRequest,
+  AppPermissions as ಠ_ಠ_AppPermissions,
+  NullableSimpleUser as ಠ_ಠ_NullableSimpleUser,
+  Installation as ಠ_ಠ_Installation,
+  NullableLicenseSimple as ಠ_ಠ_NullableLicenseSimple,
+  Repository as ಠ_ಠ_Repository,
+  InstallationToken as ಠ_ಠ_InstallationToken,
+  NullableScopedInstallation as ಠ_ಠ_NullableScopedInstallation,
+  Authorization as ಠ_ಠ_Authorization,
+  SimpleClassroomRepository as ಠ_ಠ_SimpleClassroomRepository,
+  SimpleClassroomOrganization as ಠ_ಠ_SimpleClassroomOrganization,
+  Classroom as ಠ_ಠ_Classroom,
+  ClassroomAssignment as ಠ_ಠ_ClassroomAssignment,
+  SimpleClassroomUser as ಠ_ಠ_SimpleClassroomUser,
+  SimpleClassroom as ಠ_ಠ_SimpleClassroom,
+  SimpleClassroomAssignment as ಠ_ಠ_SimpleClassroomAssignment,
+  ClassroomAcceptedAssignment as ಠ_ಠ_ClassroomAcceptedAssignment,
+  ClassroomAssignmentGrade as ಠ_ಠ_ClassroomAssignmentGrade,
+  CodeOfConduct as ಠ_ಠ_CodeOfConduct,
+  CodeSecurityConfiguration as ಠ_ಠ_CodeSecurityConfiguration,
+  CodeScanningOptions as ಠ_ಠ_CodeScanningOptions,
+  CodeScanningDefaultSetupOptions as ಠ_ಠ_CodeScanningDefaultSetupOptions,
+  CodeSecurityDefaultConfigurations as ಠ_ಠ_CodeSecurityDefaultConfigurations,
+  SimpleRepository as ಠ_ಠ_SimpleRepository,
+  CodeSecurityConfigurationRepositories as ಠ_ಠ_CodeSecurityConfigurationRepositories,
+  AlertNumber as ಠ_ಠ_AlertNumber,
+  DependabotAlertPackage as ಠ_ಠ_DependabotAlertPackage,
+  DependabotAlertSecurityVulnerability as ಠ_ಠ_DependabotAlertSecurityVulnerability,
+  DependabotAlertSecurityAdvisory as ಠ_ಠ_DependabotAlertSecurityAdvisory,
+  AlertUrl as ಠ_ಠ_AlertUrl,
+  AlertHtmlUrl as ಠ_ಠ_AlertHtmlUrl,
+  AlertCreatedAt as ಠ_ಠ_AlertCreatedAt,
+  AlertUpdatedAt as ಠ_ಠ_AlertUpdatedAt,
+  AlertDismissedAt as ಠ_ಠ_AlertDismissedAt,
+  AlertFixedAt as ಠ_ಠ_AlertFixedAt,
+  AlertAutoDismissedAt as ಠ_ಠ_AlertAutoDismissedAt,
+  DependabotAlertWithRepository as ಠ_ಠ_DependabotAlertWithRepository,
+  NullableAlertUpdatedAt as ಠ_ಠ_NullableAlertUpdatedAt,
+  SecretScanningAlertState as ಠ_ಠ_SecretScanningAlertState,
+  SecretScanningAlertResolution as ಠ_ಠ_SecretScanningAlertResolution,
+  SecretScanningLocationCommit as ಠ_ಠ_SecretScanningLocationCommit,
+  SecretScanningLocationWikiCommit as ಠ_ಠ_SecretScanningLocationWikiCommit,
+  SecretScanningLocationIssueTitle as ಠ_ಠ_SecretScanningLocationIssueTitle,
+  SecretScanningLocationIssueBody as ಠ_ಠ_SecretScanningLocationIssueBody,
+  SecretScanningLocationIssueComment as ಠ_ಠ_SecretScanningLocationIssueComment,
+  SecretScanningLocationDiscussionTitle as ಠ_ಠ_SecretScanningLocationDiscussionTitle,
+  SecretScanningLocationDiscussionBody as ಠ_ಠ_SecretScanningLocationDiscussionBody,
+  SecretScanningLocationDiscussionComment as ಠ_ಠ_SecretScanningLocationDiscussionComment,
+  SecretScanningLocationPullRequestTitle as ಠ_ಠ_SecretScanningLocationPullRequestTitle,
+  SecretScanningLocationPullRequestBody as ಠ_ಠ_SecretScanningLocationPullRequestBody,
+  SecretScanningLocationPullRequestComment as ಠ_ಠ_SecretScanningLocationPullRequestComment,
+  SecretScanningLocationPullRequestReview as ಠ_ಠ_SecretScanningLocationPullRequestReview,
+  SecretScanningLocationPullRequestReviewComment as ಠ_ಠ_SecretScanningLocationPullRequestReviewComment,
+  NullableSecretScanningFirstDetectedLocation as ಠ_ಠ_NullableSecretScanningFirstDetectedLocation,
+  OrganizationSecretScanningAlert as ಠ_ಠ_OrganizationSecretScanningAlert,
+  Actor as ಠ_ಠ_Actor,
+  NullableMilestone as ಠ_ಠ_NullableMilestone,
+  IssueType as ಠ_ಠ_IssueType,
+  NullableIntegration as ಠ_ಠ_NullableIntegration,
+  AuthorAssociation as ಠ_ಠ_AuthorAssociation,
+  ReactionRollup as ಠ_ಠ_ReactionRollup,
+  SubIssuesSummary as ಠ_ಠ_SubIssuesSummary,
+  IssueDependenciesSummary as ಠ_ಠ_IssueDependenciesSummary,
+  Issue as ಠ_ಠ_Issue,
+  IssueComment as ಠ_ಠ_IssueComment,
+  Event as ಠ_ಠ_Event,
+  LinkWithType as ಠ_ಠ_LinkWithType,
+  Feed as ಠ_ಠ_Feed,
+  BaseGist as ಠ_ಠ_BaseGist,
+  PublicUser as ಠ_ಠ_PublicUser,
+  GistHistory as ಠ_ಠ_GistHistory,
+  GistSimple as ಠ_ಠ_GistSimple,
+  GistComment as ಠ_ಠ_GistComment,
+  GistCommit as ಠ_ಠ_GistCommit,
+  GitignoreTemplate as ಠ_ಠ_GitignoreTemplate,
+  LicenseSimple as ಠ_ಠ_LicenseSimple,
+  License as ಠ_ಠ_License,
+  MarketplaceListingPlan as ಠ_ಠ_MarketplaceListingPlan,
+  MarketplacePurchase as ಠ_ಠ_MarketplacePurchase,
+  ApiOverview as ಠ_ಠ_ApiOverview,
+  SecurityAndAnalysis as ಠ_ಠ_SecurityAndAnalysis,
+  MinimalRepository as ಠ_ಠ_MinimalRepository,
+  Thread as ಠ_ಠ_Thread,
+  ThreadSubscription as ಠ_ಠ_ThreadSubscription,
+  OrganizationSimple as ಠ_ಠ_OrganizationSimple,
+  ActionsArtifactAndLogRetentionResponse as ಠ_ಠ_ActionsArtifactAndLogRetentionResponse,
+  ActionsArtifactAndLogRetention as ಠ_ಠ_ActionsArtifactAndLogRetention,
+  ActionsForkPrContributorApproval as ಠ_ಠ_ActionsForkPrContributorApproval,
+  ActionsForkPrWorkflowsPrivateRepos as ಠ_ಠ_ActionsForkPrWorkflowsPrivateRepos,
+  ActionsForkPrWorkflowsPrivateReposRequest as ಠ_ಠ_ActionsForkPrWorkflowsPrivateReposRequest,
+  SelfHostedRunnersSettings as ಠ_ಠ_SelfHostedRunnersSettings,
+  NullableSimpleRepository as ಠ_ಠ_NullableSimpleRepository,
+  DependabotRepositoryAccessDetails as ಠ_ಠ_DependabotRepositoryAccessDetails,
+  BillingUsageReport as ಠ_ಠ_BillingUsageReport,
+  OrganizationFull as ಠ_ಠ_OrganizationFull,
+  ActionsCacheUsageOrgEnterprise as ಠ_ಠ_ActionsCacheUsageOrgEnterprise,
+  ActionsCacheUsageByRepository as ಠ_ಠ_ActionsCacheUsageByRepository,
+  NullableActionsHostedRunnerPoolImage as ಠ_ಠ_NullableActionsHostedRunnerPoolImage,
+  ActionsHostedRunnerMachineSpec as ಠ_ಠ_ActionsHostedRunnerMachineSpec,
+  PublicIp as ಠ_ಠ_PublicIp,
+  ActionsHostedRunner as ಠ_ಠ_ActionsHostedRunner,
+  ActionsHostedRunnerImage as ಠ_ಠ_ActionsHostedRunnerImage,
+  ActionsHostedRunnerLimits as ಠ_ಠ_ActionsHostedRunnerLimits,
+  OidcCustomSub as ಠ_ಠ_OidcCustomSub,
+  EmptyObject as ಠ_ಠ_EmptyObject,
+  EnabledRepositories as ಠ_ಠ_EnabledRepositories,
+  AllowedActions as ಠ_ಠ_AllowedActions,
+  SelectedActionsUrl as ಠ_ಠ_SelectedActionsUrl,
+  ActionsOrganizationPermissions as ಠ_ಠ_ActionsOrganizationPermissions,
+  SelectedActions as ಠ_ಠ_SelectedActions,
+  ActionsDefaultWorkflowPermissions as ಠ_ಠ_ActionsDefaultWorkflowPermissions,
+  ActionsCanApprovePullRequestReviews as ಠ_ಠ_ActionsCanApprovePullRequestReviews,
+  ActionsGetDefaultWorkflowPermissions as ಠ_ಠ_ActionsGetDefaultWorkflowPermissions,
+  ActionsSetDefaultWorkflowPermissions as ಠ_ಠ_ActionsSetDefaultWorkflowPermissions,
+  RunnerGroupsOrg as ಠ_ಠ_RunnerGroupsOrg,
+  RunnerLabel as ಠ_ಠ_RunnerLabel,
+  Runner as ಠ_ಠ_Runner,
+  RunnerApplication as ಠ_ಠ_RunnerApplication,
+  AuthenticationToken as ಠ_ಠ_AuthenticationToken,
+  OrganizationActionsSecret as ಠ_ಠ_OrganizationActionsSecret,
+  ActionsPublicKey as ಠ_ಠ_ActionsPublicKey,
+  OrganizationActionsVariable as ಠ_ಠ_OrganizationActionsVariable,
+  CampaignState as ಠ_ಠ_CampaignState,
+  NullableTeamSimple as ಠ_ಠ_NullableTeamSimple,
+  Team as ಠ_ಠ_Team,
+  CampaignSummary as ಠ_ಠ_CampaignSummary,
+  CodeScanningAnalysisToolName as ಠ_ಠ_CodeScanningAnalysisToolName,
+  CodeScanningAnalysisToolGuid as ಠ_ಠ_CodeScanningAnalysisToolGuid,
+  CodeScanningAlertStateQuery as ಠ_ಠ_CodeScanningAlertStateQuery,
+  CodeScanningAlertSeverity as ಠ_ಠ_CodeScanningAlertSeverity,
+  AlertInstancesUrl as ಠ_ಠ_AlertInstancesUrl,
+  CodeScanningAlertState as ಠ_ಠ_CodeScanningAlertState,
+  CodeScanningAlertDismissedReason as ಠ_ಠ_CodeScanningAlertDismissedReason,
+  CodeScanningAlertDismissedComment as ಠ_ಠ_CodeScanningAlertDismissedComment,
+  CodeScanningAlertRuleSummary as ಠ_ಠ_CodeScanningAlertRuleSummary,
+  CodeScanningAnalysisToolVersion as ಠ_ಠ_CodeScanningAnalysisToolVersion,
+  CodeScanningAnalysisTool as ಠ_ಠ_CodeScanningAnalysisTool,
+  CodeScanningRef as ಠ_ಠ_CodeScanningRef,
+  CodeScanningAnalysisAnalysisKey as ಠ_ಠ_CodeScanningAnalysisAnalysisKey,
+  CodeScanningAlertEnvironment as ಠ_ಠ_CodeScanningAlertEnvironment,
+  CodeScanningAnalysisCategory as ಠ_ಠ_CodeScanningAnalysisCategory,
+  CodeScanningAlertLocation as ಠ_ಠ_CodeScanningAlertLocation,
+  CodeScanningAlertClassification as ಠ_ಠ_CodeScanningAlertClassification,
+  CodeScanningAlertInstance as ಠ_ಠ_CodeScanningAlertInstance,
+  CodeScanningOrganizationAlertItems as ಠ_ಠ_CodeScanningOrganizationAlertItems,
+  NullableCodespaceMachine as ಠ_ಠ_NullableCodespaceMachine,
+  Codespace as ಠ_ಠ_Codespace,
+  CodespacesOrgSecret as ಠ_ಠ_CodespacesOrgSecret,
+  CodespacesPublicKey as ಠ_ಠ_CodespacesPublicKey,
+  CopilotOrganizationSeatBreakdown as ಠ_ಠ_CopilotOrganizationSeatBreakdown,
+  CopilotOrganizationDetails as ಠ_ಠ_CopilotOrganizationDetails,
+  NullableOrganizationSimple as ಠ_ಠ_NullableOrganizationSimple,
+  EnterpriseTeam as ಠ_ಠ_EnterpriseTeam,
+  CopilotSeatDetails as ಠ_ಠ_CopilotSeatDetails,
+  CopilotIdeCodeCompletions as ಠ_ಠ_CopilotIdeCodeCompletions,
+  CopilotIdeChat as ಠ_ಠ_CopilotIdeChat,
+  CopilotDotcomChat as ಠ_ಠ_CopilotDotcomChat,
+  CopilotDotcomPullRequests as ಠ_ಠ_CopilotDotcomPullRequests,
+  CopilotUsageMetricsDay as ಠ_ಠ_CopilotUsageMetricsDay,
+  OrganizationDependabotSecret as ಠ_ಠ_OrganizationDependabotSecret,
+  DependabotPublicKey as ಠ_ಠ_DependabotPublicKey,
+  NullableMinimalRepository as ಠ_ಠ_NullableMinimalRepository,
+  Package as ಠ_ಠ_Package,
+  OrganizationInvitation as ಠ_ಠ_OrganizationInvitation,
+  OrgHook as ಠ_ಠ_OrgHook,
+  ApiInsightsRouteStats as ಠ_ಠ_ApiInsightsRouteStats,
+  ApiInsightsSubjectStats as ಠ_ಠ_ApiInsightsSubjectStats,
+  ApiInsightsSummaryStats as ಠ_ಠ_ApiInsightsSummaryStats,
+  ApiInsightsTimeStats as ಠ_ಠ_ApiInsightsTimeStats,
+  ApiInsightsUserStats as ಠ_ಠ_ApiInsightsUserStats,
+  InteractionGroup as ಠ_ಠ_InteractionGroup,
+  InteractionLimitResponse as ಠ_ಠ_InteractionLimitResponse,
+  InteractionExpiry as ಠ_ಠ_InteractionExpiry,
+  InteractionLimit as ಠ_ಠ_InteractionLimit,
+  OrganizationCreateIssueType as ಠ_ಠ_OrganizationCreateIssueType,
+  OrganizationUpdateIssueType as ಠ_ಠ_OrganizationUpdateIssueType,
+  OrgMembership as ಠ_ಠ_OrgMembership,
+  Migration as ಠ_ಠ_Migration,
+  OrganizationRole as ಠ_ಠ_OrganizationRole,
+  TeamRoleAssignment as ಠ_ಠ_TeamRoleAssignment,
+  TeamSimple as ಠ_ಠ_TeamSimple,
+  UserRoleAssignment as ಠ_ಠ_UserRoleAssignment,
+  PackageVersion as ಠ_ಠ_PackageVersion,
+  OrganizationProgrammaticAccessGrantRequest as ಠ_ಠ_OrganizationProgrammaticAccessGrantRequest,
+  OrganizationProgrammaticAccessGrant as ಠ_ಠ_OrganizationProgrammaticAccessGrant,
+  OrgPrivateRegistryConfiguration as ಠ_ಠ_OrgPrivateRegistryConfiguration,
+  OrgPrivateRegistryConfigurationWithSelectedRepositories as ಠ_ಠ_OrgPrivateRegistryConfigurationWithSelectedRepositories,
+  Project as ಠ_ಠ_Project,
+  CustomProperty as ಠ_ಠ_CustomProperty,
+  CustomPropertySetPayload as ಠ_ಠ_CustomPropertySetPayload,
+  CustomPropertyValue as ಠ_ಠ_CustomPropertyValue,
+  OrgRepoCustomPropertyValues as ಠ_ಠ_OrgRepoCustomPropertyValues,
+  NullableRepository as ಠ_ಠ_NullableRepository,
+  CodeOfConductSimple as ಠ_ಠ_CodeOfConductSimple,
+  FullRepository as ಠ_ಠ_FullRepository,
+  RepositoryRuleEnforcement as ಠ_ಠ_RepositoryRuleEnforcement,
+  RepositoryRulesetBypassActor as ಠ_ಠ_RepositoryRulesetBypassActor,
+  RepositoryRulesetConditions as ಠ_ಠ_RepositoryRulesetConditions,
+  RepositoryRulesetConditionsRepositoryNameTarget as ಠ_ಠ_RepositoryRulesetConditionsRepositoryNameTarget,
+  RepositoryRulesetConditionsRepositoryIdTarget as ಠ_ಠ_RepositoryRulesetConditionsRepositoryIdTarget,
+  RepositoryRulesetConditionsRepositoryPropertySpec as ಠ_ಠ_RepositoryRulesetConditionsRepositoryPropertySpec,
+  RepositoryRulesetConditionsRepositoryPropertyTarget as ಠ_ಠ_RepositoryRulesetConditionsRepositoryPropertyTarget,
+  OrgRulesetConditions as ಠ_ಠ_OrgRulesetConditions,
+  RepositoryRuleCreation as ಠ_ಠ_RepositoryRuleCreation,
+  RepositoryRuleUpdate as ಠ_ಠ_RepositoryRuleUpdate,
+  RepositoryRuleDeletion as ಠ_ಠ_RepositoryRuleDeletion,
+  RepositoryRuleRequiredLinearHistory as ಠ_ಠ_RepositoryRuleRequiredLinearHistory,
+  RepositoryRuleMergeQueue as ಠ_ಠ_RepositoryRuleMergeQueue,
+  RepositoryRuleRequiredDeployments as ಠ_ಠ_RepositoryRuleRequiredDeployments,
+  RepositoryRuleRequiredSignatures as ಠ_ಠ_RepositoryRuleRequiredSignatures,
+  RepositoryRuleParamsReviewer as ಠ_ಠ_RepositoryRuleParamsReviewer,
+  RepositoryRuleParamsRequiredReviewerConfiguration as ಠ_ಠ_RepositoryRuleParamsRequiredReviewerConfiguration,
+  RepositoryRulePullRequest as ಠ_ಠ_RepositoryRulePullRequest,
+  RepositoryRuleParamsStatusCheckConfiguration as ಠ_ಠ_RepositoryRuleParamsStatusCheckConfiguration,
+  RepositoryRuleRequiredStatusChecks as ಠ_ಠ_RepositoryRuleRequiredStatusChecks,
+  RepositoryRuleNonFastForward as ಠ_ಠ_RepositoryRuleNonFastForward,
+  RepositoryRuleCommitMessagePattern as ಠ_ಠ_RepositoryRuleCommitMessagePattern,
+  RepositoryRuleCommitAuthorEmailPattern as ಠ_ಠ_RepositoryRuleCommitAuthorEmailPattern,
+  RepositoryRuleCommitterEmailPattern as ಠ_ಠ_RepositoryRuleCommitterEmailPattern,
+  RepositoryRuleBranchNamePattern as ಠ_ಠ_RepositoryRuleBranchNamePattern,
+  RepositoryRuleTagNamePattern as ಠ_ಠ_RepositoryRuleTagNamePattern,
+  RepositoryRuleFilePathRestriction as ಠ_ಠ_RepositoryRuleFilePathRestriction,
+  RepositoryRuleMaxFilePathLength as ಠ_ಠ_RepositoryRuleMaxFilePathLength,
+  RepositoryRuleFileExtensionRestriction as ಠ_ಠ_RepositoryRuleFileExtensionRestriction,
+  RepositoryRuleMaxFileSize as ಠ_ಠ_RepositoryRuleMaxFileSize,
+  RepositoryRuleParamsRestrictedCommits as ಠ_ಠ_RepositoryRuleParamsRestrictedCommits,
+  RepositoryRuleParamsWorkflowFileReference as ಠ_ಠ_RepositoryRuleParamsWorkflowFileReference,
+  RepositoryRuleWorkflows as ಠ_ಠ_RepositoryRuleWorkflows,
+  RepositoryRuleParamsCodeScanningTool as ಠ_ಠ_RepositoryRuleParamsCodeScanningTool,
+  RepositoryRuleCodeScanning as ಠ_ಠ_RepositoryRuleCodeScanning,
+  RepositoryRule as ಠ_ಠ_RepositoryRule,
+  RepositoryRuleset as ಠ_ಠ_RepositoryRuleset,
+  OrgRules as ಠ_ಠ_OrgRules,
+  RuleSuites as ಠ_ಠ_RuleSuites,
+  RuleSuite as ಠ_ಠ_RuleSuite,
+  RulesetVersion as ಠ_ಠ_RulesetVersion,
+  RulesetVersionWithState as ಠ_ಠ_RulesetVersionWithState,
+  SecretScanningRowVersion as ಠ_ಠ_SecretScanningRowVersion,
+  SecretScanningPatternOverride as ಠ_ಠ_SecretScanningPatternOverride,
+  SecretScanningPatternConfiguration as ಠ_ಠ_SecretScanningPatternConfiguration,
+  RepositoryAdvisoryVulnerability as ಠ_ಠ_RepositoryAdvisoryVulnerability,
+  RepositoryAdvisoryCredit as ಠ_ಠ_RepositoryAdvisoryCredit,
+  RepositoryAdvisory as ಠ_ಠ_RepositoryAdvisory,
+  ActionsBillingUsage as ಠ_ಠ_ActionsBillingUsage,
+  PackagesBillingUsage as ಠ_ಠ_PackagesBillingUsage,
+  CombinedBillingUsage as ಠ_ಠ_CombinedBillingUsage,
+  NetworkConfiguration as ಠ_ಠ_NetworkConfiguration,
+  NetworkSettings as ಠ_ಠ_NetworkSettings,
+  TeamOrganization as ಠ_ಠ_TeamOrganization,
+  TeamFull as ಠ_ಠ_TeamFull,
+  TeamDiscussion as ಠ_ಠ_TeamDiscussion,
+  TeamDiscussionComment as ಠ_ಠ_TeamDiscussionComment,
+  Reaction as ಠ_ಠ_Reaction,
+  TeamMembership as ಠ_ಠ_TeamMembership,
+  TeamProject as ಠ_ಠ_TeamProject,
+  TeamRepository as ಠ_ಠ_TeamRepository,
+  ProjectCard as ಠ_ಠ_ProjectCard,
+  ProjectColumn as ಠ_ಠ_ProjectColumn,
+  ProjectCollaboratorPermission as ಠ_ಠ_ProjectCollaboratorPermission,
+  RateLimit as ಠ_ಠ_RateLimit,
+  RateLimitOverview as ಠ_ಠ_RateLimitOverview,
+  Artifact as ಠ_ಠ_Artifact,
+  ActionsCacheList as ಠ_ಠ_ActionsCacheList,
+  Job as ಠ_ಠ_Job,
+  OidcCustomSubRepo as ಠ_ಠ_OidcCustomSubRepo,
+  ActionsSecret as ಠ_ಠ_ActionsSecret,
+  ActionsVariable as ಠ_ಠ_ActionsVariable,
+  ActionsEnabled as ಠ_ಠ_ActionsEnabled,
+  ActionsRepositoryPermissions as ಠ_ಠ_ActionsRepositoryPermissions,
+  ActionsWorkflowAccessToRepository as ಠ_ಠ_ActionsWorkflowAccessToRepository,
+  ReferencedWorkflow as ಠ_ಠ_ReferencedWorkflow,
+  PullRequestMinimal as ಠ_ಠ_PullRequestMinimal,
+  NullableSimpleCommit as ಠ_ಠ_NullableSimpleCommit,
+  WorkflowRun as ಠ_ಠ_WorkflowRun,
+  EnvironmentApprovals as ಠ_ಠ_EnvironmentApprovals,
+  ReviewCustomGatesCommentRequired as ಠ_ಠ_ReviewCustomGatesCommentRequired,
+  ReviewCustomGatesStateRequired as ಠ_ಠ_ReviewCustomGatesStateRequired,
+  DeploymentReviewerType as ಠ_ಠ_DeploymentReviewerType,
+  PendingDeployment as ಠ_ಠ_PendingDeployment,
+  Deployment as ಠ_ಠ_Deployment,
+  WorkflowRunUsage as ಠ_ಠ_WorkflowRunUsage,
+  Workflow as ಠ_ಠ_Workflow,
+  WorkflowUsage as ಠ_ಠ_WorkflowUsage,
+  Activity as ಠ_ಠ_Activity,
+  Autolink as ಠ_ಠ_Autolink,
+  CheckAutomatedSecurityFixes as ಠ_ಠ_CheckAutomatedSecurityFixes,
+  ProtectedBranchRequiredStatusCheck as ಠ_ಠ_ProtectedBranchRequiredStatusCheck,
+  ProtectedBranchAdminEnforced as ಠ_ಠ_ProtectedBranchAdminEnforced,
+  ProtectedBranchPullRequestReview as ಠ_ಠ_ProtectedBranchPullRequestReview,
+  BranchRestrictionPolicy as ಠ_ಠ_BranchRestrictionPolicy,
+  BranchProtection as ಠ_ಠ_BranchProtection,
+  ShortBranch as ಠ_ಠ_ShortBranch,
+  NullableGitUser as ಠ_ಠ_NullableGitUser,
+  Verification as ಠ_ಠ_Verification,
+  DiffEntry as ಠ_ಠ_DiffEntry,
+  Commit as ಠ_ಠ_Commit,
+  BranchWithProtection as ಠ_ಠ_BranchWithProtection,
+  StatusCheckPolicy as ಠ_ಠ_StatusCheckPolicy,
+  ProtectedBranch as ಠ_ಠ_ProtectedBranch,
+  DeploymentSimple as ಠ_ಠ_DeploymentSimple,
+  CheckRun as ಠ_ಠ_CheckRun,
+  CheckAnnotation as ಠ_ಠ_CheckAnnotation,
+  SimpleCommit as ಠ_ಠ_SimpleCommit,
+  CheckSuite as ಠ_ಠ_CheckSuite,
+  CheckSuitePreference as ಠ_ಠ_CheckSuitePreference,
+  CodeScanningAlertItems as ಠ_ಠ_CodeScanningAlertItems,
+  CodeScanningAlertRule as ಠ_ಠ_CodeScanningAlertRule,
+  CodeScanningAlert as ಠ_ಠ_CodeScanningAlert,
+  CodeScanningAlertSetState as ಠ_ಠ_CodeScanningAlertSetState,
+  CodeScanningAlertCreateRequest as ಠ_ಠ_CodeScanningAlertCreateRequest,
+  CodeScanningAutofixStatus as ಠ_ಠ_CodeScanningAutofixStatus,
+  CodeScanningAutofixDescription as ಠ_ಠ_CodeScanningAutofixDescription,
+  CodeScanningAutofixStartedAt as ಠ_ಠ_CodeScanningAutofixStartedAt,
+  CodeScanningAutofix as ಠ_ಠ_CodeScanningAutofix,
+  CodeScanningAutofixCommits as ಠ_ಠ_CodeScanningAutofixCommits,
+  CodeScanningAutofixCommitsResponse as ಠ_ಠ_CodeScanningAutofixCommitsResponse,
+  CodeScanningAnalysisSarifId as ಠ_ಠ_CodeScanningAnalysisSarifId,
+  CodeScanningAnalysisCommitSha as ಠ_ಠ_CodeScanningAnalysisCommitSha,
+  CodeScanningAnalysisEnvironment as ಠ_ಠ_CodeScanningAnalysisEnvironment,
+  CodeScanningAnalysisCreatedAt as ಠ_ಠ_CodeScanningAnalysisCreatedAt,
+  CodeScanningAnalysisUrl as ಠ_ಠ_CodeScanningAnalysisUrl,
+  CodeScanningAnalysis as ಠ_ಠ_CodeScanningAnalysis,
+  CodeScanningAnalysisDeletion as ಠ_ಠ_CodeScanningAnalysisDeletion,
+  CodeScanningCodeqlDatabase as ಠ_ಠ_CodeScanningCodeqlDatabase,
+  CodeScanningVariantAnalysisLanguage as ಠ_ಠ_CodeScanningVariantAnalysisLanguage,
+  CodeScanningVariantAnalysisRepository as ಠ_ಠ_CodeScanningVariantAnalysisRepository,
+  CodeScanningVariantAnalysisStatus as ಠ_ಠ_CodeScanningVariantAnalysisStatus,
+  CodeScanningVariantAnalysisSkippedRepoGroup as ಠ_ಠ_CodeScanningVariantAnalysisSkippedRepoGroup,
+  CodeScanningVariantAnalysis as ಠ_ಠ_CodeScanningVariantAnalysis,
+  CodeScanningVariantAnalysisRepoTask as ಠ_ಠ_CodeScanningVariantAnalysisRepoTask,
+  CodeScanningDefaultSetup as ಠ_ಠ_CodeScanningDefaultSetup,
+  CodeScanningDefaultSetupUpdate as ಠ_ಠ_CodeScanningDefaultSetupUpdate,
+  CodeScanningDefaultSetupUpdateResponse as ಠ_ಠ_CodeScanningDefaultSetupUpdateResponse,
+  CodeScanningRefFull as ಠ_ಠ_CodeScanningRefFull,
+  CodeScanningAnalysisSarifFile as ಠ_ಠ_CodeScanningAnalysisSarifFile,
+  CodeScanningSarifsReceipt as ಠ_ಠ_CodeScanningSarifsReceipt,
+  CodeScanningSarifsStatus as ಠ_ಠ_CodeScanningSarifsStatus,
+  CodeSecurityConfigurationForRepository as ಠ_ಠ_CodeSecurityConfigurationForRepository,
+  CodeownersErrors as ಠ_ಠ_CodeownersErrors,
+  CodespaceMachine as ಠ_ಠ_CodespaceMachine,
+  CodespacesPermissionsCheckForDevcontainer as ಠ_ಠ_CodespacesPermissionsCheckForDevcontainer,
+  RepoCodespacesSecret as ಠ_ಠ_RepoCodespacesSecret,
+  Collaborator as ಠ_ಠ_Collaborator,
+  RepositoryInvitation as ಠ_ಠ_RepositoryInvitation,
+  NullableCollaborator as ಠ_ಠ_NullableCollaborator,
+  RepositoryCollaboratorPermission as ಠ_ಠ_RepositoryCollaboratorPermission,
+  CommitComment as ಠ_ಠ_CommitComment,
+  BranchShort as ಠ_ಠ_BranchShort,
+  Link as ಠ_ಠ_Link,
+  AutoMerge as ಠ_ಠ_AutoMerge,
+  PullRequestSimple as ಠ_ಠ_PullRequestSimple,
+  SimpleCommitStatus as ಠ_ಠ_SimpleCommitStatus,
+  CombinedCommitStatus as ಠ_ಠ_CombinedCommitStatus,
+  Status as ಠ_ಠ_Status,
+  NullableCodeOfConductSimple as ಠ_ಠ_NullableCodeOfConductSimple,
+  NullableCommunityHealthFile as ಠ_ಠ_NullableCommunityHealthFile,
+  CommunityProfile as ಠ_ಠ_CommunityProfile,
+  CommitComparison as ಠ_ಠ_CommitComparison,
+  ContentTree as ಠ_ಠ_ContentTree,
+  ContentDirectory as ಠ_ಠ_ContentDirectory,
+  ContentFile as ಠ_ಠ_ContentFile,
+  ContentSymlink as ಠ_ಠ_ContentSymlink,
+  ContentSubmodule as ಠ_ಠ_ContentSubmodule,
+  FileCommit as ಠ_ಠ_FileCommit,
+  SecretScanningPushProtectionBypassPlaceholderId as ಠ_ಠ_SecretScanningPushProtectionBypassPlaceholderId,
+  RepositoryRuleViolationError as ಠ_ಠ_RepositoryRuleViolationError,
+  Contributor as ಠ_ಠ_Contributor,
+  DependabotAlert as ಠ_ಠ_DependabotAlert,
+  DependabotSecret as ಠ_ಠ_DependabotSecret,
+  DependencyGraphDiff as ಠ_ಠ_DependencyGraphDiff,
+  DependencyGraphSpdxSbom as ಠ_ಠ_DependencyGraphSpdxSbom,
+  Metadata as ಠ_ಠ_Metadata,
+  Dependency as ಠ_ಠ_Dependency,
+  Manifest as ಠ_ಠ_Manifest,
+  Snapshot as ಠ_ಠ_Snapshot,
+  DeploymentStatus as ಠ_ಠ_DeploymentStatus,
+  WaitTimer as ಠ_ಠ_WaitTimer,
+  DeploymentBranchPolicySettings as ಠ_ಠ_DeploymentBranchPolicySettings,
+  Environment as ಠ_ಠ_Environment,
+  PreventSelfReview as ಠ_ಠ_PreventSelfReview,
+  DeploymentBranchPolicy as ಠ_ಠ_DeploymentBranchPolicy,
+  DeploymentBranchPolicyNamePatternWithType as ಠ_ಠ_DeploymentBranchPolicyNamePatternWithType,
+  DeploymentBranchPolicyNamePattern as ಠ_ಠ_DeploymentBranchPolicyNamePattern,
+  CustomDeploymentRuleApp as ಠ_ಠ_CustomDeploymentRuleApp,
+  DeploymentProtectionRule as ಠ_ಠ_DeploymentProtectionRule,
+  ShortBlob as ಠ_ಠ_ShortBlob,
+  Blob as ಠ_ಠ_Blob,
+  GitCommit as ಠ_ಠ_GitCommit,
+  GitRef as ಠ_ಠ_GitRef,
+  GitTag as ಠ_ಠ_GitTag,
+  GitTree as ಠ_ಠ_GitTree,
+  HookResponse as ಠ_ಠ_HookResponse,
+  Hook as ಠ_ಠ_Hook,
+  Import as ಠ_ಠ_Import,
+  PorterAuthor as ಠ_ಠ_PorterAuthor,
+  PorterLargeFile as ಠ_ಠ_PorterLargeFile,
+  NullableIssue as ಠ_ಠ_NullableIssue,
+  IssueEventLabel as ಠ_ಠ_IssueEventLabel,
+  IssueEventDismissedReview as ಠ_ಠ_IssueEventDismissedReview,
+  IssueEventMilestone as ಠ_ಠ_IssueEventMilestone,
+  IssueEventProjectCard as ಠ_ಠ_IssueEventProjectCard,
+  IssueEventRename as ಠ_ಠ_IssueEventRename,
+  IssueEvent as ಠ_ಠ_IssueEvent,
+  LabeledIssueEvent as ಠ_ಠ_LabeledIssueEvent,
+  UnlabeledIssueEvent as ಠ_ಠ_UnlabeledIssueEvent,
+  AssignedIssueEvent as ಠ_ಠ_AssignedIssueEvent,
+  UnassignedIssueEvent as ಠ_ಠ_UnassignedIssueEvent,
+  MilestonedIssueEvent as ಠ_ಠ_MilestonedIssueEvent,
+  DemilestonedIssueEvent as ಠ_ಠ_DemilestonedIssueEvent,
+  RenamedIssueEvent as ಠ_ಠ_RenamedIssueEvent,
+  ReviewRequestedIssueEvent as ಠ_ಠ_ReviewRequestedIssueEvent,
+  ReviewRequestRemovedIssueEvent as ಠ_ಠ_ReviewRequestRemovedIssueEvent,
+  ReviewDismissedIssueEvent as ಠ_ಠ_ReviewDismissedIssueEvent,
+  LockedIssueEvent as ಠ_ಠ_LockedIssueEvent,
+  AddedToProjectIssueEvent as ಠ_ಠ_AddedToProjectIssueEvent,
+  MovedColumnInProjectIssueEvent as ಠ_ಠ_MovedColumnInProjectIssueEvent,
+  RemovedFromProjectIssueEvent as ಠ_ಠ_RemovedFromProjectIssueEvent,
+  ConvertedNoteToIssueIssueEvent as ಠ_ಠ_ConvertedNoteToIssueIssueEvent,
+  IssueEventForIssue as ಠ_ಠ_IssueEventForIssue,
+  Label as ಠ_ಠ_Label,
+  TimelineCommentEvent as ಠ_ಠ_TimelineCommentEvent,
+  TimelineCrossReferencedEvent as ಠ_ಠ_TimelineCrossReferencedEvent,
+  TimelineCommittedEvent as ಠ_ಠ_TimelineCommittedEvent,
+  TimelineReviewedEvent as ಠ_ಠ_TimelineReviewedEvent,
+  PullRequestReviewComment as ಠ_ಠ_PullRequestReviewComment,
+  TimelineLineCommentedEvent as ಠ_ಠ_TimelineLineCommentedEvent,
+  TimelineCommitCommentedEvent as ಠ_ಠ_TimelineCommitCommentedEvent,
+  TimelineAssignedIssueEvent as ಠ_ಠ_TimelineAssignedIssueEvent,
+  TimelineUnassignedIssueEvent as ಠ_ಠ_TimelineUnassignedIssueEvent,
+  StateChangeIssueEvent as ಠ_ಠ_StateChangeIssueEvent,
+  TimelineIssueEvents as ಠ_ಠ_TimelineIssueEvents,
+  DeployKey as ಠ_ಠ_DeployKey,
+  Language as ಠ_ಠ_Language,
+  LicenseContent as ಠ_ಠ_LicenseContent,
+  MergedUpstream as ಠ_ಠ_MergedUpstream,
+  Milestone as ಠ_ಠ_Milestone,
+  PagesSourceHash as ಠ_ಠ_PagesSourceHash,
+  PagesHttpsCertificate as ಠ_ಠ_PagesHttpsCertificate,
+  Page as ಠ_ಠ_Page,
+  PageBuild as ಠ_ಠ_PageBuild,
+  PageBuildStatus as ಠ_ಠ_PageBuildStatus,
+  PageDeployment as ಠ_ಠ_PageDeployment,
+  PagesDeploymentStatus as ಠ_ಠ_PagesDeploymentStatus,
+  PagesHealthCheck as ಠ_ಠ_PagesHealthCheck,
+  PullRequest as ಠ_ಠ_PullRequest,
+  PullRequestMergeResult as ಠ_ಠ_PullRequestMergeResult,
+  PullRequestReviewRequest as ಠ_ಠ_PullRequestReviewRequest,
+  PullRequestReview as ಠ_ಠ_PullRequestReview,
+  ReviewComment as ಠ_ಠ_ReviewComment,
+  ReleaseAsset as ಠ_ಠ_ReleaseAsset,
+  Release as ಠ_ಠ_Release,
+  ReleaseNotesContent as ಠ_ಠ_ReleaseNotesContent,
+  RepositoryRuleRulesetInfo as ಠ_ಠ_RepositoryRuleRulesetInfo,
+  RepositoryRuleDetailed as ಠ_ಠ_RepositoryRuleDetailed,
+  SecretScanningAlert as ಠ_ಠ_SecretScanningAlert,
+  SecretScanningAlertResolutionComment as ಠ_ಠ_SecretScanningAlertResolutionComment,
+  SecretScanningLocation as ಠ_ಠ_SecretScanningLocation,
+  SecretScanningPushProtectionBypassReason as ಠ_ಠ_SecretScanningPushProtectionBypassReason,
+  SecretScanningPushProtectionBypass as ಠ_ಠ_SecretScanningPushProtectionBypass,
+  SecretScanningScan as ಠ_ಠ_SecretScanningScan,
+  SecretScanningScanHistory as ಠ_ಠ_SecretScanningScanHistory,
+  RepositoryAdvisoryCreate as ಠ_ಠ_RepositoryAdvisoryCreate,
+  PrivateVulnerabilityReportCreate as ಠ_ಠ_PrivateVulnerabilityReportCreate,
+  RepositoryAdvisoryUpdate as ಠ_ಠ_RepositoryAdvisoryUpdate,
+  Stargazer as ಠ_ಠ_Stargazer,
+  CodeFrequencyStat as ಠ_ಠ_CodeFrequencyStat,
+  CommitActivity as ಠ_ಠ_CommitActivity,
+  ContributorActivity as ಠ_ಠ_ContributorActivity,
+  ParticipationStats as ಠ_ಠ_ParticipationStats,
+  RepositorySubscription as ಠ_ಠ_RepositorySubscription,
+  Tag as ಠ_ಠ_Tag,
+  TagProtection as ಠ_ಠ_TagProtection,
+  Topic as ಠ_ಠ_Topic,
+  Traffic as ಠ_ಠ_Traffic,
+  CloneTraffic as ಠ_ಠ_CloneTraffic,
+  ContentTraffic as ಠ_ಠ_ContentTraffic,
+  ReferrerTraffic as ಠ_ಠ_ReferrerTraffic,
+  ViewTraffic as ಠ_ಠ_ViewTraffic,
+  SearchResultTextMatches as ಠ_ಠ_SearchResultTextMatches,
+  CodeSearchResultItem as ಠ_ಠ_CodeSearchResultItem,
+  CommitSearchResultItem as ಠ_ಠ_CommitSearchResultItem,
+  IssueSearchResultItem as ಠ_ಠ_IssueSearchResultItem,
+  LabelSearchResultItem as ಠ_ಠ_LabelSearchResultItem,
+  RepoSearchResultItem as ಠ_ಠ_RepoSearchResultItem,
+  TopicSearchResultItem as ಠ_ಠ_TopicSearchResultItem,
+  UserSearchResultItem as ಠ_ಠ_UserSearchResultItem,
+  PrivateUser as ಠ_ಠ_PrivateUser,
+  CodespacesSecret as ಠ_ಠ_CodespacesSecret,
+  CodespacesUserPublicKey as ಠ_ಠ_CodespacesUserPublicKey,
+  CodespaceExportDetails as ಠ_ಠ_CodespaceExportDetails,
+  CodespaceWithFullRepository as ಠ_ಠ_CodespaceWithFullRepository,
+  Email as ಠ_ಠ_Email,
+  GpgKey as ಠ_ಠ_GpgKey,
+  Key as ಠ_ಠ_Key,
+  MarketplaceAccount as ಠ_ಠ_MarketplaceAccount,
+  UserMarketplacePurchase as ಠ_ಠ_UserMarketplacePurchase,
+  SocialAccount as ಠ_ಠ_SocialAccount,
+  SshSigningKey as ಠ_ಠ_SshSigningKey,
+  StarredRepository as ಠ_ಠ_StarredRepository,
+  Hovercard as ಠ_ಠ_Hovercard,
+  KeySimple as ಠ_ಠ_KeySimple,
+  BillingUsageReportUser as ಠ_ಠ_BillingUsageReportUser,
+  EnterpriseWebhooks as ಠ_ಠ_EnterpriseWebhooks,
+  SimpleInstallation as ಠ_ಠ_SimpleInstallation,
+  OrganizationSimpleWebhooks as ಠ_ಠ_OrganizationSimpleWebhooks,
+  RepositoryWebhooks as ಠ_ಠ_RepositoryWebhooks,
+  WebhooksRule as ಠ_ಠ_WebhooksRule,
+  SimpleCheckSuite as ಠ_ಠ_SimpleCheckSuite,
+  CheckRunWithSimpleCheckSuite as ಠ_ಠ_CheckRunWithSimpleCheckSuite,
+  WebhooksCodeScanningCommitOid as ಠ_ಠ_WebhooksCodeScanningCommitOid,
+  WebhooksCodeScanningRef as ಠ_ಠ_WebhooksCodeScanningRef,
+  WebhooksDeployPusherType as ಠ_ಠ_WebhooksDeployPusherType,
+  WebhooksRef0 as ಠ_ಠ_WebhooksRef0,
+  WebhooksDeployKey as ಠ_ಠ_WebhooksDeployKey,
+  WebhooksWorkflow as ಠ_ಠ_WebhooksWorkflow,
+  WebhooksApprover as ಠ_ಠ_WebhooksApprover,
+  WebhooksReviewers as ಠ_ಠ_WebhooksReviewers,
+  WebhooksWorkflowJobRun as ಠ_ಠ_WebhooksWorkflowJobRun,
+  WebhooksUser as ಠ_ಠ_WebhooksUser,
+  WebhooksAnswer as ಠ_ಠ_WebhooksAnswer,
+  Discussion as ಠ_ಠ_Discussion,
+  WebhooksComment as ಠ_ಠ_WebhooksComment,
+  WebhooksLabel as ಠ_ಠ_WebhooksLabel,
+  WebhooksRepositories as ಠ_ಠ_WebhooksRepositories,
+  WebhooksRepositoriesAdded as ಠ_ಠ_WebhooksRepositoriesAdded,
+  WebhooksRepositorySelection as ಠ_ಠ_WebhooksRepositorySelection,
+  WebhooksIssueComment as ಠ_ಠ_WebhooksIssueComment,
+  WebhooksChanges as ಠ_ಠ_WebhooksChanges,
+  WebhooksIssue as ಠ_ಠ_WebhooksIssue,
+  WebhooksMilestone as ಠ_ಠ_WebhooksMilestone,
+  WebhooksIssue2 as ಠ_ಠ_WebhooksIssue2,
+  WebhooksUserMannequin as ಠ_ಠ_WebhooksUserMannequin,
+  WebhooksMarketplacePurchase as ಠ_ಠ_WebhooksMarketplacePurchase,
+  WebhooksPreviousMarketplacePurchase as ಠ_ಠ_WebhooksPreviousMarketplacePurchase,
+  WebhooksTeam as ಠ_ಠ_WebhooksTeam,
+  MergeGroup as ಠ_ಠ_MergeGroup,
+  NullableRepositoryWebhooks as ಠ_ಠ_NullableRepositoryWebhooks,
+  WebhooksMilestone3 as ಠ_ಠ_WebhooksMilestone3,
+  WebhooksMembership as ಠ_ಠ_WebhooksMembership,
+  PersonalAccessTokenRequest as ಠ_ಠ_PersonalAccessTokenRequest,
+  WebhooksProjectCard as ಠ_ಠ_WebhooksProjectCard,
+  WebhooksProject as ಠ_ಠ_WebhooksProject,
+  WebhooksProjectColumn as ಠ_ಠ_WebhooksProjectColumn,
+  NullableProjectsV2StatusUpdate as ಠ_ಠ_NullableProjectsV2StatusUpdate,
+  ProjectsV2 as ಠ_ಠ_ProjectsV2,
+  WebhooksProjectChanges as ಠ_ಠ_WebhooksProjectChanges,
+  ProjectsV2ItemContentType as ಠ_ಠ_ProjectsV2ItemContentType,
+  ProjectsV2Item as ಠ_ಠ_ProjectsV2Item,
+  ProjectsV2SingleSelectOption as ಠ_ಠ_ProjectsV2SingleSelectOption,
+  ProjectsV2IterationSetting as ಠ_ಠ_ProjectsV2IterationSetting,
+  ProjectsV2StatusUpdate as ಠ_ಠ_ProjectsV2StatusUpdate,
+  WebhooksNumber as ಠ_ಠ_WebhooksNumber,
+  PullRequestWebhook as ಠ_ಠ_PullRequestWebhook,
+  WebhooksPullRequest5 as ಠ_ಠ_WebhooksPullRequest5,
+  WebhooksReviewComment as ಠ_ಠ_WebhooksReviewComment,
+  WebhooksReview as ಠ_ಠ_WebhooksReview,
+  WebhooksNullableString as ಠ_ಠ_WebhooksNullableString,
+  WebhooksRelease as ಠ_ಠ_WebhooksRelease,
+  WebhooksRelease1 as ಠ_ಠ_WebhooksRelease1,
+  WebhooksAlert as ಠ_ಠ_WebhooksAlert,
+  SecretScanningAlertResolutionWebhook as ಠ_ಠ_SecretScanningAlertResolutionWebhook,
+  SecretScanningAlertWebhook as ಠ_ಠ_SecretScanningAlertWebhook,
+  WebhooksSecurityAdvisory as ಠ_ಠ_WebhooksSecurityAdvisory,
+  WebhooksSponsorship as ಠ_ಠ_WebhooksSponsorship,
+  WebhooksEffectiveDate as ಠ_ಠ_WebhooksEffectiveDate,
+  WebhooksChanges8 as ಠ_ಠ_WebhooksChanges8,
+  WebhooksTeam1 as ಠ_ಠ_WebhooksTeam1,
+  WebhookBranchProtectionConfigurationDisabled as ಠ_ಠ_WebhookBranchProtectionConfigurationDisabled,
+  WebhookBranchProtectionConfigurationEnabled as ಠ_ಠ_WebhookBranchProtectionConfigurationEnabled,
+  WebhookBranchProtectionRuleCreated as ಠ_ಠ_WebhookBranchProtectionRuleCreated,
+  WebhookBranchProtectionRuleDeleted as ಠ_ಠ_WebhookBranchProtectionRuleDeleted,
+  WebhookBranchProtectionRuleEdited as ಠ_ಠ_WebhookBranchProtectionRuleEdited,
+  WebhookCheckRunCompleted as ಠ_ಠ_WebhookCheckRunCompleted,
+  WebhookCheckRunCompletedFormEncoded as ಠ_ಠ_WebhookCheckRunCompletedFormEncoded,
+  WebhookCheckRunCreated as ಠ_ಠ_WebhookCheckRunCreated,
+  WebhookCheckRunCreatedFormEncoded as ಠ_ಠ_WebhookCheckRunCreatedFormEncoded,
+  WebhookCheckRunRequestedAction as ಠ_ಠ_WebhookCheckRunRequestedAction,
+  WebhookCheckRunRequestedActionFormEncoded as ಠ_ಠ_WebhookCheckRunRequestedActionFormEncoded,
+  WebhookCheckRunRerequested as ಠ_ಠ_WebhookCheckRunRerequested,
+  WebhookCheckRunRerequestedFormEncoded as ಠ_ಠ_WebhookCheckRunRerequestedFormEncoded,
+  WebhookCheckSuiteCompleted as ಠ_ಠ_WebhookCheckSuiteCompleted,
+  WebhookCheckSuiteRequested as ಠ_ಠ_WebhookCheckSuiteRequested,
+  WebhookCheckSuiteRerequested as ಠ_ಠ_WebhookCheckSuiteRerequested,
+  WebhookCodeScanningAlertAppearedInBranch as ಠ_ಠ_WebhookCodeScanningAlertAppearedInBranch,
+  WebhookCodeScanningAlertClosedByUser as ಠ_ಠ_WebhookCodeScanningAlertClosedByUser,
+  WebhookCodeScanningAlertCreated as ಠ_ಠ_WebhookCodeScanningAlertCreated,
+  WebhookCodeScanningAlertFixed as ಠ_ಠ_WebhookCodeScanningAlertFixed,
+  WebhookCodeScanningAlertReopened as ಠ_ಠ_WebhookCodeScanningAlertReopened,
+  WebhookCodeScanningAlertReopenedByUser as ಠ_ಠ_WebhookCodeScanningAlertReopenedByUser,
+  WebhookCommitCommentCreated as ಠ_ಠ_WebhookCommitCommentCreated,
+  WebhookCreate as ಠ_ಠ_WebhookCreate,
+  WebhookCustomPropertyCreated as ಠ_ಠ_WebhookCustomPropertyCreated,
+  WebhookCustomPropertyDeleted as ಠ_ಠ_WebhookCustomPropertyDeleted,
+  WebhookCustomPropertyPromotedToEnterprise as ಠ_ಠ_WebhookCustomPropertyPromotedToEnterprise,
+  WebhookCustomPropertyUpdated as ಠ_ಠ_WebhookCustomPropertyUpdated,
+  WebhookCustomPropertyValuesUpdated as ಠ_ಠ_WebhookCustomPropertyValuesUpdated,
+  WebhookDelete as ಠ_ಠ_WebhookDelete,
+  WebhookDependabotAlertAutoDismissed as ಠ_ಠ_WebhookDependabotAlertAutoDismissed,
+  WebhookDependabotAlertAutoReopened as ಠ_ಠ_WebhookDependabotAlertAutoReopened,
+  WebhookDependabotAlertCreated as ಠ_ಠ_WebhookDependabotAlertCreated,
+  WebhookDependabotAlertDismissed as ಠ_ಠ_WebhookDependabotAlertDismissed,
+  WebhookDependabotAlertFixed as ಠ_ಠ_WebhookDependabotAlertFixed,
+  WebhookDependabotAlertReintroduced as ಠ_ಠ_WebhookDependabotAlertReintroduced,
+  WebhookDependabotAlertReopened as ಠ_ಠ_WebhookDependabotAlertReopened,
+  WebhookDeployKeyCreated as ಠ_ಠ_WebhookDeployKeyCreated,
+  WebhookDeployKeyDeleted as ಠ_ಠ_WebhookDeployKeyDeleted,
+  WebhookDeploymentCreated as ಠ_ಠ_WebhookDeploymentCreated,
+  WebhookDeploymentProtectionRuleRequested as ಠ_ಠ_WebhookDeploymentProtectionRuleRequested,
+  WebhookDeploymentReviewApproved as ಠ_ಠ_WebhookDeploymentReviewApproved,
+  WebhookDeploymentReviewRejected as ಠ_ಠ_WebhookDeploymentReviewRejected,
+  WebhookDeploymentReviewRequested as ಠ_ಠ_WebhookDeploymentReviewRequested,
+  WebhookDeploymentStatusCreated as ಠ_ಠ_WebhookDeploymentStatusCreated,
+  WebhookDiscussionAnswered as ಠ_ಠ_WebhookDiscussionAnswered,
+  WebhookDiscussionCategoryChanged as ಠ_ಠ_WebhookDiscussionCategoryChanged,
+  WebhookDiscussionClosed as ಠ_ಠ_WebhookDiscussionClosed,
+  WebhookDiscussionCommentCreated as ಠ_ಠ_WebhookDiscussionCommentCreated,
+  WebhookDiscussionCommentDeleted as ಠ_ಠ_WebhookDiscussionCommentDeleted,
+  WebhookDiscussionCommentEdited as ಠ_ಠ_WebhookDiscussionCommentEdited,
+  WebhookDiscussionCreated as ಠ_ಠ_WebhookDiscussionCreated,
+  WebhookDiscussionDeleted as ಠ_ಠ_WebhookDiscussionDeleted,
+  WebhookDiscussionEdited as ಠ_ಠ_WebhookDiscussionEdited,
+  WebhookDiscussionLabeled as ಠ_ಠ_WebhookDiscussionLabeled,
+  WebhookDiscussionLocked as ಠ_ಠ_WebhookDiscussionLocked,
+  WebhookDiscussionPinned as ಠ_ಠ_WebhookDiscussionPinned,
+  WebhookDiscussionReopened as ಠ_ಠ_WebhookDiscussionReopened,
+  WebhookDiscussionTransferred as ಠ_ಠ_WebhookDiscussionTransferred,
+  WebhookDiscussionUnanswered as ಠ_ಠ_WebhookDiscussionUnanswered,
+  WebhookDiscussionUnlabeled as ಠ_ಠ_WebhookDiscussionUnlabeled,
+  WebhookDiscussionUnlocked as ಠ_ಠ_WebhookDiscussionUnlocked,
+  WebhookDiscussionUnpinned as ಠ_ಠ_WebhookDiscussionUnpinned,
+  WebhookFork as ಠ_ಠ_WebhookFork,
+  WebhookGithubAppAuthorizationRevoked as ಠ_ಠ_WebhookGithubAppAuthorizationRevoked,
+  WebhookGollum as ಠ_ಠ_WebhookGollum,
+  WebhookInstallationCreated as ಠ_ಠ_WebhookInstallationCreated,
+  WebhookInstallationDeleted as ಠ_ಠ_WebhookInstallationDeleted,
+  WebhookInstallationNewPermissionsAccepted as ಠ_ಠ_WebhookInstallationNewPermissionsAccepted,
+  WebhookInstallationRepositoriesAdded as ಠ_ಠ_WebhookInstallationRepositoriesAdded,
+  WebhookInstallationRepositoriesRemoved as ಠ_ಠ_WebhookInstallationRepositoriesRemoved,
+  WebhookInstallationSuspend as ಠ_ಠ_WebhookInstallationSuspend,
+  WebhookInstallationTargetRenamed as ಠ_ಠ_WebhookInstallationTargetRenamed,
+  WebhookInstallationUnsuspend as ಠ_ಠ_WebhookInstallationUnsuspend,
+  WebhookIssueCommentCreated as ಠ_ಠ_WebhookIssueCommentCreated,
+  WebhookIssueCommentDeleted as ಠ_ಠ_WebhookIssueCommentDeleted,
+  WebhookIssueCommentEdited as ಠ_ಠ_WebhookIssueCommentEdited,
+  WebhookIssueDependenciesBlockedByAdded as ಠ_ಠ_WebhookIssueDependenciesBlockedByAdded,
+  WebhookIssueDependenciesBlockedByRemoved as ಠ_ಠ_WebhookIssueDependenciesBlockedByRemoved,
+  WebhookIssueDependenciesBlockingAdded as ಠ_ಠ_WebhookIssueDependenciesBlockingAdded,
+  WebhookIssueDependenciesBlockingRemoved as ಠ_ಠ_WebhookIssueDependenciesBlockingRemoved,
+  WebhookIssuesAssigned as ಠ_ಠ_WebhookIssuesAssigned,
+  WebhookIssuesClosed as ಠ_ಠ_WebhookIssuesClosed,
+  WebhookIssuesDeleted as ಠ_ಠ_WebhookIssuesDeleted,
+  WebhookIssuesDemilestoned as ಠ_ಠ_WebhookIssuesDemilestoned,
+  WebhookIssuesEdited as ಠ_ಠ_WebhookIssuesEdited,
+  WebhookIssuesLabeled as ಠ_ಠ_WebhookIssuesLabeled,
+  WebhookIssuesLocked as ಠ_ಠ_WebhookIssuesLocked,
+  WebhookIssuesMilestoned as ಠ_ಠ_WebhookIssuesMilestoned,
+  WebhookIssuesOpened as ಠ_ಠ_WebhookIssuesOpened,
+  WebhookIssuesPinned as ಠ_ಠ_WebhookIssuesPinned,
+  WebhookIssuesReopened as ಠ_ಠ_WebhookIssuesReopened,
+  WebhookIssuesTransferred as ಠ_ಠ_WebhookIssuesTransferred,
+  WebhookIssuesTyped as ಠ_ಠ_WebhookIssuesTyped,
+  WebhookIssuesUnassigned as ಠ_ಠ_WebhookIssuesUnassigned,
+  WebhookIssuesUnlabeled as ಠ_ಠ_WebhookIssuesUnlabeled,
+  WebhookIssuesUnlocked as ಠ_ಠ_WebhookIssuesUnlocked,
+  WebhookIssuesUnpinned as ಠ_ಠ_WebhookIssuesUnpinned,
+  WebhookIssuesUntyped as ಠ_ಠ_WebhookIssuesUntyped,
+  WebhookLabelCreated as ಠ_ಠ_WebhookLabelCreated,
+  WebhookLabelDeleted as ಠ_ಠ_WebhookLabelDeleted,
+  WebhookLabelEdited as ಠ_ಠ_WebhookLabelEdited,
+  WebhookMarketplacePurchaseCancelled as ಠ_ಠ_WebhookMarketplacePurchaseCancelled,
+  WebhookMarketplacePurchaseChanged as ಠ_ಠ_WebhookMarketplacePurchaseChanged,
+  WebhookMarketplacePurchasePendingChange as ಠ_ಠ_WebhookMarketplacePurchasePendingChange,
+  WebhookMarketplacePurchasePendingChangeCancelled as ಠ_ಠ_WebhookMarketplacePurchasePendingChangeCancelled,
+  WebhookMarketplacePurchasePurchased as ಠ_ಠ_WebhookMarketplacePurchasePurchased,
+  WebhookMemberAdded as ಠ_ಠ_WebhookMemberAdded,
+  WebhookMemberEdited as ಠ_ಠ_WebhookMemberEdited,
+  WebhookMemberRemoved as ಠ_ಠ_WebhookMemberRemoved,
+  WebhookMembershipAdded as ಠ_ಠ_WebhookMembershipAdded,
+  WebhookMembershipRemoved as ಠ_ಠ_WebhookMembershipRemoved,
+  WebhookMergeGroupChecksRequested as ಠ_ಠ_WebhookMergeGroupChecksRequested,
+  WebhookMergeGroupDestroyed as ಠ_ಠ_WebhookMergeGroupDestroyed,
+  WebhookMetaDeleted as ಠ_ಠ_WebhookMetaDeleted,
+  WebhookMilestoneClosed as ಠ_ಠ_WebhookMilestoneClosed,
+  WebhookMilestoneCreated as ಠ_ಠ_WebhookMilestoneCreated,
+  WebhookMilestoneDeleted as ಠ_ಠ_WebhookMilestoneDeleted,
+  WebhookMilestoneEdited as ಠ_ಠ_WebhookMilestoneEdited,
+  WebhookMilestoneOpened as ಠ_ಠ_WebhookMilestoneOpened,
+  WebhookOrgBlockBlocked as ಠ_ಠ_WebhookOrgBlockBlocked,
+  WebhookOrgBlockUnblocked as ಠ_ಠ_WebhookOrgBlockUnblocked,
+  WebhookOrganizationDeleted as ಠ_ಠ_WebhookOrganizationDeleted,
+  WebhookOrganizationMemberAdded as ಠ_ಠ_WebhookOrganizationMemberAdded,
+  WebhookOrganizationMemberInvited as ಠ_ಠ_WebhookOrganizationMemberInvited,
+  WebhookOrganizationMemberRemoved as ಠ_ಠ_WebhookOrganizationMemberRemoved,
+  WebhookOrganizationRenamed as ಠ_ಠ_WebhookOrganizationRenamed,
+  WebhookRubygemsMetadata as ಠ_ಠ_WebhookRubygemsMetadata,
+  WebhookPackagePublished as ಠ_ಠ_WebhookPackagePublished,
+  WebhookPackageUpdated as ಠ_ಠ_WebhookPackageUpdated,
+  WebhookPageBuild as ಠ_ಠ_WebhookPageBuild,
+  WebhookPersonalAccessTokenRequestApproved as ಠ_ಠ_WebhookPersonalAccessTokenRequestApproved,
+  WebhookPersonalAccessTokenRequestCancelled as ಠ_ಠ_WebhookPersonalAccessTokenRequestCancelled,
+  WebhookPersonalAccessTokenRequestCreated as ಠ_ಠ_WebhookPersonalAccessTokenRequestCreated,
+  WebhookPersonalAccessTokenRequestDenied as ಠ_ಠ_WebhookPersonalAccessTokenRequestDenied,
+  WebhookPing as ಠ_ಠ_WebhookPing,
+  WebhookPingFormEncoded as ಠ_ಠ_WebhookPingFormEncoded,
+  WebhookProjectCardConverted as ಠ_ಠ_WebhookProjectCardConverted,
+  WebhookProjectCardCreated as ಠ_ಠ_WebhookProjectCardCreated,
+  WebhookProjectCardDeleted as ಠ_ಠ_WebhookProjectCardDeleted,
+  WebhookProjectCardEdited as ಠ_ಠ_WebhookProjectCardEdited,
+  WebhookProjectCardMoved as ಠ_ಠ_WebhookProjectCardMoved,
+  WebhookProjectClosed as ಠ_ಠ_WebhookProjectClosed,
+  WebhookProjectColumnCreated as ಠ_ಠ_WebhookProjectColumnCreated,
+  WebhookProjectColumnDeleted as ಠ_ಠ_WebhookProjectColumnDeleted,
+  WebhookProjectColumnEdited as ಠ_ಠ_WebhookProjectColumnEdited,
+  WebhookProjectColumnMoved as ಠ_ಠ_WebhookProjectColumnMoved,
+  WebhookProjectCreated as ಠ_ಠ_WebhookProjectCreated,
+  WebhookProjectDeleted as ಠ_ಠ_WebhookProjectDeleted,
+  WebhookProjectEdited as ಠ_ಠ_WebhookProjectEdited,
+  WebhookProjectReopened as ಠ_ಠ_WebhookProjectReopened,
+  WebhookProjectsV2ProjectClosed as ಠ_ಠ_WebhookProjectsV2ProjectClosed,
+  WebhookProjectsV2ProjectCreated as ಠ_ಠ_WebhookProjectsV2ProjectCreated,
+  WebhookProjectsV2ProjectDeleted as ಠ_ಠ_WebhookProjectsV2ProjectDeleted,
+  WebhookProjectsV2ProjectEdited as ಠ_ಠ_WebhookProjectsV2ProjectEdited,
+  WebhookProjectsV2ItemArchived as ಠ_ಠ_WebhookProjectsV2ItemArchived,
+  WebhookProjectsV2ItemConverted as ಠ_ಠ_WebhookProjectsV2ItemConverted,
+  WebhookProjectsV2ItemCreated as ಠ_ಠ_WebhookProjectsV2ItemCreated,
+  WebhookProjectsV2ItemDeleted as ಠ_ಠ_WebhookProjectsV2ItemDeleted,
+  WebhookProjectsV2ItemEdited as ಠ_ಠ_WebhookProjectsV2ItemEdited,
+  WebhookProjectsV2ItemReordered as ಠ_ಠ_WebhookProjectsV2ItemReordered,
+  WebhookProjectsV2ItemRestored as ಠ_ಠ_WebhookProjectsV2ItemRestored,
+  WebhookProjectsV2ProjectReopened as ಠ_ಠ_WebhookProjectsV2ProjectReopened,
+  WebhookProjectsV2StatusUpdateCreated as ಠ_ಠ_WebhookProjectsV2StatusUpdateCreated,
+  WebhookProjectsV2StatusUpdateDeleted as ಠ_ಠ_WebhookProjectsV2StatusUpdateDeleted,
+  WebhookProjectsV2StatusUpdateEdited as ಠ_ಠ_WebhookProjectsV2StatusUpdateEdited,
+  WebhookPublic as ಠ_ಠ_WebhookPublic,
+  WebhookPullRequestAssigned as ಠ_ಠ_WebhookPullRequestAssigned,
+  WebhookPullRequestAutoMergeDisabled as ಠ_ಠ_WebhookPullRequestAutoMergeDisabled,
+  WebhookPullRequestAutoMergeEnabled as ಠ_ಠ_WebhookPullRequestAutoMergeEnabled,
+  WebhookPullRequestClosed as ಠ_ಠ_WebhookPullRequestClosed,
+  WebhookPullRequestConvertedToDraft as ಠ_ಠ_WebhookPullRequestConvertedToDraft,
+  WebhookPullRequestDemilestoned as ಠ_ಠ_WebhookPullRequestDemilestoned,
+  WebhookPullRequestDequeued as ಠ_ಠ_WebhookPullRequestDequeued,
+  WebhookPullRequestEdited as ಠ_ಠ_WebhookPullRequestEdited,
+  WebhookPullRequestEnqueued as ಠ_ಠ_WebhookPullRequestEnqueued,
+  WebhookPullRequestLabeled as ಠ_ಠ_WebhookPullRequestLabeled,
+  WebhookPullRequestLocked as ಠ_ಠ_WebhookPullRequestLocked,
+  WebhookPullRequestMilestoned as ಠ_ಠ_WebhookPullRequestMilestoned,
+  WebhookPullRequestOpened as ಠ_ಠ_WebhookPullRequestOpened,
+  WebhookPullRequestReadyForReview as ಠ_ಠ_WebhookPullRequestReadyForReview,
+  WebhookPullRequestReopened as ಠ_ಠ_WebhookPullRequestReopened,
+  WebhookPullRequestReviewCommentCreated as ಠ_ಠ_WebhookPullRequestReviewCommentCreated,
+  WebhookPullRequestReviewCommentDeleted as ಠ_ಠ_WebhookPullRequestReviewCommentDeleted,
+  WebhookPullRequestReviewCommentEdited as ಠ_ಠ_WebhookPullRequestReviewCommentEdited,
+  WebhookPullRequestReviewDismissed as ಠ_ಠ_WebhookPullRequestReviewDismissed,
+  WebhookPullRequestReviewEdited as ಠ_ಠ_WebhookPullRequestReviewEdited,
+  WebhookPullRequestReviewRequestRemoved as ಠ_ಠ_WebhookPullRequestReviewRequestRemoved,
+  WebhookPullRequestReviewRequested as ಠ_ಠ_WebhookPullRequestReviewRequested,
+  WebhookPullRequestReviewSubmitted as ಠ_ಠ_WebhookPullRequestReviewSubmitted,
+  WebhookPullRequestReviewThreadResolved as ಠ_ಠ_WebhookPullRequestReviewThreadResolved,
+  WebhookPullRequestReviewThreadUnresolved as ಠ_ಠ_WebhookPullRequestReviewThreadUnresolved,
+  WebhookPullRequestSynchronize as ಠ_ಠ_WebhookPullRequestSynchronize,
+  WebhookPullRequestUnassigned as ಠ_ಠ_WebhookPullRequestUnassigned,
+  WebhookPullRequestUnlabeled as ಠ_ಠ_WebhookPullRequestUnlabeled,
+  WebhookPullRequestUnlocked as ಠ_ಠ_WebhookPullRequestUnlocked,
+  WebhookPush as ಠ_ಠ_WebhookPush,
+  WebhookRegistryPackagePublished as ಠ_ಠ_WebhookRegistryPackagePublished,
+  WebhookRegistryPackageUpdated as ಠ_ಠ_WebhookRegistryPackageUpdated,
+  WebhookReleaseCreated as ಠ_ಠ_WebhookReleaseCreated,
+  WebhookReleaseDeleted as ಠ_ಠ_WebhookReleaseDeleted,
+  WebhookReleaseEdited as ಠ_ಠ_WebhookReleaseEdited,
+  WebhookReleasePrereleased as ಠ_ಠ_WebhookReleasePrereleased,
+  WebhookReleasePublished as ಠ_ಠ_WebhookReleasePublished,
+  WebhookReleaseReleased as ಠ_ಠ_WebhookReleaseReleased,
+  WebhookReleaseUnpublished as ಠ_ಠ_WebhookReleaseUnpublished,
+  WebhookRepositoryAdvisoryPublished as ಠ_ಠ_WebhookRepositoryAdvisoryPublished,
+  WebhookRepositoryAdvisoryReported as ಠ_ಠ_WebhookRepositoryAdvisoryReported,
+  WebhookRepositoryArchived as ಠ_ಠ_WebhookRepositoryArchived,
+  WebhookRepositoryCreated as ಠ_ಠ_WebhookRepositoryCreated,
+  WebhookRepositoryDeleted as ಠ_ಠ_WebhookRepositoryDeleted,
+  WebhookRepositoryDispatchSample as ಠ_ಠ_WebhookRepositoryDispatchSample,
+  WebhookRepositoryEdited as ಠ_ಠ_WebhookRepositoryEdited,
+  WebhookRepositoryImport as ಠ_ಠ_WebhookRepositoryImport,
+  WebhookRepositoryPrivatized as ಠ_ಠ_WebhookRepositoryPrivatized,
+  WebhookRepositoryPublicized as ಠ_ಠ_WebhookRepositoryPublicized,
+  WebhookRepositoryRenamed as ಠ_ಠ_WebhookRepositoryRenamed,
+  WebhookRepositoryRulesetCreated as ಠ_ಠ_WebhookRepositoryRulesetCreated,
+  WebhookRepositoryRulesetDeleted as ಠ_ಠ_WebhookRepositoryRulesetDeleted,
+  WebhookRepositoryRulesetEdited as ಠ_ಠ_WebhookRepositoryRulesetEdited,
+  WebhookRepositoryTransferred as ಠ_ಠ_WebhookRepositoryTransferred,
+  WebhookRepositoryUnarchived as ಠ_ಠ_WebhookRepositoryUnarchived,
+  WebhookRepositoryVulnerabilityAlertCreate as ಠ_ಠ_WebhookRepositoryVulnerabilityAlertCreate,
+  WebhookRepositoryVulnerabilityAlertDismiss as ಠ_ಠ_WebhookRepositoryVulnerabilityAlertDismiss,
+  WebhookRepositoryVulnerabilityAlertReopen as ಠ_ಠ_WebhookRepositoryVulnerabilityAlertReopen,
+  WebhookRepositoryVulnerabilityAlertResolve as ಠ_ಠ_WebhookRepositoryVulnerabilityAlertResolve,
+  WebhookSecretScanningAlertCreated as ಠ_ಠ_WebhookSecretScanningAlertCreated,
+  WebhookSecretScanningAlertLocationCreated as ಠ_ಠ_WebhookSecretScanningAlertLocationCreated,
+  WebhookSecretScanningAlertLocationCreatedFormEncoded as ಠ_ಠ_WebhookSecretScanningAlertLocationCreatedFormEncoded,
+  WebhookSecretScanningAlertPubliclyLeaked as ಠ_ಠ_WebhookSecretScanningAlertPubliclyLeaked,
+  WebhookSecretScanningAlertReopened as ಠ_ಠ_WebhookSecretScanningAlertReopened,
+  WebhookSecretScanningAlertResolved as ಠ_ಠ_WebhookSecretScanningAlertResolved,
+  WebhookSecretScanningAlertValidated as ಠ_ಠ_WebhookSecretScanningAlertValidated,
+  WebhookSecretScanningScanCompleted as ಠ_ಠ_WebhookSecretScanningScanCompleted,
+  WebhookSecurityAdvisoryPublished as ಠ_ಠ_WebhookSecurityAdvisoryPublished,
+  WebhookSecurityAdvisoryUpdated as ಠ_ಠ_WebhookSecurityAdvisoryUpdated,
+  WebhookSecurityAdvisoryWithdrawn as ಠ_ಠ_WebhookSecurityAdvisoryWithdrawn,
+  WebhookSecurityAndAnalysis as ಠ_ಠ_WebhookSecurityAndAnalysis,
+  WebhookSponsorshipCancelled as ಠ_ಠ_WebhookSponsorshipCancelled,
+  WebhookSponsorshipCreated as ಠ_ಠ_WebhookSponsorshipCreated,
+  WebhookSponsorshipEdited as ಠ_ಠ_WebhookSponsorshipEdited,
+  WebhookSponsorshipPendingCancellation as ಠ_ಠ_WebhookSponsorshipPendingCancellation,
+  WebhookSponsorshipPendingTierChange as ಠ_ಠ_WebhookSponsorshipPendingTierChange,
+  WebhookSponsorshipTierChanged as ಠ_ಠ_WebhookSponsorshipTierChanged,
+  WebhookStarCreated as ಠ_ಠ_WebhookStarCreated,
+  WebhookStarDeleted as ಠ_ಠ_WebhookStarDeleted,
+  WebhookStatus as ಠ_ಠ_WebhookStatus,
+  WebhookSubIssuesParentIssueAdded as ಠ_ಠ_WebhookSubIssuesParentIssueAdded,
+  WebhookSubIssuesParentIssueRemoved as ಠ_ಠ_WebhookSubIssuesParentIssueRemoved,
+  WebhookSubIssuesSubIssueAdded as ಠ_ಠ_WebhookSubIssuesSubIssueAdded,
+  WebhookSubIssuesSubIssueRemoved as ಠ_ಠ_WebhookSubIssuesSubIssueRemoved,
+  WebhookTeamAdd as ಠ_ಠ_WebhookTeamAdd,
+  WebhookTeamAddedToRepository as ಠ_ಠ_WebhookTeamAddedToRepository,
+  WebhookTeamCreated as ಠ_ಠ_WebhookTeamCreated,
+  WebhookTeamDeleted as ಠ_ಠ_WebhookTeamDeleted,
+  WebhookTeamEdited as ಠ_ಠ_WebhookTeamEdited,
+  WebhookTeamRemovedFromRepository as ಠ_ಠ_WebhookTeamRemovedFromRepository,
+  WebhookWatchStarted as ಠ_ಠ_WebhookWatchStarted,
+  WebhookWorkflowDispatch as ಠ_ಠ_WebhookWorkflowDispatch,
+  WebhookWorkflowJobCompleted as ಠ_ಠ_WebhookWorkflowJobCompleted,
+  WebhookWorkflowJobInProgress as ಠ_ಠ_WebhookWorkflowJobInProgress,
+  WebhookWorkflowJobQueued as ಠ_ಠ_WebhookWorkflowJobQueued,
+  WebhookWorkflowJobWaiting as ಠ_ಠ_WebhookWorkflowJobWaiting,
+  WebhookWorkflowRunCompleted as ಠ_ಠ_WebhookWorkflowRunCompleted,
+  WebhookWorkflowRunInProgress as ಠ_ಠ_WebhookWorkflowRunInProgress,
+  WebhookWorkflowRunRequested as ಠ_ಠ_WebhookWorkflowRunRequested
+};

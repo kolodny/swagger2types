@@ -274,7 +274,7 @@ type VehicleList = List & {
   results?: Vehicle[];
 };
 
-type Routes = {
+type $_Routes = {
   /** Get URL roots for all available resources */
   ["GET /api"]: { Request: { params?: never; headers?: never; query?: never; body?: never }; Response: Root };
 
@@ -549,4 +549,24 @@ type Routes = {
   };
 };
 
-export type { Routes };
+export type {
+  $_Routes as Routes,
+
+  // The following are only exported to avoid the error: Exported variable 'X' has or is using name 'Y' from external module "Z" but cannot be named.ts(4023)
+
+  Film as ಠ_ಠ_Film,
+  FilmList as ಠ_ಠ_FilmList,
+  Item as ಠ_ಠ_Item,
+  List as ಠ_ಠ_List,
+  Person as ಠ_ಠ_Person,
+  PersonList as ಠ_ಠ_PersonList,
+  Planet as ಠ_ಠ_Planet,
+  PlanetList as ಠ_ಠ_PlanetList,
+  Root as ಠ_ಠ_Root,
+  Species as ಠ_ಠ_Species,
+  SpeciesList as ಠ_ಠ_SpeciesList,
+  Starship as ಠ_ಠ_Starship,
+  StarshipList as ಠ_ಠ_StarshipList,
+  Vehicle as ಠ_ಠ_Vehicle,
+  VehicleList as ಠ_ಠ_VehicleList
+};

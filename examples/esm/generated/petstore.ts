@@ -68,7 +68,7 @@ interface User {
   userStatus?: number;
 }
 
-type Routes = {
+type $_Routes = {
   ["POST /pet/${petId}/uploadImage"]: {
     Request: {
       params: {
@@ -295,4 +295,15 @@ type Routes = {
   ["POST /user"]: { Request: { params?: never; headers?: never; query?: never; body: User }; Response: void };
 };
 
-export type { Routes };
+export type {
+  $_Routes as Routes,
+
+  // The following are only exported to avoid the error: Exported variable 'X' has or is using name 'Y' from external module "Z" but cannot be named.ts(4023)
+
+  ApiResponse as ಠ_ಠ_ApiResponse,
+  Category as ಠ_ಠ_Category,
+  Pet as ಠ_ಠ_Pet,
+  Tag as ಠ_ಠ_Tag,
+  Order as ಠ_ಠ_Order,
+  User as ಠ_ಠ_User
+};

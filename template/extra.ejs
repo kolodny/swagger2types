@@ -32,7 +32,7 @@ const allRoutes = [...routes.outOfModule, ...(routes.combined).flatMap(item => i
 
 %>
 
-export type Routes = {
+type $_Routes = {
   <% for (const route of allRoutes) { %>
     <%~ processRoute(route) %>
   <% } %>
