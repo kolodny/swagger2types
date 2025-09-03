@@ -3,80 +3,69 @@ import type { Got, StrictOptions } from 'got';
 import type { RequestOptions } from 'https';
 
 // #region Base Types
-type BaseRoute = {
-  Request: {
-    params?: Record<string, any>;
-    query?: Record<string, any>;
-    headers?: Record<string, any>;
-    body?: any;
-  };
-  Response: any;
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+type OptionalKeys<T> = keyof {
+  [Key in keyof T as Omit<T, Key> extends T ? Key : never]: T[Key];
 };
+type Optional<T> = {
+  [K in keyof T]: keyof T[K] extends OptionalKeys<T[K]> ? K : never;
+}[keyof T];
+type Required<T> = keyof Omit<T, Optional<T> & keyof T>;
 
-type BaseRoutes = Record<string, BaseRoute>;
+type Mapped<T> = { [K in Required<T>]: T[K] } & { [K in Optional<T>]?: T[K] };
+type RequestTuple<T> = object extends T ? [request?: T] : [request: T];
 
-type Params<
-  Routes extends BaseRoutes,
-  Route extends keyof Routes & string,
-> = Record<string, undefined> extends Routes[Route]['Request']
-  ? [route: Route] | [route: Route, request: Routes[Route]['Request']]
-  : [route: Route, request: Routes[Route]['Request']];
+type BaseRoutes = Record<string, { Request: any; Response: any }>;
+type Params<Routes extends BaseRoutes, Route extends keyof Routes> = [
+  route: Route,
+  ...RequestTuple<Mapped<Routes[Route]['Request']>>,
+];
 
-type Handler<Routes extends BaseRoutes> = <
-  Callback extends <Route extends keyof Routes & string>(
-    ...params: Params<Routes, Route>
-  ) => any,
->(
-  callback: Callback
-) => Callback;
+/* eslint-enable @typescript-eslint/no-explicit-any */
+// #endregion
 
-// prettier-ignore
-type UpperMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'TRACE';
-type AllMethods = UpperMethods | Lowercase<UpperMethods>;
+export type Client<Routes extends BaseRoutes> = <Route extends keyof Routes>(
+  ...args: Params<Routes, Route & string>
+) => Promise<Routes[Route]['Response']>;
 
 const prepareFrom = <Routes extends BaseRoutes>(baseUrl: string) => {
   return <Route extends keyof Routes & string>(
-    ...[route, request]: Params<Routes, Route>
+    route: Route,
+    request?: Routes[Route]['Request']
   ) => {
-    const [method, template] = route.split(' ') as [AllMethods, string];
-    const params = request?.['params'];
+    const [method, path] = route.split(' ') as [string, string];
     const regex = /\$\{([^}]*)}/g;
-    const formatted = template.replace(regex, (_, m) => params?.[m]);
+
+    const formatted = path.replace(regex, (_, m) => request?.['params']?.[m]);
     const url = new URL(`.${formatted}`, baseUrl);
 
-    const query = request?.['query'];
-    const queryEntries = Object.entries(query ?? {});
+    const queryEntries = Object.entries(request?.['query'] ?? {});
     for (const [k, v] of queryEntries) url.searchParams.set(k, `${v}`);
 
-    const body = request?.['body'];
-    const headers = request?.['headers'];
-    const urlString = `${url}`;
-
-    return { url: urlString, params, method, body, headers, query };
+    const req = request as Record<'body' | 'headers', never>;
+    return { ...req, url: `${url}`, method };
   };
 };
-// #endregion
 
 // #region Fetch Client
 export const clientFromFetch = <Routes extends BaseRoutes>({
   baseUrl,
-  fetch = globalThis.fetch,
 }: {
   baseUrl: string;
-  fetch?: typeof globalThis.fetch;
-}) => {
+}): Client<Routes> => {
   const prepare = prepareFrom<Routes>(baseUrl);
-  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (...[route, request]) => {
-    type Response = Routes[typeof route]['Response'];
-
-    const { body, method, url, ...rest } = prepare(route, request!);
+  return async (...args) => {
+    const { body, method, url, ...rest } = prepare(...args);
     const headers: Record<string, string> = rest.headers ?? {};
     const requestInit: RequestInit = { method, headers };
 
-    if (body) headers['Content-Type'] ??= 'application/json';
-    if (body) requestInit.body = JSON.stringify(body);
+    if (body || method === 'POST') {
+      headers['Content-Type'] ??= 'application/json';
+      requestInit.body = JSON.stringify(body ?? {});
+    }
 
     const response = await fetch(url, requestInit);
     if (!response.ok) {
@@ -84,9 +73,8 @@ export const clientFromFetch = <Routes extends BaseRoutes>({
       throw new Error(message);
     }
 
-    const json: Response = await response.json();
-    return json;
-  });
+    return await response.json();
+  };
 };
 // #endregion Fetch Client
 
@@ -97,11 +85,10 @@ export const clientFromAxios = <Routes extends BaseRoutes>({
 }: {
   axios: AxiosInstance;
   baseUrl: string;
-}) => {
+}): Client<Routes> => {
   const prepare = prepareFrom<Routes>(baseUrl);
-  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (...[route, request]) => {
+  return async (...[route, request]) => {
     type Response = Routes[typeof route]['Response'];
 
     // These two types line up almost perfectly, just need omit and rename some properties.
@@ -109,7 +96,7 @@ export const clientFromAxios = <Routes extends BaseRoutes>({
     const config: AxiosRequestConfig = { ...prepared, data: body };
     const response = await axios<Response>(config);
     return response.data;
-  });
+  };
 };
 // #endregion
 
@@ -120,20 +107,18 @@ export const clientFromGot = <Routes extends BaseRoutes>({
 }: {
   got: Got;
   baseUrl: string;
-}) => {
+}): Client<Routes> => {
   const prepare = prepareFrom<Routes>(baseUrl);
-  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (...[route, request]) => {
-    type Response = Routes[typeof route]['Response'];
+  return async (...[route, request]) => {
+    // These two types line up almost perfectly, just need some slight modifications.
+    const { body, ...prepared } = prepare(route, request!);
+    const method = prepared.method as never;
+    const options: StrictOptions = { ...prepared, method, json: body };
 
-    // These two types line up almost perfectly, just need omit and rename some properties.
-    const { body, params, query, ...prepared } = prepare(route, request!);
-    const options: StrictOptions = { ...prepared, json: body };
-
-    const response = await got<Response>(options);
+    const response = await got(options);
     return response.body;
-  });
+  };
 };
 // #endregion
 
@@ -144,20 +129,17 @@ export const clientFromRequest = <Routes extends BaseRoutes>({
 }: {
   baseUrl: string;
   request: typeof import('http').request;
-}) => {
+}): Client<Routes> => {
   const prepare = prepareFrom<Routes>(baseUrl);
-  const myHandler: Handler<Routes> = (cb) => cb;
 
-  return myHandler(async (...[route, request]) => {
-    type Response = Routes[typeof route]['Response'];
-
+  return async (...[route, request]) => {
     const prepared = prepare(route, request!);
-    const headers = prepared.headers ?? {};
+    const headers: Record<string, string> = prepared.headers ?? {};
     const options: RequestOptions = { method: prepared.method, headers };
 
     if (prepared.body) headers['Content-Type'] ??= 'application/json';
 
-    const response = new Promise<Response>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const req = nodeRequest(prepared.url, options, (res) => {
         let responseData = '';
         res.on('data', (chunk) => (responseData += chunk));
@@ -179,22 +161,22 @@ export const clientFromRequest = <Routes extends BaseRoutes>({
 
       req.on('error', reject).end();
     });
-    return response;
-  });
+  };
 };
 // #endregion
 
 // Proof of concept for a proxy in order to also get jsDoc description. I assume you know what you're doing if you use this.
-// export const fetchProxy = <Routes extends BaseRoutes>(
-//   fetcher: ReturnType<typeof clientFromFetch<Routes>>
+// export const proxyClient = <Routes extends BaseRoutes>(
+//   ...args: Parameters<typeof clientFromFetch<Routes>>
 // ) => {
-//   type Mapped = {
+//   type Proxy = {
 //     [K in keyof Routes]: (
-//       request: Parameters<typeof fetcher>[1]
-//     ) => ReturnType<typeof fetcher>;
+//       ...args: RequestTuple<Mapped<Routes[K]['Request']>>
+//     ) => ReturnType<typeof fetcher<K & string>>;
 //   };
-//   return new Proxy<Mapped>({} as Mapped, {
-//     get: (t, key) => (request: any) => fetcher(key as any, request),
+//   const fetcher = clientFromFetch(...args);
+//   return new Proxy({} as Proxy, {
+//     get: (_, key) => (request: never) => fetcher(key as never, request),
 //   });
 // };
 // Usage:
